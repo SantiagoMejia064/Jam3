@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "lajam3.slnx"
+    "dotnet.defaultSolution": "My project.slnx"
 }
