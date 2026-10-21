@@ -6,8 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/Inicio.unity
+    guid: e46a9ecc55cd7da44a9c5606a7e78f48
+  - enabled: 1
+    path: Assets/Scenes/Taller.unity
+    guid: 44706a8189631d646b881bce39a0d128
+  - enabled: 1
+    path: Assets/Scenes/SalaMaquinas.unity
+    guid: 9f1b301fb2272a446acb1619372fd9fb
+  - enabled: 1
+    path: Assets/Scenes/Bodega.unity
+    guid: ddfb661ea14e26a4883ca1f06c17b01b
+  - enabled: 1
+    path: Assets/Scenes/Invernadero.unity
+    guid: 7b23749d4259c464dbea7d419d28c390
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
