@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using TMPro;
 
 /// <summary>Persistent in-memory registry and UI for the ten collectible notes.</summary>
 [DisallowMultipleComponent]
@@ -11,6 +12,15 @@ public sealed class NotebookController : MonoBehaviour
 
     [SerializeField] private GameObject[] pages = new GameObject[NoteCount];
     [SerializeField] private Button[] pageButtons = new Button[NoteCount];
+    [Header("Sellos — UI editable en Inicio")]
+    [SerializeField] private Button stampsButton;
+    [SerializeField] private GameObject stampsPanel;
+    [SerializeField] private TMP_Text[] stampSlots = new TMP_Text[3];
+    [SerializeField] private Button backToNotesButton;
+    [SerializeField] private GameObject stampNotification;
+    [SerializeField] private TMP_Text stampNotificationText;
+    private bool showingStamps;
+    private float notificationUntil;
     private readonly bool[] unlockedNotes = new bool[NoteCount];
     private readonly string[] titles = new string[NoteCount];
     private readonly string[] contents = new string[NoteCount];
@@ -33,18 +43,38 @@ public sealed class NotebookController : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         BuildPanel();
+        SAL_Progress.FlagChanged += OnProgressChanged;
         Refresh();
     }
 
     private void Update()
     {
+        if (stampNotification && stampNotification.activeSelf && Time.unscaledTime >= notificationUntil)
+            stampNotification.SetActive(false);
         var keyboard = Keyboard.current;
         if (keyboard == null) return;
         if (keyboard.tabKey.wasPressedThisFrame) ToggleNotebook();
         else if (IsOpen && keyboard.escapeKey.wasPressedThisFrame) CloseNotebook();
     }
 
-    private void OnDestroy() { if (Instance == this) Instance = null; }
+    private void OnDestroy()
+    {
+        SAL_Progress.FlagChanged -= OnProgressChanged;
+        if (Instance == this) Instance = null;
+    }
+
+    private void OnProgressChanged(string id, bool value)
+    {
+        if (!CORE_GameState.IsStamp(id)) return;
+        Refresh();
+        if (!value || !stampNotification || !stampNotificationText) return;
+        stampNotificationText.text = CORE_GameState.Symbol(id) + " SELLO RECOGIDO\n<size=22>Revísalo en el Cuaderno (Tab)</size>";
+        notificationUntil = Time.unscaledTime + 3.5f;
+        stampNotification.SetActive(true);
+    }
+
+    public void ShowStamps() { showingStamps = true; Refresh(); }
+    public void ShowNotes() { showingStamps = false; Refresh(); }
 
     // Registers content without opening its page or displaying the story in the world HUD.
     public void CollectNote(int index, string title, string content, string rereading = "")
@@ -81,6 +111,7 @@ public sealed class NotebookController : MonoBehaviour
     {
         if (!IsNoteUnlocked(index))
             return;
+        showingStamps = false;
         if (selectedPage == index) reading = true;
         else { selectedPage = index; reading = false; }
         if (notebookPanel) notebookPanel.SetActive(true);
@@ -102,7 +133,7 @@ public sealed class NotebookController : MonoBehaviour
         {
             if (pages != null && i < pages.Length && pages[i] != null)
             {
-                bool visible = selectedPage == i && reading;
+                bool visible = !showingStamps && selectedPage == i && reading;
                 pages[i].SetActive(visible);
                 if (visible)
                 {
@@ -121,10 +152,14 @@ public sealed class NotebookController : MonoBehaviour
                     ? $"{(selectedPage == i ? "► " : "")}Nota {i + 1} · {(selectedPage == i && !reading ? "Leer" : "Abrir página")}"
                     : $"Nota {i + 1} · No recogida";
         }
-        if (heading) heading.text = selectedPage < 0 ? "CUADERNO · Notas recogidas" : $"NOTA {selectedPage + 1} · {titles[selectedPage]}";
+        if (stampsPanel) stampsPanel.SetActive(showingStamps);
+        string[] ids = { CORE_GameState.SelloTriangulo, CORE_GameState.SelloRombo, CORE_GameState.SelloCruz };
+        for (int i = 0; i < stampSlots.Length && i < ids.Length; i++)
+            if (stampSlots[i]) stampSlots[i].text = CORE_GameState.HasStamp(ids[i]) ? CORE_GameState.Symbol(ids[i]) : "?";
+        if (heading) heading.text = showingStamps ? "CUADERNO · Sellos" : selectedPage < 0 ? "CUADERNO · Notas recogidas" : $"NOTA {selectedPage + 1} · {titles[selectedPage]}";
         if (preview)
         {
-            preview.gameObject.SetActive(!reading || selectedPage < 0);
+            preview.gameObject.SetActive(!showingStamps && (!reading || selectedPage < 0));
             preview.text = selectedPage < 0
                 ? "Selecciona una nota del índice.\n\nSolo puedes consultar las notas que hayas recogido."
                 : $"{titles[selectedPage]}\n\nPágina abierta.\nPulsa otra vez su botón del índice para leer la nota.";
@@ -167,6 +202,19 @@ public sealed class NotebookController : MonoBehaviour
         preview = Label("PaginaCerrada", pageArea.transform, new Vector2(650, 460), Vector2.zero, "", 24);
         preview.color = new Color(.08f, .10f, .11f);
         preview.alignment = TextAnchor.MiddleCenter;
+        if (stampsPanel)
+        {
+            stampsPanel.transform.SetParent(pageArea.transform, false);
+            Place((RectTransform)stampsPanel.transform, new Vector2(730, 540), Vector2.zero);
+        }
+        if (stampsButton)
+        {
+            stampsButton.transform.SetParent(notebookPanel.transform, false);
+            Place(stampsButton.GetComponent<RectTransform>(), new Vector2(300, 45), new Vector2(-375, -270));
+            stampsButton.onClick.AddListener(ShowStamps);
+        }
+        if (backToNotesButton) backToNotesButton.onClick.AddListener(ShowNotes);
+        if (stampNotification) stampNotification.SetActive(false);
         for (int i = 0; i < NoteCount; i++)
         {
             titles[i] = $"Nota {i + 1}";

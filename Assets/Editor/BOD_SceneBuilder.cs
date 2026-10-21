@@ -30,6 +30,7 @@ public static class BOD_SceneBuilder
         Trays(root.transform);
         KeypadAndChamber(root.transform);
         Story(root.transform);
+        StampSetup.ConfigureBodega();
         Doors(root.transform);
         ConfigureArrival(scene, root.transform);
         EditorSceneManager.MarkSceneDirty(scene);
