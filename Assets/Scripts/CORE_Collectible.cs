@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider))]
 public sealed class CORE_Collectible : MonoBehaviour
 {
     [SerializeField] private string itemId;
     [SerializeField] private string displayName;
+    [SerializeField] private UnityEvent onCollected = new UnityEvent();
     private CORE_PlayerController player;
     private Collider triggerCollider;
     private void Awake() { triggerCollider = GetComponent<Collider>(); }
@@ -24,7 +26,7 @@ public sealed class CORE_Collectible : MonoBehaviour
             return;
         }
 
-        if(player.InteractPressed) { CORE_InventoryBridge.AddItem(itemId); CORE_InteractionHUD.ClearPrompt(this); CORE_InteractionHUD.ShowMessage("Recogiste: " + displayName); gameObject.SetActive(false); }
+        if(player.InteractPressed) { CORE_InventoryBridge.AddItem(itemId); onCollected?.Invoke(); CORE_InteractionHUD.ClearPrompt(this); CORE_InteractionHUD.ShowMessage("Recogiste: " + displayName); gameObject.SetActive(false); }
     }
 
     private bool PlayerIsInRange()
