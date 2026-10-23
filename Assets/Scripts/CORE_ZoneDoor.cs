@@ -103,13 +103,41 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
     }
 }
 
-/// <summary>Integration seam for Persona 2 inventory, with a local prototype fallback.</summary>
 public static class CORE_InventoryBridge
 {
-    private static readonly System.Collections.Generic.HashSet<string> LocalItems = new System.Collections.Generic.HashSet<string>();
-    public static System.Func<string, bool> HasItemProvider;
-    public static bool HasItem(string id) => HasItemProvider != null ? HasItemProvider(id) : LocalItems.Contains(id);
-    public static void AddItem(string id) { if (!string.IsNullOrEmpty(id)) LocalItems.Add(id); }
-    public static void RemoveItem(string id) { if (!string.IsNullOrEmpty(id)) LocalItems.Remove(id); }
-    public static void ClearLocalItems() => LocalItems.Clear();
+    public static bool HasItem(string id)
+    {
+        return CORE_Inventory.Instance != null && CORE_Inventory.Instance.HasItem(id);
+    }
+
+    public static bool WasCollected(string id)
+    {
+        return CORE_Inventory.Instance != null && CORE_Inventory.Instance.WasCollected(id);
+    }
+
+    public static bool IsSelected(string id)
+    {
+        return CORE_Inventory.Instance != null && CORE_Inventory.Instance.IsSelected(id);
+    }
+
+    public static bool TryAddItem(string id)
+    {
+        return CORE_Inventory.Instance != null && CORE_Inventory.Instance.TryAddItem(id);
+    }
+
+    // Conserva la firma utilizada por las zonas actuales.
+    public static void AddItem(string id)
+    {
+        TryAddItem(id);
+    }
+
+    public static void RemoveItem(string id)
+    {
+        if (CORE_Inventory.Instance != null) CORE_Inventory.Instance.RemoveItem(id);
+    }
+
+    public static void ClearLocalItems()
+    {
+        if (CORE_Inventory.Instance != null) CORE_Inventory.Instance.ResetForNewGame();
+    }
 }
