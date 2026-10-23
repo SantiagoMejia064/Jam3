@@ -22,6 +22,7 @@ public sealed class BOD_KeypadController : MonoBehaviour
     [SerializeField] private GameObject ductHint;
     [SerializeField] private Light ductHintLight;
     [SerializeField] private float hintFlashSeconds = 2f;
+    [SerializeField] private BOD_Audio audioFeedback;
 
     private CORE_PlayerController player;
     private Collider triggerCollider;
@@ -105,6 +106,11 @@ public sealed class BOD_KeypadController : MonoBehaviour
         if (enteredCode == correctCode)
         {
             solved = true;
+            if (audioFeedback)
+            {
+                audioFeedback.PlayCorrectCode();
+                audioFeedback.PlayChamberOpening();
+            }
             if (chamberDoor) chamberDoor.SetActive(false);
             if (heatPiece) heatPiece.SetActive(true);
             SetFeedback("Cámara abierta. Pieza Calor disponible.");
@@ -113,6 +119,7 @@ public sealed class BOD_KeypadController : MonoBehaviour
         }
 
         failedAttempts++;
+        if (audioFeedback) audioFeedback.PlayWrongCode();
         enteredCode = string.Empty;
         RefreshDisplay();
         SetFeedback("Código incorrecto.");

@@ -12,6 +12,7 @@ public sealed class BOD_Tray : MonoBehaviour
     private float elapsed;
     private bool cleaned;
     private bool waitingForRelease;
+    public bool IsCleaning { get; private set; }
 
     private void Awake()
     {
@@ -31,6 +32,7 @@ public sealed class BOD_Tray : MonoBehaviour
 
     private void Update()
     {
+        IsCleaning = false;
         if (!player) return;
         var body = player.GetComponent<Collider>();
         if (!body || !area.bounds.Intersects(body.bounds)) { Leave(); return; }
@@ -42,6 +44,7 @@ public sealed class BOD_Tray : MonoBehaviour
             return;
         }
         elapsed = player.InteractHeld ? Mathf.Min(cleanSeconds, elapsed + Time.deltaTime) : 0f;
+        IsCleaning = player.InteractHeld && elapsed < cleanSeconds;
         CORE_InteractionHUD.SetPrompt(this, $"Mantén E para limpiar · {elapsed:0.0} / {cleanSeconds:0.0} s ({Mathf.RoundToInt(elapsed / cleanSeconds * 100)}%)");
         if (elapsed < cleanSeconds) return;
         cleaned = true;
@@ -52,6 +55,7 @@ public sealed class BOD_Tray : MonoBehaviour
 
     private void Leave()
     {
+        IsCleaning = false;
         elapsed = 0f;
         player = null;
         if (numberVisual) numberVisual.SetActive(false);

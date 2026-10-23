@@ -7,6 +7,9 @@ public sealed class CORE_PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 8f;
     [SerializeField] private float fixedZ;
+    [Header("Audio de movimiento - acompana al robot entre escenas")]
+    [SerializeField] private AudioClip movimientoRobot;
+    [SerializeField, HideInInspector] private AudioSource movimientoSource;
     private Rigidbody body;
     private InputAction moveAction;
     private InputAction interactAction;
@@ -33,7 +36,7 @@ public sealed class CORE_PlayerController : MonoBehaviour
     }
 
     private void OnEnable() { moveAction?.Enable(); interactAction?.Enable(); }
-    private void OnDisable() { moveAction?.Disable(); interactAction?.Disable(); }
+    private void OnDisable() { moveAction?.Disable(); interactAction?.Disable(); if (movimientoSource) movimientoSource.Stop(); }
     private void OnDestroy() { moveAction?.Dispose(); interactAction?.Dispose(); }
 
     private void Update()
@@ -47,6 +50,22 @@ public sealed class CORE_PlayerController : MonoBehaviour
             keyboardX = (right ? 1f : 0f) - (left ? 1f : 0f);
         }
         horizontalInput = keyboardX != 0f ? keyboardX : actionX;
+    }
+
+    private void LateUpdate()
+    {
+        if (!movimientoSource) return;
+        if (movimientoSource.clip != movimientoRobot)
+        {
+            movimientoSource.Stop();
+            movimientoSource.clip = movimientoRobot;
+        }
+        bool moving = body && Mathf.Abs(body.linearVelocity.x) > .1f && Time.timeScale > 0f;
+        if (moving && movimientoRobot)
+        {
+            if (!movimientoSource.isPlaying) movimientoSource.Play();
+        }
+        else if (movimientoSource.isPlaying) movimientoSource.Stop();
     }
 
     private void FixedUpdate()

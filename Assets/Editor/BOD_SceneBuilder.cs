@@ -33,6 +33,7 @@ public static class BOD_SceneBuilder
         StampSetup.ConfigureBodega();
         Doors(root.transform);
         ConfigureArrival(scene, root.transform);
+        ConfigureAudio();
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.SaveAssets();
@@ -183,4 +184,152 @@ public static class BOD_SceneBuilder
         return go;
     }
     private static void Set(object target,string field,object value){var f=target.GetType().GetField(field,BindingFlags.Instance|BindingFlags.NonPublic);if(f==null)throw new MissingFieldException(target.GetType().Name,field);f.SetValue(target,value);EditorUtility.SetDirty((UnityEngine.Object)target);}
+
+    [MenuItem("Jam3/Conectar sonidos Bodega")]
+    public static void ConfigureAudio()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+        var scene = SceneManager.GetSceneByPath(ScenePath);
+        bool alreadyLoaded = scene.IsValid() && scene.isLoaded;
+        if (!alreadyLoaded) scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
+        GameObject generated = null;
+        foreach (var go in scene.GetRootGameObjects()) if (go.name == "BOD_Generated") generated = go;
+        if (!generated) throw new InvalidOperationException("BOD_Generated no encontrado en Bodega.");
+        var existing = generated.transform.Find("BOD_Audio");
+        var audioRoot = existing ? existing.gameObject : Empty("BOD_Audio", generated.transform, Vector3.zero);
+        var audio = audioRoot.GetComponent<BOD_Audio>();
+        if (!audio) audio = audioRoot.AddComponent<BOD_Audio>();
+        var legacy = new SerializedObject(audio);
+        var legacyClip = legacy.FindProperty("movimientoRobot");
+        AudioClip movement = legacyClip != null ? legacyClip.objectReferenceValue as AudioClip : null;
+        var oldMovement = audioRoot.transform.Find("Movimiento_Robot");
+        if (!movement && oldMovement && oldMovement.TryGetComponent<AudioSource>(out var oldSource)) movement = oldSource.clip;
+        if (!movement) movement = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sonidos/pasosRobot.mp3");
+        ConfigureRobotAudio(movement, oldMovement ? oldMovement.GetComponent<AudioSource>() : null);
+        if (legacyClip != null) legacyClip.objectReferenceValue = null;
+        var legacySource = legacy.FindProperty("movimientoSource");
+        if (legacySource != null) legacySource.objectReferenceValue = null;
+        legacy.ApplyModifiedPropertiesWithoutUndo();
+        if (oldMovement) UnityEngine.Object.DestroyImmediate(oldMovement.gameObject);
+        Set(audio, "limpiezaSource", SoundSource(audioRoot.transform, "Limpieza_Bandejas", true, false));
+        var doorSource = SoundSource(audioRoot.transform, "Apertura_Camara_3D", false, true);
+        var keypad = generated.GetComponentInChildren<BOD_KeypadController>(true);
+        var door = (GameObject)typeof(BOD_KeypadController).GetField("chamberDoor", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(keypad);
+        doorSource.transform.position = door.transform.position;
+        Set(audio, "puertaSource", doorSource);
+        Set(audio, "feedbackSource", SoundSource(audioRoot.transform, "Sellos_Y_Teclado", false, false));
+        // Clips live in BOD_Audio only. AudioSources provide playback and volume controls.
+        ConfigureClip(audio, "limpiezaBandeja", "limpiar", audioRoot.transform.Find("Limpieza_Bandejas").GetComponent<AudioSource>());
+        ConfigureClip(audio, "abrirCamara", "puertaCongelador", doorSource);
+        ConfigureClip(audio, "recogerSello", "cogerSello", null);
+        ConfigureClip(audio, "codigoErroneo", "accesoDenegado", null);
+        ConfigureClip(audio, "codigoCorrecto", "accesoPermitido", null);
+        foreach (var source in audioRoot.GetComponentsInChildren<AudioSource>(true))
+        {
+            source.clip = null;
+            source.playOnAwake = false;
+            EditorUtility.SetDirty(source);
+        }
+        Set(audio, "bandejas", generated.GetComponentsInChildren<BOD_Tray>(true));
+        Set(keypad, "audioFeedback", audio);
+        var seal = generated.transform.Find("BOD_PuntoRonda_Cruz").GetComponent<CORE_Dirt>();
+        var onCleaned = (UnityEvent)typeof(CORE_Dirt).GetField("onCleaned", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(seal);
+        bool connected = false;
+        for (int i = 0; i < onCleaned.GetPersistentEventCount(); i++)
+            if (onCleaned.GetPersistentTarget(i) == audio && onCleaned.GetPersistentMethodName(i) == nameof(BOD_Audio.PlayStampPickup)) connected = true;
+        if (!connected) UnityEventTools.AddPersistentListener(onCleaned, audio.PlayStampPickup);
+        EditorUtility.SetDirty(seal);
+        // Same optional collection event works for notes and ordinary collectibles.
+        foreach (var note in generated.GetComponentsInChildren<BOD_NotePlate>(true))
+            ConnectPickupEvent(note, audio);
+        foreach (var collectible in generated.GetComponentsInChildren<CORE_Collectible>(true))
+        {
+            var data = new SerializedObject(collectible);
+            if (data.FindProperty("itemId").stringValue == "PiezaCalor") ConnectPickupEvent(collectible, audio);
+        }
+        var ambience = new System.Collections.Generic.List<AudioSource>();
+        foreach (var sceneRoot in scene.GetRootGameObjects())
+            foreach (var source in sceneRoot.GetComponentsInChildren<AudioSource>(true))
+                if (source.name == "vientoNivelBodega" || source.name == "ventilador")
+                {
+                    source.playOnAwake = false;
+                    source.loop = true;
+                    ambience.Add(source);
+                    EditorUtility.SetDirty(source);
+                }
+        Set(audio, "ambienteSources", ambience.ToArray());
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+        if (!alreadyLoaded) EditorSceneManager.CloseScene(scene, true);
+        Debug.Log("BOD_AUDIO_OK: cinco efectos locales; movimiento conectado al robot persistente de Inicio.");
+    }
+
+    private static void ConnectPickupEvent(UnityEngine.Object target, BOD_Audio audio)
+    {
+        var evt = (UnityEvent)target.GetType().GetField("onCollected", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(target);
+        for (int i = 0; i < evt.GetPersistentEventCount(); i++)
+            if (evt.GetPersistentTarget(i) == audio && evt.GetPersistentMethodName(i) == nameof(BOD_Audio.PlayPickup)) return;
+        UnityEventTools.AddPersistentListener(evt, audio.PlayPickup);
+        EditorUtility.SetDirty(target);
+    }
+
+    private static void ConfigureClip(BOD_Audio audio, string field, string filename, AudioSource fallback)
+    {
+        var so = new SerializedObject(audio);
+        var property = so.FindProperty(field);
+        if (!property.objectReferenceValue)
+            property.objectReferenceValue = fallback && fallback.clip ? fallback.clip
+                : AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sonidos/Bodega/" + filename + ".mp3");
+        so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    private static void ConfigureRobotAudio(AudioClip clip, AudioSource previousSource)
+    {
+        const string path = "Assets/Scenes/Inicio.unity";
+        var scene = SceneManager.GetSceneByPath(path);
+        bool loaded = scene.IsValid() && scene.isLoaded;
+        if (!loaded) scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
+        CORE_PlayerController player = null;
+        foreach (var root in scene.GetRootGameObjects())
+            foreach (var candidate in root.GetComponentsInChildren<CORE_PlayerController>(true))
+                if (candidate.GetComponent<PlayerPersistence>()) player = candidate;
+        if (!player) throw new InvalidOperationException("Robot persistente no encontrado en Inicio.");
+        var child = player.transform.Find("Audio_Movimiento");
+        var source = child ? child.GetComponent<AudioSource>() : null;
+        if (!source)
+        {
+            source = Empty("Audio_Movimiento", player.transform, Vector3.zero).AddComponent<AudioSource>();
+            if (previousSource) EditorUtility.CopySerialized(previousSource, source);
+            else source.volume = .45f;
+        }
+        source.playOnAwake = false;
+        source.loop = true;
+        source.spatialBlend = 0f;
+        source.dopplerLevel = 0f;
+        source.clip = null;
+        var so = new SerializedObject(player);
+        if (!so.FindProperty("movimientoRobot").objectReferenceValue)
+            so.FindProperty("movimientoRobot").objectReferenceValue = clip;
+        so.FindProperty("movimientoSource").objectReferenceValue = source;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        EditorUtility.SetDirty(source);
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+        if (!loaded) EditorSceneManager.CloseScene(scene, true);
+    }
+
+    private static AudioSource SoundSource(Transform parent, string name, bool loop, bool spatial)
+    {
+        var existing = parent.Find(name);
+        if (existing && existing.TryGetComponent<AudioSource>(out var retained)) return retained;
+        var source = Empty(name, parent, Vector3.zero).AddComponent<AudioSource>();
+        source.playOnAwake = false;
+        source.loop = loop;
+        source.spatialBlend = spatial ? 1f : 0f;
+        source.volume = loop ? .45f : .75f;
+        source.minDistance = 2f;
+        source.maxDistance = 25f;
+        source.dopplerLevel = 0f;
+        return source;
+    }
 }

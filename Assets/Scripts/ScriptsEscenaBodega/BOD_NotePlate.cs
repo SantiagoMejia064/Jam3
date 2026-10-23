@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>Reusable N4 plate interaction with a distinct first read and reread.</summary>
 [RequireComponent(typeof(Collider))]
@@ -9,6 +10,7 @@ public sealed class BOD_NotePlate : MonoBehaviour
     [TextArea, SerializeField] private string reread = "¿Por qué más grises junto al ducto?";
     [SerializeField, Range(0, NotebookController.NoteCount - 1)] private int notebookIndex = 3;
 
+    [SerializeField] private UnityEvent onCollected = new UnityEvent();
     private CORE_PlayerController player;
     private Collider triggerCollider;
 
@@ -55,6 +57,7 @@ public sealed class BOD_NotePlate : MonoBehaviour
             return;
         }
         notebook.CollectNote(notebookIndex, "Placa de la Bodega Fría", firstRead, reread);
+        onCollected?.Invoke();
         CORE_InteractionHUD.ClearPrompt(this);
         CORE_InteractionHUD.ShowMessage($"Nota N{notebookIndex + 1} añadida al Cuaderno [Tab].");
     }

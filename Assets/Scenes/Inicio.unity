@@ -923,7 +923,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text:
+  m_Text: 
 --- !u!222 &114910170
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1220,6 +1220,7 @@ MonoBehaviour:
   dustVisual: {fileID: 0}
   revealOnClean: {fileID: 2103804667}
   revealOnCleanExtra: {fileID: 0}
+  stampId: 
 --- !u!23 &147372051
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2586,7 +2587,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Inicio
   requiredItem: 
-  prompt: "E - Volver a Inicio"
+  ignoreRequirementForDebug: 0
+  prompt: E - Volver a Inicio
   lockedMessage: "Est\xE1 sellada."
   promptVisual: {fileID: 0}
 --- !u!23 &324513793
@@ -4362,7 +4364,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: SalaMaquinas
   requiredItem: 
-  prompt: "E - Entrar a Sala de Maquinas"
+  ignoreRequirementForDebug: 0
+  prompt: E - Entrar a Sala de Maquinas
   lockedMessage: "Est\xE1 sellada."
   promptVisual: {fileID: 0}
 --- !u!23 &516672822
@@ -4808,7 +4811,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text:
+  m_Text: 
 --- !u!1 &585027672
 GameObject:
   m_ObjectHideFlags: 0
@@ -5791,7 +5794,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Invernadero
   requiredItem: Cortador
-  prompt: "E - Entrar a Invernadero"
+  ignoreRequirementForDebug: 0
+  prompt: E - Entrar a Invernadero
   lockedMessage: "Est\xE1 sellada."
   promptVisual: {fileID: 0}
 --- !u!23 &694539194
@@ -6396,7 +6400,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 30
@@ -8288,6 +8292,7 @@ MonoBehaviour:
   dustVisual: {fileID: 1197263902}
   revealOnClean: {fileID: 2097081780}
   revealOnCleanExtra: {fileID: 2113606955}
+  stampId: 
 --- !u!23 &1015386896
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10916,6 +10921,54 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Sellos
       objectReference: {fileID: 0}
+    - target: {fileID: 736871152471759672, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4280031764
+      objectReference: {fileID: 0}
+    - target: {fileID: 736871152471759672, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 1310390133949310932, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4280031764
+      objectReference: {fileID: 0}
+    - target: {fileID: 1310390133949310932, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 1472920515641421450, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 3772733879146630278, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4280031764
+      objectReference: {fileID: 0}
+    - target: {fileID: 3772733879146630278, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815387814585586283, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4280031764
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815387814585586283, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497761510236661135, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 5023186359414721509, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4280031764
+      objectReference: {fileID: 0}
+    - target: {fileID: 5023186359414721509, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 8019850996971816586, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -10996,6 +11049,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9180394008129979842, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4280031764
+      objectReference: {fileID: 0}
+    - target: {fileID: 9180394008129979842, guid: 4e359ac70d819a34ab69b485ec880a8e, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11010,7 +11071,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &1444223482 stripped
 RectTransform:
@@ -11031,7 +11092,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!114 &1444223485 stripped
 MonoBehaviour:
@@ -11042,7 +11103,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &1444223486 stripped
 MonoBehaviour:
@@ -11053,7 +11114,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &1444223487 stripped
 MonoBehaviour:
@@ -11064,7 +11125,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1444223488 stripped
 GameObject:
@@ -11080,7 +11141,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &1457215525
 GameObject:
@@ -11328,6 +11389,7 @@ Transform:
   m_LocalScale: {x: 0.65, y: 0.8, z: 0.45}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2145000002}
   - {fileID: 1978767707}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11345,8 +11407,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_PlayerController
   moveSpeed: 8
   fixedZ: 0
-  moveSpeed: 8
-  fixedZ: 0
+  movimientoRobot: {fileID: 8300000, guid: 2ddf4c7947a27584b92e1c31aad487e1, type: 3}
+  movimientoSource: {fileID: 2145000003}
 --- !u!54 &1497516806
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13121,7 +13183,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Taller
   requiredItem: 
-  prompt: "E - Entrar a Taller"
+  ignoreRequirementForDebug: 0
+  prompt: E - Entrar a Taller
   lockedMessage: "Est\xE1 sellada."
   promptVisual: {fileID: 0}
 --- !u!23 &1834667358
@@ -15398,6 +15461,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_Collectible
   itemId: Pelota
   displayName: Pelota
+  onCollected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!23 &2113606958
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15588,6 +15654,135 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2135718411}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2145000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2145000002}
+  - component: {fileID: 2145000003}
+  m_Layer: 0
+  m_Name: Audio_Movimiento
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2145000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1497516804}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &2145000003
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145000001}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.45
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 2
+  MaxDistance: 25
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
