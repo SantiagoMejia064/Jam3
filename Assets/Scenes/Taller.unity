@@ -1220,6 +1220,7 @@ MonoBehaviour:
   dustVisual: {fileID: 0}
   revealOnClean: {fileID: 2103804667}
   revealOnCleanExtra: {fileID: 0}
+  stampId: 
 --- !u!23 &147372051
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2374,6 +2375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Inicio
   requiredItem: 
+  ignoreRequirementForDebug: 0
   prompt: E - Entrar
   lockedMessage: "Est\xE1 sellada."
   promptVisual: {fileID: 0}
@@ -3117,6 +3119,136 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 355518316}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &404241956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 404241960}
+  - component: {fileID: 404241959}
+  - component: {fileID: 404241958}
+  - component: {fileID: 404241957}
+  - component: {fileID: 404241961}
+  m_Layer: 0
+  m_Name: TAL_Cable
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &404241957
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404241956}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &404241958
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404241956}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &404241959
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404241956}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &404241960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404241956}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.63, y: 0.53, z: 0.07}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &404241961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404241956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f2e6707836ad04448b790b0a02fd45c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CORE_Collectible
+  itemId: Cable
+  displayName: Cable
+  onCollected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &404252910
 GameObject:
   m_ObjectHideFlags: 0
@@ -3645,6 +3777,115 @@ Material:
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
+--- !u!1001 &505030410
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1384262255713024651, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2042109475231066891, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4293979624
+      objectReference: {fileID: 0}
+    - target: {fileID: 2042109475231066891, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 3517988667966220482, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_Name
+      value: CORE_Inventario
+      objectReference: {fileID: 0}
+    - target: {fileID: 4688202815266933445, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4283611391
+      objectReference: {fileID: 0}
+    - target: {fileID: 4688202815266933445, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 4954914176950507459, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4293979624
+      objectReference: {fileID: 0}
+    - target: {fileID: 4954914176950507459, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758890326412778369, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7126773691519865407, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4290424990
+      objectReference: {fileID: 0}
+    - target: {fileID: 7126773691519865407, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 7210305710023576246, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4283611391
+      objectReference: {fileID: 0}
+    - target: {fileID: 7210305710023576246, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 9096873686057434957, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4283611391
+      objectReference: {fileID: 0}
+    - target: {fileID: 9096873686057434957, guid: a8502e11beb5b494081b285285924dfa, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a8502e11beb5b494081b285285924dfa, type: 3}
 --- !u!21 &507863846
 Material:
   serializedVersion: 8
@@ -3861,6 +4102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: SalaMaquinas
   requiredItem: 
+  ignoreRequirementForDebug: 0
   prompt: E - Entrar
   lockedMessage: "Est\xE1 sellada."
   promptVisual: {fileID: 0}
@@ -5168,6 +5410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Invernadero
   requiredItem: Cortador
+  ignoreRequirementForDebug: 0
   prompt: E - Usar cortador
   lockedMessage: "Est\xE1 sellada."
   promptVisual: {fileID: 0}
@@ -5549,7 +5792,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &724620180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5584,6 +5827,15 @@ MonoBehaviour:
   - {fileID: 1433425616}
   - {fileID: 1542265532}
   - {fileID: 410482958}
+  stampsButton: {fileID: 0}
+  stampsPanel: {fileID: 0}
+  stampSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  backToNotesButton: {fileID: 0}
+  stampNotification: {fileID: 0}
+  stampNotificationText: {fileID: 0}
 --- !u!114 &724620181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9475,6 +9727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Bodega
   requiredItem: Cortador
+  ignoreRequirementForDebug: 0
   prompt: E - Usar cortador
   lockedMessage: "Est\xE1 sellada."
   promptVisual: {fileID: 0}
@@ -10155,7 +10408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1497516804
 Transform:
   m_ObjectHideFlags: 0
@@ -10186,6 +10439,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_PlayerController
   moveSpeed: 8
   fixedZ: 0
+  movimientoRobot: {fileID: 0}
+  movimientoSource: {fileID: 0}
 --- !u!54 &1497516806
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11870,6 +12125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Taller
   requiredItem: 
+  ignoreRequirementForDebug: 0
   prompt: E - Entrar
   lockedMessage: "Est\xE1 sellada."
   promptVisual: {fileID: 0}
@@ -13531,7 +13787,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2064869416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14037,6 +14293,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_Collectible
   itemId: Pelota
   displayName: Pelota
+  onCollected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!23 &2113606958
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14240,3 +14499,5 @@ SceneRoots:
   - {fileID: 2064869420}
   - {fileID: 421056846}
   - {fileID: 724620184}
+  - {fileID: 505030410}
+  - {fileID: 404241960}
