@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>Hold E while near this marked dust patch to reveal its scene-authored reward.</summary>
@@ -15,6 +15,14 @@ public sealed class CORE_Dirt : MonoBehaviour
     [SerializeField] private GameObject revealOnCleanExtra;
     [SerializeField, Tooltip("Optional stamp flag; leave empty for ordinary dirt.")]
     private string stampId;
+    [SerializeField] private string cleanFlag;
+    [SerializeField, Tooltip("Optional story flag set when this patch is cleaned.")]
+    private string resultFlag;
+    [SerializeField, Range(-1, 9)] private int notebookIndex = -1;
+    [SerializeField] private string noteTitle;
+    [SerializeField, TextArea(1, 3)] private string noteContent;
+    [SerializeField, TextArea(1, 3)] private string noteRereading;
+    [SerializeField] private bool rollRevealedBall;
     private CORE_PlayerController player;
     private Collider triggerCollider;
     private float progress;
@@ -22,9 +30,8 @@ public sealed class CORE_Dirt : MonoBehaviour
     private void Awake() { triggerCollider = GetComponent<Collider>(); }
     private void Start()
     {
-        if (!CORE_GameState.IsStamp(stampId)) return;
-        cleaned = CORE_GameState.HasStamp(stampId);
-        ApplyStampVisuals();
+        cleaned = (!string.IsNullOrEmpty(cleanFlag) && SAL_Progress.HasFlag(cleanFlag)) || CORE_GameState.HasStamp(stampId);
+        if (cleaned) ApplyStampVisuals();
     }
     private void ApplyStampVisuals()
     {
@@ -53,15 +60,24 @@ public sealed class CORE_Dirt : MonoBehaviour
             cleaned=true;
             onCleaned?.Invoke();
             if(revealOnClean) revealOnClean.SetActive(true);
-            if(revealOnCleanExtra) revealOnCleanExtra.SetActive(true);
+            if(revealOnCleanExtra)
+            {
+                revealOnCleanExtra.SetActive(true);
+                if (rollRevealedBall && revealOnCleanExtra.TryGetComponent(out Rigidbody ballBody))
+                    ballBody.AddForce(Vector3.right * 0.6f, ForceMode.Impulse);
+            }
             if(dustVisual) dustVisual.SetActive(false); else gameObject.SetActive(false);
             CORE_InteractionHUD.ClearPrompt(this);
+            if (notebookIndex >= 0 && NotebookController.Instance)
+                NotebookController.Instance.CollectNote(notebookIndex, noteTitle, noteContent, noteRereading);
+            if (!string.IsNullOrEmpty(cleanFlag)) SAL_Progress.SetFlag(cleanFlag);
+            if (!string.IsNullOrEmpty(resultFlag)) SAL_Progress.SetFlag(resultFlag);
             if (CORE_GameState.IsStamp(stampId))
             {
                 CORE_GameState.RegisterStamp(stampId);
                 ApplyStampVisuals();
             }
-            else CORE_InteractionHUD.ShowMessage("Acción completada.");
+            CORE_InteractionHUD.ShowMessage(completedMessage);
         }
     }
 
@@ -71,3 +87,6 @@ public sealed class CORE_Dirt : MonoBehaviour
         return triggerCollider && playerCollider && triggerCollider.bounds.Intersects(playerCollider.bounds);
     }
 }
+
+
+

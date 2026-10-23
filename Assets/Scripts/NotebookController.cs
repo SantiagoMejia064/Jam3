@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
@@ -19,15 +19,19 @@ public sealed class NotebookController : MonoBehaviour
     [SerializeField] private Button backToNotesButton;
     [SerializeField] private GameObject stampNotification;
     [SerializeField] private TMP_Text stampNotificationText;
+    [Header("UI authored in the scene")]
+    [SerializeField] private GameObject notebookPanel;
+    [SerializeField] private RectTransform pageArea;
+    [SerializeField] private Button openButton;
+    [SerializeField] private Button closeButton;
+    [SerializeField] private Text preview;
+    [SerializeField] private Text heading;
     private bool showingStamps;
     private float notificationUntil;
     private readonly bool[] unlockedNotes = new bool[NoteCount];
     private readonly string[] titles = new string[NoteCount];
     private readonly string[] contents = new string[NoteCount];
     private readonly string[] rereadings = new string[NoteCount];
-    private GameObject notebookPanel;
-    private Text preview;
-    private Text heading;
     private int selectedPage = -1;
     private bool reading;
     public bool IsOpen => notebookPanel && notebookPanel.activeSelf;
@@ -42,7 +46,7 @@ public sealed class NotebookController : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        BuildPanel();
+        BindSceneUi();
         SAL_Progress.FlagChanged += OnProgressChanged;
         Refresh();
     }
@@ -173,11 +177,11 @@ public sealed class NotebookController : MonoBehaviour
             : body + "\n\nRelectura\n" + rereadings[index];
     }
 
-    // Reuses the existing Canvas, page objects and index buttons. Only notebook UI is authored here.
-    private void BuildPanel()
+    // All interface objects are authored in the scene; runtime only wires existing controls.
+    private void BindSceneUi()
     {
         var canvas = GetComponent<Canvas>();
-        if (!canvas) return;
+        if (!canvas || !notebookPanel || !pageArea || !preview || !heading) return;
         canvas.sortingOrder = 30;
         var scaler = GetComponent<CanvasScaler>();
         if (scaler)
@@ -186,109 +190,29 @@ public sealed class NotebookController : MonoBehaviour
             scaler.referenceResolution = new Vector2(1920, 1080);
             scaler.matchWidthOrHeight = .5f;
         }
-        notebookPanel = new GameObject("Panel_Cuaderno", typeof(RectTransform), typeof(Image));
-        notebookPanel.transform.SetParent(transform, false);
-        Place((RectTransform)notebookPanel.transform, new Vector2(1120, 720), Vector2.zero);
-        notebookPanel.GetComponent<Image>().color = new Color(.035f, .075f, .10f, .99f);
-        heading = Label("Titulo", notebookPanel.transform, new Vector2(960, 56), new Vector2(-25, 308), "CUADERNO", 26);
-        Label("Ayuda", notebookPanel.transform, new Vector2(1000, 42), new Vector2(0, -320),
-            "Primer clic: abrir página · Segundo clic: leer · Tab / Esc: cerrar", 18);
-        var close = MakeButton("Cerrar", notebookPanel.transform, new Vector2(84, 40), new Vector2(490, 310), "Cerrar");
-        close.onClick.AddListener(CloseNotebook);
-        var pageArea = new GameObject("AreaLectura", typeof(RectTransform), typeof(Image));
-        pageArea.transform.SetParent(notebookPanel.transform, false);
-        Place((RectTransform)pageArea.transform, new Vector2(730, 540), new Vector2(165, -5));
-        pageArea.GetComponent<Image>().color = new Color(.90f, .87f, .75f);
-        preview = Label("PaginaCerrada", pageArea.transform, new Vector2(650, 460), Vector2.zero, "", 24);
-        preview.color = new Color(.08f, .10f, .11f);
-        preview.alignment = TextAnchor.MiddleCenter;
-        if (stampsPanel)
-        {
-            stampsPanel.transform.SetParent(pageArea.transform, false);
-            Place((RectTransform)stampsPanel.transform, new Vector2(730, 540), Vector2.zero);
-        }
-        if (stampsButton)
-        {
-            stampsButton.transform.SetParent(notebookPanel.transform, false);
-            Place(stampsButton.GetComponent<RectTransform>(), new Vector2(300, 45), new Vector2(-375, -270));
-            stampsButton.onClick.AddListener(ShowStamps);
-        }
+        if (stampsButton) stampsButton.onClick.AddListener(ShowStamps);
         if (backToNotesButton) backToNotesButton.onClick.AddListener(ShowNotes);
-        if (stampNotification) stampNotification.SetActive(false);
+        if (closeButton) closeButton.onClick.AddListener(CloseNotebook);
+        if (openButton) openButton.onClick.AddListener(ToggleNotebook);
+
         for (int i = 0; i < NoteCount; i++)
         {
             titles[i] = $"Nota {i + 1}";
             if (pages != null && i < pages.Length && pages[i])
             {
-                var page = pages[i];
-                var text = page.GetComponentInChildren<Text>(true);
-                if (text) contents[i] = text.text;
-                page.transform.SetParent(pageArea.transform, false);
-                var rect = page.GetComponent<RectTransform>();
-                if (rect) { rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.offsetMin = rect.offsetMax = Vector2.zero; }
-                if (text)
-                {
-                    text.fontSize = 25;
-                    text.horizontalOverflow = HorizontalWrapMode.Wrap;
-                    text.verticalOverflow = VerticalWrapMode.Truncate;
-                    text.resizeTextForBestFit = true;
-                    text.resizeTextMinSize = 16;
-                    text.resizeTextMaxSize = 25;
-                }
+                GameObject page = pages[i];
+                Text body = page.GetComponentInChildren<Text>(true);
+                if (body) contents[i] = body.text;
             }
             if (pageButtons == null || i >= pageButtons.Length || !pageButtons[i]) continue;
-            var button = pageButtons[i];
-            button.transform.SetParent(notebookPanel.transform, false);
-            Place(button.GetComponent<RectTransform>(), new Vector2(300, 45), new Vector2(-375, 240 - i * 51));
-            // Editor-time AddListener calls are not serialized. Bind each page on the live instance.
+            Button button = pageButtons[i];
             button.onClick = new Button.ButtonClickedEvent();
             int index = i;
             button.onClick.AddListener(() => ShowPage(index));
-            var label = button.GetComponentInChildren<Text>(true);
-            if (label) label.fontSize = 18;
         }
-        var open = MakeButton("Abrir_Cuaderno", transform, new Vector2(210, 44), Vector2.zero, "Cuaderno [Tab]");
-        var openRect = open.GetComponent<RectTransform>();
-        openRect.anchorMin = openRect.anchorMax = openRect.pivot = Vector2.one;
-        openRect.anchoredPosition = new Vector2(-24, -24);
-        open.onClick.AddListener(ToggleNotebook);
+        if (stampNotification) stampNotification.SetActive(false);
         notebookPanel.SetActive(false);
     }
-
-    private static void Place(RectTransform rect, Vector2 size, Vector2 position)
-    {
-        rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(.5f, .5f);
-        rect.localScale = Vector3.one;
-        rect.sizeDelta = size;
-        rect.anchoredPosition = position;
-    }
-
-    private static Text Label(string name, Transform parent, Vector2 size, Vector2 position, string value, int fontSize)
-    {
-        var go = new GameObject(name, typeof(RectTransform), typeof(Text));
-        go.transform.SetParent(parent, false);
-        Place((RectTransform)go.transform, size, position);
-        var label = go.GetComponent<Text>();
-        label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        label.fontSize = fontSize;
-        label.color = Color.white;
-        label.text = value;
-        label.alignment = TextAnchor.MiddleLeft;
-        label.raycastTarget = false;
-        return label;
-    }
-
-    private static Button MakeButton(string name, Transform parent, Vector2 size, Vector2 position, string caption)
-    {
-        var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
-        go.transform.SetParent(parent, false);
-        Place((RectTransform)go.transform, size, position);
-        go.GetComponent<Image>().color = new Color(.12f, .27f, .33f);
-        var text = Label("Texto", go.transform, size, Vector2.zero, caption, 18);
-        text.alignment = TextAnchor.MiddleCenter;
-        return go.GetComponent<Button>();
-    }
-
     private static bool IsValidIndex(int index) => index >= 0 && index < NoteCount;
 
 #if UNITY_EDITOR
@@ -297,5 +221,18 @@ public sealed class NotebookController : MonoBehaviour
         pages = configuredPages;
         pageButtons = configuredButtons;
     }
+
+    public void ConfigureSceneUi(GameObject panel, RectTransform area, Button open, Button close, Text previewText, Text headingText)
+    {
+        notebookPanel = panel;
+        pageArea = area;
+        openButton = open;
+        closeButton = close;
+        preview = previewText;
+        heading = headingText;
+        UnityEditor.EditorUtility.SetDirty(this);
+    }
 #endif
 }
+
+

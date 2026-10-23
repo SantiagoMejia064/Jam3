@@ -8,6 +8,10 @@ public sealed class CORE_Collectible : MonoBehaviour
     private CORE_PlayerController player;
     private Collider triggerCollider;
     private void Awake() { triggerCollider = GetComponent<Collider>(); }
+    private void Start()
+    {
+        if (!string.IsNullOrEmpty(itemId) && CORE_InventoryBridge.HasItem(itemId)) gameObject.SetActive(false);
+    }
     private void Reset() { GetComponent<Collider>().isTrigger=true; }
     private void OnTriggerEnter(Collider other) { if(other.TryGetComponent(out CORE_PlayerController p)) { player=p; CORE_InteractionHUD.SetPrompt(this,"E · Recoger " + displayName); } }
     private void OnTriggerExit(Collider other) { if(other.GetComponent<CORE_PlayerController>()) { player=null; CORE_InteractionHUD.ClearPrompt(this); } }

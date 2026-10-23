@@ -45,7 +45,9 @@ public sealed class SAL_AudioDirector : MonoBehaviour
 
     public void PlayLog(string id) => PlayLog(id, false);
 
-    public void PlayLog(string id, bool complete)
+    public void PlayLog(string id, bool complete) => PlayLog(id, complete, 5f);
+
+    public void PlayLog(string id, bool complete, float subtitleSeconds)
     {
         if (logs == null) return;
         foreach (SAL_AudioLogData log in logs)
@@ -58,7 +60,7 @@ public sealed class SAL_AudioDirector : MonoBehaviour
                 voiceSource.Stop();
                 if (clip) { voiceSource.clip = clip; voiceSource.Play(); }
             }
-            ShowSubtitle(text, clip ? Mathf.Max(3f, clip.length) : 5f);
+            ShowSubtitle(text, clip ? Mathf.Max(3f, clip.length) : Mathf.Max(0.1f, subtitleSeconds));
             return;
         }
     }
