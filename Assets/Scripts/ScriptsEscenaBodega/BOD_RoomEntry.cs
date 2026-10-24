@@ -30,6 +30,8 @@ public sealed class BOD_RoomEntry : MonoBehaviour
         FollowBody();
         foreach (var follow in FindObjectsByType<CORE_CameraFollow>(FindObjectsSortMode.None))
             if (cameraTarget) follow.SetTarget(cameraTarget);
+        foreach (var framing in FindObjectsByType<BOD_CameraFraming>(FindObjectsSortMode.None))
+            if (cameraTarget) framing.SetTarget(cameraTarget);
     }
 
     private void Update() => FollowBody();
