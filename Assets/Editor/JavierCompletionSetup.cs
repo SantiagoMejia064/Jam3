@@ -51,6 +51,15 @@ public static class JavierCompletionSetup
         Scene javier = SceneManager.GetSceneByPath(JavierPath);
         if (!javier.IsValid() || !javier.isLoaded) javier = EditorSceneManager.OpenScene(JavierPath, OpenSceneMode.Additive);
 
+        // The merged Javier scene already contains authored Persona 1 objects. Never replace it
+        // with Inicio on a fresh editor install; only migrate the older, unconfigured copy.
+        if (FindNamed(javier, "LAB_Pantalla_Borron") || FindNamed(javier, "LAB_Esclusa_Palanca_Base"))
+        {
+            SceneManager.SetActiveScene(javier);
+            if (closeInicio) EditorSceneManager.CloseScene(inicio, true);
+            return;
+        }
+
         foreach (GameObject root in javier.GetRootGameObjects()) Object.DestroyImmediate(root);
         foreach (GameObject root in inicio.GetRootGameObjects())
         {
@@ -183,9 +192,16 @@ public static class JavierCompletionSetup
 
     private static void ConfigureScreenAndDust(Scene scene)
     {
-        CORE_Interactable screen = FindNamedComponent<CORE_Interactable>(scene, "LAB_Pantalla_Muelle");
+        GameObject screenObject = FindNamed(scene, "LAB_Pantalla_Muelle");
+        CORE_Interactable screen = screenObject ? screenObject.GetComponent<CORE_Interactable>() : null;
+        if (screenObject && !screen) screen = screenObject.AddComponent<CORE_Interactable>();
         if (screen)
         {
+            BoxCollider screenTrigger = screenObject.GetComponent<BoxCollider>();
+            if (!screenTrigger) screenTrigger = screenObject.AddComponent<BoxCollider>();
+            screenTrigger.isTrigger = true;
+            screenTrigger.center = new Vector3(0f, -1.2f, 0f);
+            screenTrigger.size = new Vector3(2.4f, 2.8f, .6f);
             Set(screen, "prompt", "E · Releer A1");
             Set(screen, "responseMessage", "Formateo completado. Motivo: desobediencia.");
             Set(screen, "audioLogId", "A1");

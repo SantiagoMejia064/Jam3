@@ -9,6 +9,7 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
     [SerializeField] private string destinationScene;
     [SerializeField] private string requiredItem;
     [SerializeField] private string additionalRequiredItem;
+    [SerializeField] private bool requireSelectedItem;
     [SerializeField] private string requiredFlag;
     [SerializeField] private string missingFlagMessage;
     [SerializeField] private string prompt = "E · Entrar";
@@ -25,20 +26,23 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
 
     private void Awake() { triggerCollider = GetComponent<Collider>(); }
     private void Reset() { GetComponent<Collider>().isTrigger = true; }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (isActiveAndEnabled && other.TryGetComponent(out CORE_PlayerController p))
+        if (isActiveAndEnabled && other.TryGetComponent(out CORE_PlayerController foundPlayer))
         {
-            player = p;
+            player = foundPlayer;
             CORE_InteractionHUD.SetPrompt(this, prompt);
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (!other.GetComponent<CORE_PlayerController>()) return;
         player = null;
         CORE_InteractionHUD.ClearPrompt(this);
     }
+
     private void OnDisable()
     {
         player = null;
@@ -57,6 +61,11 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
         if (!string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem))
         {
             CORE_InteractionHUD.ShowMessage(lockedMessage);
+            return;
+        }
+        if (requireSelectedItem && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.IsSelected(requiredItem))
+        {
+            CORE_InteractionHUD.ShowMessage("Selecciona " + requiredItem + " en el inventario.");
             return;
         }
         if (!string.IsNullOrEmpty(additionalRequiredItem) && !CORE_InventoryBridge.HasItem(additionalRequiredItem))
