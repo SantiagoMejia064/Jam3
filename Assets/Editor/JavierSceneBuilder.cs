@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -165,28 +165,4 @@ public static class JavierSceneBuilder
     }
 }
 
-/// <summary>Completes the requested one-time scene setup when the project Editor imports these scripts.</summary>
-[InitializeOnLoad]
-internal static class JavierSceneSetup
-{
-    private const string DoneKey="Jam3.JavierSceneBuilt.v1";
-    static JavierSceneSetup()
-    {
-        EditorSceneManager.sceneOpened += OnSceneOpened;
-        EditorApplication.delayCall += BuildIfRequestedSceneIsAlreadyOpen;
-    }
-    private static void BuildIfRequestedSceneIsAlreadyOpen()
-    {
-        if(!EditorPrefs.GetBool(DoneKey,false) && SceneManager.GetActiveScene().name=="Javier") BuildOnce();
-    }
-    private static void OnSceneOpened(Scene scene,OpenSceneMode mode)
-    {
-        if(!EditorPrefs.GetBool(DoneKey,false) && scene.name=="Javier") EditorApplication.delayCall += BuildOnce;
-    }
-    private static void BuildOnce()
-    {
-        if(EditorPrefs.GetBool(DoneKey,false)) return;
-        EditorPrefs.SetBool(DoneKey,true);
-        JavierSceneBuilder.Build();
-    }
-}
+

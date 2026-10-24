@@ -1,40 +1,108 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>Scene-authored doorway. Assign destination scene and optional required item key in Inspector.</summary>
+/// <summary>Scene-authored doorway with optional inventory and story-state requirements.</summary>
 [RequireComponent(typeof(Collider))]
 public sealed class CORE_ZoneDoor : MonoBehaviour
 {
     [SerializeField] private string destinationScene;
     [SerializeField] private string requiredItem;
-    [SerializeField, Tooltip("Temporary: lets this door open without its required item.")]
-    private bool ignoreRequirementForDebug;
+    [SerializeField] private string additionalRequiredItem;
+    [SerializeField] private bool requireSelectedItem;
+    [SerializeField] private string requiredFlag;
+    [SerializeField] private string missingFlagMessage;
     [SerializeField] private string prompt = "E · Entrar";
     [SerializeField] private string lockedMessage = "Está sellada.";
+    [SerializeField] private string openMessage;
+    [SerializeField] private string alternateOpenMessage;
+    [SerializeField] private string revealFlag;
+    [SerializeField, Min(0f)] private float openMessageSeconds = 2f;
     [SerializeField] private GameObject promptVisual;
+
     private CORE_PlayerController player;
     private Collider triggerCollider;
+    private bool loadingScene;
+
     private void Awake() { triggerCollider = GetComponent<Collider>(); }
-    private void Reset() { GetComponent<Collider>().isTrigger=true; }
-    private void OnTriggerEnter(Collider other) { if(isActiveAndEnabled && other.TryGetComponent(out CORE_PlayerController p)) { player=p; CORE_InteractionHUD.SetPrompt(this,prompt); } }
-    private void OnTriggerExit(Collider other) { if(other.GetComponent<CORE_PlayerController>()) { player=null; CORE_InteractionHUD.ClearPrompt(this); } }
-    private void OnDisable() { player = null; CORE_InteractionHUD.ClearPrompt(this); }
+    private void Reset() { GetComponent<Collider>().isTrigger = true; }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (isActiveAndEnabled && other.TryGetComponent(out CORE_PlayerController foundPlayer))
+        {
+            player = foundPlayer;
+            CORE_InteractionHUD.SetPrompt(this, prompt);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.GetComponent<CORE_PlayerController>()) return;
+        player = null;
+        CORE_InteractionHUD.ClearPrompt(this);
+    }
+
+    private void OnDisable()
+    {
+        player = null;
+        CORE_InteractionHUD.ClearPrompt(this);
+    }
+
     private void Update()
     {
-        if(!PlayerIsInRange())
+        if (!PlayerIsInRange())
         {
             if (player) CORE_InteractionHUD.ClearPrompt(this);
             player = null;
             return;
         }
-        if(!player.InteractPressed) return;
-        if(!ignoreRequirementForDebug && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem)) { CORE_InteractionHUD.ShowMessage(lockedMessage); return; }
-        if(!string.IsNullOrEmpty(destinationScene) && Application.CanStreamedLevelBeLoaded(destinationScene))
+        if (!player.InteractPressed || loadingScene) return;
+        if (!string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem))
         {
-            if (GameSceneManager.Instance != null) GameSceneManager.Instance.LoadSceneByName(destinationScene);
-            else SceneManager.LoadScene(destinationScene);
+            CORE_InteractionHUD.ShowMessage(lockedMessage);
+            return;
         }
-        else CORE_InteractionHUD.ShowMessage("Esta zona todavía no está disponible.");
+        if (requireSelectedItem && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.IsSelected(requiredItem))
+        {
+            CORE_InteractionHUD.ShowMessage("Selecciona " + requiredItem + " en el inventario.");
+            return;
+        }
+        if (!string.IsNullOrEmpty(additionalRequiredItem) && !CORE_InventoryBridge.HasItem(additionalRequiredItem))
+        {
+            CORE_InteractionHUD.ShowMessage(lockedMessage);
+            return;
+        }
+        if (!string.IsNullOrEmpty(requiredFlag) && !SAL_Progress.HasFlag(requiredFlag))
+        {
+            CORE_InteractionHUD.ShowMessage(string.IsNullOrEmpty(missingFlagMessage) ? lockedMessage : missingFlagMessage);
+            return;
+        }
+        if (string.IsNullOrEmpty(destinationScene) || !Application.CanStreamedLevelBeLoaded(destinationScene))
+        {
+            CORE_InteractionHUD.ShowMessage("Esta zona todavía no está disponible.");
+            return;
+        }
+
+        string message = !string.IsNullOrEmpty(revealFlag) && SAL_Progress.HasFlag(revealFlag) && !string.IsNullOrEmpty(alternateOpenMessage)
+            ? alternateOpenMessage
+            : openMessage;
+        if (!string.IsNullOrEmpty(message)) CORE_InteractionHUD.ShowMessage(message, openMessageSeconds);
+        if (openMessageSeconds > 0f && !string.IsNullOrEmpty(message)) StartCoroutine(LoadAfterMessage());
+        else LoadDestination();
+    }
+
+    private IEnumerator LoadAfterMessage()
+    {
+        loadingScene = true;
+        yield return new WaitForSecondsRealtime(openMessageSeconds);
+        LoadDestination();
+    }
+
+    private void LoadDestination()
+    {
+        if (GameSceneManager.Instance != null) GameSceneManager.Instance.LoadSceneByName(destinationScene);
+        else SceneManager.LoadScene(destinationScene);
     }
 
     private bool PlayerIsInRange()

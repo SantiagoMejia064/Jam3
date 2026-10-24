@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-/// <summary>Runtime progress for SAL. Other zones can use SetFlag/SetAct until CORE_GameState exists.</summary>
+/// <summary>Shared in-session story flags and progress used by SAL and the other authored zones.</summary>
 public static class SAL_Progress
 {
     public const string DrawingsFound = "SAL_DibujosEncontrados";
@@ -15,6 +15,8 @@ public static class SAL_Progress
     public const string PanelSolved = "SAL_PanelResuelto";
     public const string SeedObtained = "SemillaObtenida";
     public const string Revealed = "Revelado";
+    public const string FinalAvailable = "FinalDisponible";
+    public const string FinalComplete = "FinalCompleto";
 
     private static readonly HashSet<string> Flags = new HashSet<string>();
     public static event Action<string, bool> FlagChanged;
@@ -38,6 +40,9 @@ public static class SAL_Progress
         bool changed = value ? Flags.Add(id) : Flags.Remove(id);
         if (changed) FlagChanged?.Invoke(id, value);
     }
+
+    /// <summary>Call when the final sequence's requirements are fulfilled to enable Javier's airlock lever.</summary>
+    public static void UnlockFinal() => SetFlag(FinalAvailable);
 
     public static void SetAct(int act)
     {
