@@ -9,6 +9,7 @@ public sealed class SAL_InteractionDriver : MonoBehaviour
     private float holdProgress;
     private float readyAt;
     private SAL_Interactable previous;
+    private bool waitingForRelease = true;
 
     public SAL_Interactable Target { get; private set; }
     public float HoldProgress => holdProgress;
@@ -27,13 +28,25 @@ public sealed class SAL_InteractionDriver : MonoBehaviour
 
     private void Update()
     {
+        if (NotebookController.Instance && NotebookController.Instance.IsOpen)
+        {
+            Target = null; previous = null; holdProgress = 0;
+            return;
+        }
         if (!player || !room || targets == null || Time.time < readyAt) return;
+        if (waitingForRelease)
+        {
+            if (!player.InteractHeld) waitingForRelease = false;
+            return;
+        }
         SAL_Interactable closest = null;
         float distance = float.MaxValue;
         foreach (SAL_Interactable candidate in targets)
         {
             if (!room.IsAvailable(candidate)) continue;
-            float dx = Mathf.Abs(candidate.transform.position.x - player.transform.position.x);
+            var body = player.GetComponent<Collider>();
+            float playerX = body ? body.bounds.center.x : player.transform.position.x;
+            float dx = Mathf.Abs(candidate.transform.position.x - playerX);
             if (dx <= candidate.reach && dx < distance) { closest = candidate; distance = dx; }
         }
         Target = closest;

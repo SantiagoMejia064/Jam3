@@ -480,14 +480,14 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 23
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_BestFit: 1
+    m_MinSize: 18
+    m_MaxSize: 23
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 1
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
 --- !u!222 &114910170
@@ -512,10 +512,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 303333420}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.76}
-  m_AnchorMax: {x: 1, y: 0.89}
-  m_AnchoredPosition: {x: 0, y: -4}
-  m_SizeDelta: {x: -44, y: -10}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0.6}
+  m_AnchoredPosition: {x: 0, y: 4}
+  m_SizeDelta: {x: -44, y: -12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!21 &195268263
 Material:
@@ -828,11 +828,11 @@ RectTransform:
   - {fileID: 114910171}
   m_Father: {fileID: 2064869420}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 42}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -42}
   m_SizeDelta: {x: 820, y: 132}
-  m_Pivot: {x: 0.5, y: 0}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &303333421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1255,11 +1255,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbb0b821eb68d8d44a84153e6f4e58c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameSceneManager
-  inicioScene: Inicio
-  tallerScene: 
-  salaMaquinasScene: 
-  bodegaFriaScene: 
-  invernaderoScene: 
+  inicioScene: Javier
+  tallerScene: Taller
+  salaMaquinasScene: SAL
+  bodegaFriaScene: Bodega
+  invernaderoScene: Invernadero
 --- !u!4 &421056846
 Transform:
   m_ObjectHideFlags: 0
@@ -1668,10 +1668,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 303333420}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.9}
+  m_AnchorMin: {x: 0, y: 0.6}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -8}
-  m_SizeDelta: {x: -44, y: -10}
+  m_AnchoredPosition: {x: 0, y: -4}
+  m_SizeDelta: {x: -44, y: -8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &573347205
 CanvasRenderer:
@@ -1703,16 +1703,16 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_FontSize: 28
     m_FontStyle: 1
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_BestFit: 1
+    m_MinSize: 22
+    m_MaxSize: 28
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 1
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
 --- !u!21 &592182434
@@ -2348,6 +2348,7 @@ RectTransform:
   - {fileID: 1077328905}
   - {fileID: 817613771}
   - {fileID: 1444223482}
+  - {fileID: 1577835511}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2370,7 +2371,7 @@ GameObject:
   - component: {fileID: 733141585}
   m_Layer: 0
   m_Name: SAL_Camara_2_5D
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4344,6 +4345,100 @@ RectTransform:
   m_AnchoredPosition: {x: 24, y: -24}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 1}
+--- !u!1 &1442191094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1442191097}
+  - component: {fileID: 1442191096}
+  - component: {fileID: 1442191095}
+  m_Layer: 0
+  m_Name: BOD_InspeccionDucto
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1442191095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442191094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b99fa2fc67333d44ab4bc7ac9cb75063, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CORE_Interactable
+  prompt: "E \xB7 Mirar el ducto"
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  requiredItem: 
+  resultItem: 
+  lockedMessage: "No sirve aqu\xED."
+  responseMessage: Hay una mancha junto al ducto.
+  secondResponseMessage: 
+  alternateResponseMessage: La mancha se extiende desde la rejilla.
+  revealFlag: Revelado
+  messageSeconds: 3.5
+  audioLogId: 
+  playOnStart: 0
+  playAudioOnApproach: 0
+  playOnStartOnceFlag: 
+  requiredFlag: 
+  resultFlag: 
+  triggerOnApproach: 0
+  responseAudio: {fileID: 0}
+  requireSelectedItem: 0
+  notebookIndex: -1
+  notebookTitle: 
+  notebookContent: 
+  notebookRereading: 
+  successVisualsToHide: []
+  promptVisual: {fileID: 0}
+  oneShot: 0
+--- !u!65 &1442191096
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442191094}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.7, y: 2, z: 1.5}
+  m_Center: {x: 0, y: 1.1, z: 0}
+--- !u!4 &1442191097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442191094}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1444223480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5089,6 +5184,108 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547443063}
   m_CullTransparentMesh: 1
+--- !u!1001 &1577835510
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 724620184}
+    m_Modifications:
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 95
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 245
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1480565287187397893, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+      propertyPath: m_Name
+      value: SubtitulosHUD
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+--- !u!224 &1577835511 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1383380652638369221, guid: 69d2cf35de1cae04b955272615309698, type: 3}
+  m_PrefabInstance: {fileID: 1577835510}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1580578633
 GameObject:
   m_ObjectHideFlags: 0
@@ -5869,18 +6066,18 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 23
+    m_FontSize: 24
     m_FontStyle: 1
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_BestFit: 1
+    m_MinSize: 20
+    m_MaxSize: 24
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: A / D  -  MOVER       E  -  INTERACTUAR
+  m_Text: "A/D \xB7 Mover     E \xB7 Interactuar"
 --- !u!222 &2006028764
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6004,7 +6201,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 28, y: -28}
-  m_SizeDelta: {x: 510, y: 64}
+  m_SizeDelta: {x: 440, y: 54}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2017604227
 MonoBehaviour:
@@ -6496,6 +6693,7 @@ MonoBehaviour:
   dirtVisual: {fileID: 3200000446}
   numberVisual: {fileID: 3200000318}
   cleanSeconds: 1
+  cleanFlag: BOD_Bandeja_4_Clara_Limpia
 --- !u!65 &3200000005
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8727,13 +8925,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Javier
-  requiredItem: PiezaCalor
+  requiredItem: 
   ignoreRequirementForDebug: 0
+  openedFlag: 
   additionalRequiredItem: 
   requireSelectedItem: 0
   requiredFlag: 
   missingFlagMessage: 
-  prompt: "E \xB7 Volver al Pasillo (requiere Pieza Calor)"
+  prompt: "E \xB7 Volver al Pasillo"
   lockedMessage: "Est\xE1 sellada."
   openMessage: 
   alternateOpenMessage: 
@@ -8791,6 +8990,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
   sceneName: Bodega
+  entryFromScene: 
 --- !u!4 &3200000146
 Transform:
   m_ObjectHideFlags: 0
@@ -10507,6 +10707,7 @@ MonoBehaviour:
   dirtVisual: {fileID: 3200000391}
   numberVisual: {fileID: 3200000025}
   cleanSeconds: 1
+  cleanFlag: BOD_Bandeja_9_Gris3_Limpia
 --- !u!65 &3200000261
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11404,6 +11605,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3200000333}
+  - component: {fileID: 3200000335}
+  - component: {fileID: 3200000334}
   m_Layer: 0
   m_Name: BOD_BaldeHerbicida
   m_TagString: Untagged
@@ -11428,6 +11631,67 @@ Transform:
   - {fileID: 3200001250}
   m_Father: {fileID: 3200000549}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3200000334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3200000332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b99fa2fc67333d44ab4bc7ac9cb75063, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CORE_Interactable
+  prompt: "E \xB7 Mirar herbicida"
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  requiredItem: 
+  resultItem: 
+  lockedMessage: "No sirve aqu\xED."
+  responseMessage: "Vega debi\xF3 usar este herbicida."
+  secondResponseMessage: 
+  alternateResponseMessage: "La etiqueta dice: Desinfecci\xF3n de emergencia."
+  revealFlag: Revelado
+  messageSeconds: 3.5
+  audioLogId: 
+  playOnStart: 0
+  playAudioOnApproach: 0
+  playOnStartOnceFlag: 
+  requiredFlag: 
+  resultFlag: 
+  triggerOnApproach: 0
+  responseAudio: {fileID: 0}
+  requireSelectedItem: 0
+  notebookIndex: -1
+  notebookTitle: 
+  notebookContent: 
+  notebookRereading: 
+  successVisualsToHide: []
+  promptVisual: {fileID: 0}
+  oneShot: 0
+--- !u!65 &3200000335
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3200000332}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.7, y: 2, z: 1.5}
+  m_Center: {x: 0, y: 0.6, z: -0.8}
 --- !u!1 &3200000338
 GameObject:
   m_ObjectHideFlags: 0
@@ -12356,6 +12620,7 @@ MonoBehaviour:
   dirtVisual: {fileID: 3200000203}
   numberVisual: {fileID: 3200000067}
   cleanSeconds: 1
+  cleanFlag: BOD_Bandeja_7_Oscura_Limpia
 --- !u!65 &3200000402
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14061,6 +14326,7 @@ MonoBehaviour:
   dirtVisual: {fileID: 3200000499}
   numberVisual: {fileID: 3200000519}
   cleanSeconds: 1
+  cleanFlag: BOD_Bandeja_2_Gris2_Limpia
 --- !u!65 &3200000510
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15514,6 +15780,7 @@ MonoBehaviour:
   destinationScene: Javier
   requiredItem: 
   ignoreRequirementForDebug: 0
+  openedFlag: 
   additionalRequiredItem: 
   requireSelectedItem: 0
   requiredFlag: 
@@ -33347,15 +33614,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!1660057539 &9223372036854775807
-SceneRoots:
-  m_ObjectHideFlags: 0
-  m_Roots:
-  - {fileID: 2064869420}
-  - {fileID: 421056846}
-  - {fileID: 724620184}
-  - {fileID: 3200000909}
-  - {fileID: 3200000471}
 --- !u!1001 &9100000000000000001
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33478,3 +33736,13 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
   m_PrefabInstance: {fileID: 9100000000000000001}
   m_PrefabAsset: {fileID: 0}
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 2064869420}
+  - {fileID: 421056846}
+  - {fileID: 724620184}
+  - {fileID: 3200000909}
+  - {fileID: 3200000471}
+  - {fileID: 1442191097}
