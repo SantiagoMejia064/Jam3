@@ -1341,7 +1341,21 @@ MonoBehaviour:
   dustVisual: {fileID: 0}
   revealOnClean: {fileID: 2103804667}
   revealOnCleanExtra: {fileID: 0}
+  cleanSound: {fileID: 0}
+  cleanAudioSource: {fileID: 0}
+  glowColor: {r: 0.15, g: 0.9, b: 1, a: 1}
+  glowStrength: 0.7
+  glowPulsesPerSecond: 1.8
   stampId: 
+  cleanFlag: 
+  resultFlag: 
+  notebookIndex: -1
+  noteTitle: 
+  noteContent: 
+  noteRereading: 
+  rollRevealedBall: 0
+  revealedBallImpulse: 1.8
+  revealedBallSpinImpulse: 2.5
 --- !u!23 &147372051
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2709,8 +2723,16 @@ MonoBehaviour:
   destinationScene: Inicio
   requiredItem: 
   ignoreRequirementForDebug: 0
+  additionalRequiredItem: 
+  requireSelectedItem: 0
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: E - Volver a Inicio
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 0}
 --- !u!23 &324513793
 MeshRenderer:
@@ -4486,8 +4508,16 @@ MonoBehaviour:
   destinationScene: SalaMaquinas
   requiredItem: 
   ignoreRequirementForDebug: 0
+  additionalRequiredItem: 
+  requireSelectedItem: 0
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: E - Entrar a Sala de Maquinas
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 0}
 --- !u!23 &516672822
 MeshRenderer:
@@ -4774,6 +4804,24 @@ MonoBehaviour:
   resultItem: 
   lockedMessage: "No sirve aqu\xED."
   responseMessage: "A2 \xB7 \xA1No puedes sacar eso de aqu\xED!"
+  secondResponseMessage: 
+  alternateResponseMessage: 
+  revealFlag: 
+  messageSeconds: 3.5
+  audioLogId: 
+  playOnStart: 0
+  playAudioOnApproach: 0
+  playOnStartOnceFlag: 
+  requiredFlag: 
+  resultFlag: 
+  triggerOnApproach: 0
+  responseAudio: {fileID: 0}
+  requireSelectedItem: 0
+  notebookIndex: -1
+  notebookTitle: 
+  notebookContent: 
+  notebookRereading: 
+  successVisualsToHide: []
   promptVisual: {fileID: 0}
   oneShot: 1
 --- !u!23 &547446021
@@ -5916,8 +5964,16 @@ MonoBehaviour:
   destinationScene: Invernadero
   requiredItem: Cortador
   ignoreRequirementForDebug: 0
+  additionalRequiredItem: 
+  requireSelectedItem: 0
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: E - Entrar a Invernadero
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 0}
 --- !u!23 &694539194
 MeshRenderer:
@@ -8421,7 +8477,21 @@ MonoBehaviour:
   dustVisual: {fileID: 1197263902}
   revealOnClean: {fileID: 2097081780}
   revealOnCleanExtra: {fileID: 2113606955}
+  cleanSound: {fileID: 0}
+  cleanAudioSource: {fileID: 0}
+  glowColor: {r: 0.15, g: 0.9, b: 1, a: 1}
+  glowStrength: 0.7
+  glowPulsesPerSecond: 1.8
   stampId: 
+  cleanFlag: 
+  resultFlag: 
+  notebookIndex: -1
+  noteTitle: 
+  noteContent: 
+  noteRereading: 
+  rollRevealedBall: 0
+  revealedBallImpulse: 1.8
+  revealedBallSpinImpulse: 2.5
 --- !u!23 &1015386896
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10658,9 +10728,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Bodega
   requiredItem: Cortador
-  ignoreRequirementForDebug: 1
+  ignoreRequirementForDebug: 0
+  additionalRequiredItem: 
+  requireSelectedItem: 1
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: "E \xB7 Entrar a Bodega"
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 216701494}
 --- !u!23 &1386550383
 MeshRenderer:
@@ -11465,6 +11543,24 @@ MonoBehaviour:
   resultItem: PiezaOscuridad
   lockedMessage: No agarra. Prueba con la Pelota.
   responseMessage: 'Gabinete abierto: pieza Oscuridad obtenida.'
+  secondResponseMessage: 
+  alternateResponseMessage: 
+  revealFlag: 
+  messageSeconds: 3.5
+  audioLogId: 
+  playOnStart: 0
+  playAudioOnApproach: 0
+  playOnStartOnceFlag: 
+  requiredFlag: 
+  resultFlag: 
+  triggerOnApproach: 0
+  responseAudio: {fileID: 0}
+  requireSelectedItem: 0
+  notebookIndex: -1
+  notebookTitle: 
+  notebookContent: 
+  notebookRereading: 
+  successVisualsToHide: []
   promptVisual: {fileID: 0}
   oneShot: 0
 --- !u!23 &1457215528
@@ -13530,8 +13626,16 @@ MonoBehaviour:
   destinationScene: Taller
   requiredItem: 
   ignoreRequirementForDebug: 0
+  additionalRequiredItem: 
+  requireSelectedItem: 0
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: E - Entrar a Taller
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 0}
 --- !u!23 &1834667358
 MeshRenderer:
@@ -15621,6 +15725,24 @@ MonoBehaviour:
   resultItem: 
   lockedMessage: "No sirve aqu\xED."
   responseMessage: "A3 \xB7 La unidad ya no distingue lo \xFAtil de lo bello."
+  secondResponseMessage: 
+  alternateResponseMessage: 
+  revealFlag: 
+  messageSeconds: 3.5
+  audioLogId: 
+  playOnStart: 0
+  playAudioOnApproach: 0
+  playOnStartOnceFlag: 
+  requiredFlag: 
+  resultFlag: 
+  triggerOnApproach: 0
+  responseAudio: {fileID: 0}
+  requireSelectedItem: 0
+  notebookIndex: -1
+  notebookTitle: 
+  notebookContent: 
+  notebookRereading: 
+  successVisualsToHide: []
   promptVisual: {fileID: 0}
   oneShot: 0
 --- !u!65 &2081488532

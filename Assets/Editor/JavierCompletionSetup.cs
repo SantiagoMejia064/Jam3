@@ -6,29 +6,19 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>One-time edit-mode migration: copies Inicio into Javier and authors Persona 1 scene wiring.</summary>
-[InitializeOnLoad]
 public static class JavierCompletionSetup
 {
     private const string InicioPath = "Assets/Scenes/Inicio.unity";
     private const string JavierPath = "Assets/Scenes/Javier.unity";
     private const string DoneKey = "Jam3.JavierPersona1Completed.v1";
 
-    static JavierCompletionSetup()
-    {
-        EditorApplication.delayCall += RunMigrationOnce;
-        EditorApplication.playModeStateChanged += OnPlayModeChanged;
-    }
-
+    [MenuItem("Jam3/Complete Javier Setup")]
     public static void CompleteForEditor() => RunMigrationOnce();
-
-    private static void OnPlayModeChanged(PlayModeStateChange state)
-    {
-        if (state == PlayModeStateChange.EnteredEditMode) EditorApplication.delayCall += RunMigrationOnce;
-    }
 
     private static void RunMigrationOnce()
     {
-        if (EditorApplication.isPlaying || EditorPrefs.GetBool(DoneKey, false)) return;
+        if (Application.isPlaying || EditorApplication.isPlaying ||
+            EditorApplication.isPlayingOrWillChangePlaymode || EditorPrefs.GetBool(DoneKey, false)) return;
         try
         {
             CopyInicioToJavier();

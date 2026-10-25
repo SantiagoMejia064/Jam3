@@ -258,6 +258,7 @@ public static class BOD_SceneBuilder
                     EditorUtility.SetDirty(source);
                 }
         Set(audio, "ambienteSources", ambience.ToArray());
+        ConfigureInteractionLights(generated);
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         if (!alreadyLoaded) EditorSceneManager.CloseScene(scene, true);
@@ -271,6 +272,28 @@ public static class BOD_SceneBuilder
             if (evt.GetPersistentTarget(i) == audio && evt.GetPersistentMethodName(i) == nameof(BOD_Audio.PlayPickup)) return;
         UnityEventTools.AddPersistentListener(evt, audio.PlayPickup);
         EditorUtility.SetDirty(target);
+    }
+
+    private static void ConfigureInteractionLights(GameObject root)
+    {
+        foreach (var interaction in root.GetComponentsInChildren<MonoBehaviour>(true))
+        {
+            if (!(interaction is BOD_Tray || interaction is BOD_KeypadController ||
+                  interaction is BOD_NotePlate || interaction is CORE_Dirt ||
+                  interaction is CORE_Collectible || interaction is CORE_ZoneDoor ||
+                  interaction is CORE_Interactable)) continue;
+            if (interaction.GetComponent<BOD_InteractionGlow>()) continue;
+            var lamp = Empty("Luz_Interaccion", interaction.transform, new Vector3(0, .35f, -.8f)).AddComponent<Light>();
+            lamp.type = LightType.Point;
+            lamp.color = new Color(.15f, .9f, 1f);
+            lamp.range = 3f;
+            lamp.intensity = 2.5f;
+            lamp.shadows = LightShadows.None;
+            lamp.enabled = false;
+            var glow = interaction.gameObject.AddComponent<BOD_InteractionGlow>();
+            Set(glow, "interaction", interaction);
+            Set(glow, "proximityLight", lamp);
+        }
     }
 
     private static void ConfigureClip(BOD_Audio audio, string field, string filename, AudioSource fallback)

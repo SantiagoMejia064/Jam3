@@ -42,6 +42,8 @@ public sealed class CORE_InteractionHUD : MonoBehaviour
         instance.Refresh();
     }
 
+    public static bool HasPrompt(Object source) => instance && source && instance.prompts.ContainsKey(source);
+
     public static void ShowMessage(string text, float seconds = 3.5f)
     {
         if (!instance || !instance.messageText) return;

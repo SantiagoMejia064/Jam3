@@ -9,7 +9,6 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>Authors the requested, editable infrastructure in Inicio without touching gameplay objects.</summary>
-[InitializeOnLoad]
 internal static class InicioInfrastructureSetup
 {
     private const string InicioPath = "Assets/Scenes/Inicio.unity";
@@ -17,17 +16,13 @@ internal static class InicioInfrastructureSetup
     private const string ManagerName = "GameSceneManager";
     private const string NotebookName = "Canvas_Cuaderno";
 
-    static InicioInfrastructureSetup()
-    {
-        EditorApplication.delayCall += EnsureSetup;
-    }
-
     [MenuItem("Jam3/Prepare Inicio Infrastructure")]
     private static void PrepareFromMenu() => EnsureSetup();
 
     private static void EnsureSetup()
     {
-        if (Application.isPlaying || !System.IO.File.Exists(InicioPath))
+        if (Application.isPlaying || EditorApplication.isPlaying ||
+            EditorApplication.isPlayingOrWillChangePlaymode || !System.IO.File.Exists(InicioPath))
             return;
 
         Scene inicio = SceneManager.GetSceneByPath(InicioPath);
@@ -79,7 +74,8 @@ internal static class InicioInfrastructureSetup
 
     private static void EnsureJavierNotebook()
     {
-        if (!System.IO.File.Exists(JavierPath)) return;
+        if (Application.isPlaying || EditorApplication.isPlaying ||
+            EditorApplication.isPlayingOrWillChangePlaymode || !System.IO.File.Exists(JavierPath)) return;
         Scene javier = SceneManager.GetSceneByPath(JavierPath);
         bool wasLoaded = javier.IsValid() && javier.isLoaded;
         if (!wasLoaded) javier = EditorSceneManager.OpenScene(JavierPath, OpenSceneMode.Additive);

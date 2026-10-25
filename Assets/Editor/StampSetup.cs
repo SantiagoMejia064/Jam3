@@ -113,9 +113,12 @@ public static class StampSetup
         var cover = point.transform.Find("Suciedad");
         cover.localPosition = new Vector3(0, .3f, -.25f);
         cover.localScale = new Vector3(.9f, .9f, .05f);
+        reward.transform.localPosition = cover.localPosition + new Vector3(0, 0, -.06f);
         var dirt = new SerializedObject(point.GetComponent<CORE_Dirt>());
         dirt.FindProperty("stampId").stringValue = CORE_GameState.SelloCruz;
-        dirt.FindProperty("prompt").stringValue = "Mantén E para limpiar";
+        dirt.FindProperty("prompt").stringValue = "Mantén E para recoger sello";
+        dirt.FindProperty("showHoldProgress").boolValue = true;
+        dirt.FindProperty("completedMessage").stringValue = "Sello recogido. Revísalo en el Cuaderno (Tab).";
         dirt.FindProperty("cleanSeconds").floatValue = 1f;
         dirt.FindProperty("dustVisual").objectReferenceValue = cover.gameObject;
         dirt.FindProperty("revealOnClean").objectReferenceValue = reward;

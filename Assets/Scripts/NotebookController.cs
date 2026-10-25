@@ -129,7 +129,11 @@ public sealed class NotebookController : MonoBehaviour
         Refresh();
     }
 
-    public void CloseNotebook() { if (notebookPanel) notebookPanel.SetActive(false); }
+    public void CloseNotebook()
+    {
+        if (notebookPanel) notebookPanel.SetActive(false);
+        Refresh();
+    }
 
     private void Refresh()
     {
@@ -156,7 +160,9 @@ public sealed class NotebookController : MonoBehaviour
                     ? $"{(selectedPage == i ? "► " : "")}Nota {i + 1} · {(selectedPage == i && !reading ? "Leer" : "Abrir página")}"
                     : $"Nota {i + 1} · No recogida";
         }
-        if (stampsPanel) stampsPanel.SetActive(showingStamps);
+        if (stampsButton) stampsButton.gameObject.SetActive(IsOpen);
+        if (stampsPanel) stampsPanel.SetActive(IsOpen && showingStamps);
+        if (backToNotesButton) backToNotesButton.gameObject.SetActive(IsOpen && showingStamps);
         string[] ids = { CORE_GameState.SelloTriangulo, CORE_GameState.SelloRombo, CORE_GameState.SelloCruz };
         for (int i = 0; i < stampSlots.Length && i < ids.Length; i++)
             if (stampSlots[i]) stampSlots[i].text = CORE_GameState.HasStamp(ids[i]) ? CORE_GameState.Symbol(ids[i]) : "?";
@@ -182,6 +188,23 @@ public sealed class NotebookController : MonoBehaviour
     {
         var canvas = GetComponent<Canvas>();
         if (!canvas || !notebookPanel || !pageArea || !preview || !heading) return;
+        // Older scene copies kept these controls beside the notebook instead of inside it.
+        if (stampsButton && !stampsButton.transform.IsChildOf(notebookPanel.transform))
+        {
+            stampsButton.transform.SetParent(notebookPanel.transform, false);
+            var rect = stampsButton.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(.5f, .5f);
+            rect.sizeDelta = new Vector2(300, 45);
+            rect.anchoredPosition = new Vector2(-375, -270);
+        }
+        if (stampsPanel && !stampsPanel.transform.IsChildOf(pageArea))
+        {
+            stampsPanel.transform.SetParent(pageArea, false);
+            var rect = stampsPanel.GetComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = rect.offsetMax = Vector2.zero;
+        }
         canvas.sortingOrder = 30;
         var scaler = GetComponent<CanvasScaler>();
         if (scaler)
