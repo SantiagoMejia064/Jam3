@@ -38,6 +38,8 @@ public sealed class CORE_Dirt : MonoBehaviour
     private MaterialPropertyBlock pulseBlock;
     private float progress;
     private bool cleaned;
+    public float Progress01 => Mathf.Clamp01(progress / cleanSeconds);
+    public bool IsCleaning => isActiveAndEnabled && !cleaned && progress > 0f;
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
     private static readonly int ColorId = Shader.PropertyToID("_Color");
 
@@ -92,6 +94,11 @@ public sealed class CORE_Dirt : MonoBehaviour
 
     private void Update()
     {
+        if (NotebookController.Instance != null && NotebookController.Instance.IsOpen)
+        {
+            progress = 0;
+            return;
+        }
         if (!cleaned) PulseDust();
         if (!PlayerIsInRange())
         {

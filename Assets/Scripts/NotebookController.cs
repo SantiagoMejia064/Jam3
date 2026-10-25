@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using TMPro;
 
 /// <summary>Persistent in-memory registry and UI for the ten collectible notes.</summary>
@@ -38,6 +39,10 @@ public sealed class NotebookController : MonoBehaviour
 
     private void Awake()
     {
+        // La entrada de UI pertenece a esta escena, aunque su Cuaderno sea un duplicado.
+        foreach (EventSystem uiInput in GetComponentsInChildren<EventSystem>(true))
+            uiInput.transform.SetParent(null, true);
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -53,7 +58,8 @@ public sealed class NotebookController : MonoBehaviour
 
     private void Update()
     {
-        if (stampNotification && stampNotification.activeSelf && Time.unscaledTime >= notificationUntil)
+        if (stampNotification && stampNotification.activeSelf &&
+            (Time.unscaledTime >= notificationUntil || IsOpen))
             stampNotification.SetActive(false);
         var keyboard = Keyboard.current;
         if (keyboard == null) return;
@@ -69,6 +75,8 @@ public sealed class NotebookController : MonoBehaviour
 
     private void OnProgressChanged(string id, bool value)
     {
+        // Una nota abierta también debe actualizarse al llegar la revelación.
+        if (id == SAL_Progress.Revealed) { Refresh(); return; }
         if (!CORE_GameState.IsStamp(id)) return;
         Refresh();
         if (!value || !stampNotification || !stampNotificationText) return;
@@ -146,7 +154,12 @@ public sealed class NotebookController : MonoBehaviour
                 if (visible)
                 {
                     var body = pages[i].GetComponentInChildren<Text>(true);
-                    if (body) body.text = ReadableContent(i);
+                    if (body && body.enabled) body.text = ReadableContent(i);
+                    else
+                    {
+                        var tmpBody = pages[i].GetComponentInChildren<TMP_Text>(true);
+                        if (tmpBody) tmpBody.text = ReadableContent(i);
+                    }
                 }
             }
 
@@ -179,7 +192,7 @@ public sealed class NotebookController : MonoBehaviour
     private string ReadableContent(int index)
     {
         string body = contents[index] ?? "Contenido pendiente.";
-        return string.IsNullOrEmpty(rereadings[index]) ? body
+        return !SAL_Progress.HasFlag(SAL_Progress.Revealed) || string.IsNullOrEmpty(rereadings[index]) ? body
             : body + "\n\nRelectura\n" + rereadings[index];
     }
 
@@ -188,22 +201,33 @@ public sealed class NotebookController : MonoBehaviour
     {
         var canvas = GetComponent<Canvas>();
         if (!canvas || !notebookPanel || !pageArea || !preview || !heading) return;
-        // Older scene copies kept these controls beside the notebook instead of inside it.
-        if (stampsButton && !stampsButton.transform.IsChildOf(notebookPanel.transform))
+        // Mantener los sellos dentro del Cuaderno, también en escenas antiguas.
+        if (stampsButton)
         {
             stampsButton.transform.SetParent(notebookPanel.transform, false);
             var rect = stampsButton.GetComponent<RectTransform>();
             rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(.5f, .5f);
             rect.sizeDelta = new Vector2(300, 45);
             rect.anchoredPosition = new Vector2(-375, -270);
+            rect.localScale = Vector3.one;
         }
-        if (stampsPanel && !stampsPanel.transform.IsChildOf(pageArea))
+        if (stampsPanel)
         {
             stampsPanel.transform.SetParent(pageArea, false);
             var rect = stampsPanel.GetComponent<RectTransform>();
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.offsetMin = rect.offsetMax = Vector2.zero;
+            rect.localScale = Vector3.one;
+        }
+        if (stampNotification)
+        {
+            stampNotification.transform.SetParent(transform, false);
+            var rect = stampNotification.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(.5f, 1);
+            rect.anchoredPosition = new Vector2(0, -185);
+            rect.sizeDelta = new Vector2(580, 110);
+            rect.localScale = Vector3.one;
         }
         canvas.sortingOrder = 30;
         var scaler = GetComponent<CanvasScaler>();
