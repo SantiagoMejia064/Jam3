@@ -8,6 +8,7 @@ public sealed class PlayerPersistence : MonoBehaviour
     public static PlayerPersistence Instance { get; private set; }
 
     [SerializeField] private string playerObjectName = "CORE_Siete";
+    private string previousScene;
 
     private void Awake()
     {
@@ -39,11 +40,17 @@ public sealed class PlayerPersistence : MonoBehaviour
                 Destroy(candidate.gameObject);
         }
 
-        SpawnPoint spawnPoint = SpawnPoint.FindForScene(scene.name);
+        SpawnPoint spawnPoint = SpawnPoint.FindForScene(scene.name, previousScene);
         if (spawnPoint != null)
         {
             transform.SetPositionAndRotation(spawnPoint.transform.position, spawnPoint.transform.rotation);
+            if (TryGetComponent(out Rigidbody body))
+            {
+                body.position = transform.position;
+                body.linearVelocity = Vector3.zero;
+            }
         }
+        previousScene = scene.name;
 
         // Cameras belong to their current scene, so acquire them again instead of retaining one.
         foreach (Camera camera in FindObjectsByType<Camera>(FindObjectsSortMode.None))

@@ -10,6 +10,7 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
     [SerializeField] private string requiredItem;
     [SerializeField, Tooltip("Acceso de prueba: omite los requisitos de esta puerta.")]
     private bool ignoreRequirementForDebug;
+    [SerializeField] private string openedFlag;
     [SerializeField] private string additionalRequiredItem;
     [SerializeField] private bool requireSelectedItem;
     [SerializeField] private string requiredFlag;
@@ -25,6 +26,7 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
     private CORE_PlayerController player;
     private Collider triggerCollider;
     private bool loadingScene;
+    private bool waitingForRelease;
 
     private void Awake() { triggerCollider = GetComponent<Collider>(); }
     private void Reset() { GetComponent<Collider>().isTrigger = true; }
@@ -34,7 +36,8 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
         if (isActiveAndEnabled && other.TryGetComponent(out CORE_PlayerController foundPlayer))
         {
             player = foundPlayer;
-            CORE_InteractionHUD.SetPrompt(this, prompt);
+            waitingForRelease = true;
+            CORE_InteractionHUD.SetPrompt(this, CurrentPrompt());
         }
     }
 
@@ -53,29 +56,36 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
 
     private void Update()
     {
+        if (NotebookController.Instance && NotebookController.Instance.IsOpen) return;
         if (!PlayerIsInRange())
         {
             if (player) CORE_InteractionHUD.ClearPrompt(this);
             player = null;
             return;
         }
+        if (waitingForRelease)
+        {
+            if (!player.InteractHeld) waitingForRelease = false;
+            return;
+        }
         if (!player.InteractPressed || loadingScene) return;
-        if (!ignoreRequirementForDebug && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem))
+        bool alreadyOpen = SAL_Progress.HasFlag(openedFlag);
+        if (!alreadyOpen && !ignoreRequirementForDebug && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem))
         {
             CORE_InteractionHUD.ShowMessage(lockedMessage);
             return;
         }
-        if (!ignoreRequirementForDebug && requireSelectedItem && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.IsSelected(requiredItem))
+        if (!alreadyOpen && !ignoreRequirementForDebug && requireSelectedItem && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.IsSelected(requiredItem))
         {
             CORE_InteractionHUD.ShowMessage("Selecciona " + requiredItem + " en el inventario.");
             return;
         }
-        if (!ignoreRequirementForDebug && !string.IsNullOrEmpty(additionalRequiredItem) && !CORE_InventoryBridge.HasItem(additionalRequiredItem))
+        if (!alreadyOpen && !ignoreRequirementForDebug && !string.IsNullOrEmpty(additionalRequiredItem) && !CORE_InventoryBridge.HasItem(additionalRequiredItem))
         {
             CORE_InteractionHUD.ShowMessage(lockedMessage);
             return;
         }
-        if (!ignoreRequirementForDebug && !string.IsNullOrEmpty(requiredFlag) && !SAL_Progress.HasFlag(requiredFlag))
+        if (!alreadyOpen && !ignoreRequirementForDebug && !string.IsNullOrEmpty(requiredFlag) && !SAL_Progress.HasFlag(requiredFlag))
         {
             CORE_InteractionHUD.ShowMessage(string.IsNullOrEmpty(missingFlagMessage) ? lockedMessage : missingFlagMessage);
             return;
@@ -86,6 +96,7 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
             return;
         }
 
+        if (!string.IsNullOrEmpty(openedFlag)) SAL_Progress.SetFlag(openedFlag);
         string message = !string.IsNullOrEmpty(revealFlag) && SAL_Progress.HasFlag(revealFlag) && !string.IsNullOrEmpty(alternateOpenMessage)
             ? alternateOpenMessage
             : openMessage;
@@ -111,6 +122,11 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
     {
         Collider playerCollider = player ? player.GetComponent<Collider>() : null;
         return triggerCollider && playerCollider && triggerCollider.bounds.Intersects(playerCollider.bounds);
+    }
+
+    private string CurrentPrompt()
+    {
+        return SAL_Progress.HasFlag(openedFlag) ? "E · Entrar a " + destinationScene : prompt;
     }
 }
 

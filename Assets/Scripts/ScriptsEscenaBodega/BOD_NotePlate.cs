@@ -22,7 +22,7 @@ public sealed class BOD_NotePlate : MonoBehaviour
         if (other.TryGetComponent(out CORE_PlayerController found))
         {
             player = found;
-            CORE_InteractionHUD.SetPrompt(this, $"E · Recoger nota N{notebookIndex + 1}");
+            CORE_InteractionHUD.SetPrompt(this, prompt);
         }
     }
 
@@ -48,7 +48,7 @@ public sealed class BOD_NotePlate : MonoBehaviour
         if (!player.InteractPressed || (notebook && notebook.IsOpen)) return;
         if (!notebook)
         {
-            CORE_InteractionHUD.ShowMessage("El cuaderno no está disponible. Inicia la partida desde Inicio.");
+            CORE_InteractionHUD.ShowMessage("El Cuaderno no está disponible. Inicia la partida desde Javier.");
             return;
         }
         if (notebook.IsNoteUnlocked(notebookIndex))

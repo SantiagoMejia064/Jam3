@@ -7,6 +7,7 @@ public sealed class BOD_Tray : MonoBehaviour
     [SerializeField] private GameObject dirtVisual;
     [SerializeField] private GameObject numberVisual;
     [SerializeField, Min(.1f)] private float cleanSeconds = 1f;
+    [SerializeField] private string cleanFlag;
     private CORE_PlayerController player;
     private Collider area;
     private float elapsed;
@@ -25,6 +26,12 @@ public sealed class BOD_Tray : MonoBehaviour
         if (other.TryGetComponent(out CORE_PlayerController found)) player = found;
     }
 
+    private void Start()
+    {
+        cleaned = SAL_Progress.HasFlag(cleanFlag);
+        if (dirtVisual) dirtVisual.SetActive(!cleaned);
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (player && other.GetComponent<CORE_PlayerController>() == player) Leave();
@@ -33,6 +40,11 @@ public sealed class BOD_Tray : MonoBehaviour
     private void Update()
     {
         IsCleaning = false;
+        if (NotebookController.Instance && NotebookController.Instance.IsOpen)
+        {
+            elapsed = 0;
+            return;
+        }
         if (!player) return;
         var body = player.GetComponent<Collider>();
         if (!body || !area.bounds.Intersects(body.bounds)) { Leave(); return; }
@@ -48,6 +60,7 @@ public sealed class BOD_Tray : MonoBehaviour
         CORE_InteractionHUD.SetPrompt(this, $"Mantén E para limpiar · {elapsed:0.0} / {cleanSeconds:0.0} s ({Mathf.RoundToInt(elapsed / cleanSeconds * 100)}%)");
         if (elapsed < cleanSeconds) return;
         cleaned = true;
+        SAL_Progress.SetFlag(cleanFlag);
         waitingForRelease = true;
         if (dirtVisual) dirtVisual.SetActive(false);
         CORE_InteractionHUD.ShowMessage("Bandeja limpia. Suelta E y pulsa E para ver su número.");

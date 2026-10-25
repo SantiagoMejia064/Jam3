@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Scene-authored keypad logic. The Canvas, chamber and visuals are assigned in the Inspector.
@@ -29,12 +30,18 @@ public sealed class BOD_KeypadController : MonoBehaviour
     private string enteredCode = string.Empty;
     private int failedAttempts;
     private bool solved;
+    private const string ChamberOpened = "BOD_CamaraAbierta";
+    private Coroutine hintRoutine;
+    private bool pausedPlayer;
 
     private void Awake()
     {
         triggerCollider = GetComponent<Collider>();
         if (keypadCanvas) keypadCanvas.SetActive(false);
-        if (heatPiece) heatPiece.SetActive(false);
+        solved = SAL_Progress.HasFlag(ChamberOpened) || CORE_InventoryBridge.WasCollected("PiezaCalor");
+        if (heatPiece) heatPiece.SetActive(solved && !CORE_InventoryBridge.WasCollected("PiezaCalor"));
+        if (chamberDoor) chamberDoor.SetActive(!solved);
+        if (solved) enteredCode = correctCode;
         if (ductHint) ductHint.SetActive(false);
         RefreshDisplay();
     }
@@ -54,6 +61,7 @@ public sealed class BOD_KeypadController : MonoBehaviour
     {
         if (other.GetComponent<CORE_PlayerController>())
         {
+            ClosePanel();
             player = null;
             CORE_InteractionHUD.ClearPrompt(this);
         }
@@ -61,6 +69,12 @@ public sealed class BOD_KeypadController : MonoBehaviour
 
     private void Update()
     {
+        if (NotebookController.Instance && NotebookController.Instance.IsOpen) { ClosePanel(); return; }
+        if (keypadCanvas && keypadCanvas.activeSelf)
+        {
+            if (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.tabKey.wasPressedThisFrame)) ClosePanel();
+            return;
+        }
         if (!PlayerIsInRange())
         {
             if (player) CORE_InteractionHUD.ClearPrompt(this);
@@ -74,15 +88,23 @@ public sealed class BOD_KeypadController : MonoBehaviour
 
     public void OpenPanel()
     {
-        if (!keypadCanvas) return;
+        if (!keypadCanvas || (NotebookController.Instance && NotebookController.Instance.IsOpen)) return;
         keypadCanvas.SetActive(true);
-        SetFeedback("OSCURO → CLARO");
+        SetFeedback(solved ? "Cámara abierta." : "OSCURO → CLARO");
+        if (player && player.enabled)
+        {
+            player.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            player.enabled = false;
+            pausedPlayer = true;
+        }
         RefreshDisplay();
     }
 
     public void ClosePanel()
     {
         if (keypadCanvas) keypadCanvas.SetActive(false);
+        if (pausedPlayer && player) player.enabled = true;
+        pausedPlayer = false;
     }
 
     public void AddDigit(string digit)
@@ -103,9 +125,15 @@ public sealed class BOD_KeypadController : MonoBehaviour
     public void Confirm()
     {
         if (solved) return;
+        if (enteredCode.Length != correctCode.Length)
+        {
+            SetFeedback("Introduce los cuatro dígitos.");
+            return;
+        }
         if (enteredCode == correctCode)
         {
             solved = true;
+            SAL_Progress.SetFlag(ChamberOpened);
             if (audioFeedback)
             {
                 audioFeedback.PlayCorrectCode();
@@ -123,7 +151,11 @@ public sealed class BOD_KeypadController : MonoBehaviour
         enteredCode = string.Empty;
         RefreshDisplay();
         SetFeedback("Código incorrecto.");
-        if (failedAttempts >= 2) StartCoroutine(FlashDuctHint());
+        if (failedAttempts >= 2)
+        {
+            if (hintRoutine != null) StopCoroutine(hintRoutine);
+            hintRoutine = StartCoroutine(FlashDuctHint());
+        }
     }
 
     private IEnumerator FlashDuctHint()
@@ -149,5 +181,12 @@ public sealed class BOD_KeypadController : MonoBehaviour
     {
         Collider playerCollider = player ? player.GetComponent<Collider>() : null;
         return triggerCollider && playerCollider && triggerCollider.bounds.Intersects(playerCollider.bounds);
+    }
+
+    private void OnDisable()
+    {
+        ClosePanel();
+        CORE_InteractionHUD.ClearPrompt(this);
+        player = null;
     }
 }

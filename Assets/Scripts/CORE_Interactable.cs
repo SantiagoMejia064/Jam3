@@ -44,6 +44,14 @@ public sealed class CORE_Interactable : MonoBehaviour
 
     private void Start()
     {
+        if (oneShot && ((!string.IsNullOrEmpty(resultItem) && CORE_InventoryBridge.WasCollected(resultItem)) ||
+                        (notebookIndex >= 0 && NotebookController.Instance && NotebookController.Instance.IsNoteUnlocked(notebookIndex)) ||
+                        (!string.IsNullOrEmpty(resultFlag) && SAL_Progress.HasFlag(resultFlag))))
+        {
+            used = true;
+            HideSuccessVisuals();
+        }
+        if (used) return;
         if (!playOnStart) return;
         if (!string.IsNullOrEmpty(playOnStartOnceFlag) && SAL_Progress.HasFlag(playOnStartOnceFlag)) return;
         PlayAudioLog();
@@ -56,6 +64,7 @@ public sealed class CORE_Interactable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (oneShot && used) return;
         if (!other.TryGetComponent(out CORE_PlayerController foundPlayer)) return;
         player = foundPlayer;
         displayedPrompt = CurrentPrompt();
@@ -74,6 +83,8 @@ public sealed class CORE_Interactable : MonoBehaviour
 
     private void Update()
     {
+        if (oneShot && used) { CORE_InteractionHUD.ClearPrompt(this); return; }
+        if (NotebookController.Instance && NotebookController.Instance.IsOpen) return;
         if (!PlayerIsInRange())
         {
             if (player) CORE_InteractionHUD.ClearPrompt(this);
@@ -84,6 +95,8 @@ public sealed class CORE_Interactable : MonoBehaviour
         if ((!oneShot || !used) && player.InteractPressed && !triggerOnApproach)
             Interact();
 
+        if (!isActiveAndEnabled || (oneShot && used)) return;
+
         string currentPrompt = CurrentPrompt();
         if (currentPrompt == displayedPrompt) return;
         displayedPrompt = currentPrompt;
@@ -92,6 +105,7 @@ public sealed class CORE_Interactable : MonoBehaviour
 
     public void Interact()
     {
+        if (NotebookController.Instance && NotebookController.Instance.IsOpen) return;
         if (oneShot && used) return;
         if (!string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem))
         {
@@ -126,12 +140,25 @@ public sealed class CORE_Interactable : MonoBehaviour
         if (notebookIndex >= 0 && NotebookController.Instance)
             NotebookController.Instance.CollectNote(notebookIndex, notebookTitle, notebookContent, notebookRereading);
         if (!string.IsNullOrEmpty(resultFlag)) SAL_Progress.SetFlag(resultFlag);
-        if (successVisualsToHide != null)
-            foreach (GameObject visual in successVisualsToHide)
-                if (visual) visual.SetActive(false);
+        HideSuccessVisuals();
 
         readCount++;
         used = true;
+        if (oneShot) CORE_InteractionHUD.ClearPrompt(this);
+    }
+
+    private void HideSuccessVisuals()
+    {
+        if (successVisualsToHide != null)
+            foreach (GameObject visual in successVisualsToHide)
+                if (visual) visual.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        player = null;
+        displayedPrompt = null;
+        CORE_InteractionHUD.ClearPrompt(this);
     }
 
     private string GetCurrentMessage()
@@ -153,7 +180,7 @@ public sealed class CORE_Interactable : MonoBehaviour
     private void PlayAudioLog()
     {
         if (!string.IsNullOrEmpty(audioLogId) && SAL_AudioDirector.Instance)
-            SAL_AudioDirector.Instance.PlayLog(audioLogId, false, messageSeconds);
+            SAL_AudioDirector.Instance.PlayLog(audioLogId, SAL_Progress.HasFlag(SAL_Progress.Revealed), messageSeconds);
     }
 
     private IEnumerator StopResponseAudioAfter(float seconds)

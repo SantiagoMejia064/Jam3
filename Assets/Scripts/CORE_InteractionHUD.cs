@@ -27,6 +27,7 @@ public sealed class CORE_InteractionHUD : MonoBehaviour
     public static void SetPrompt(Object source, string text)
     {
         if (!instance || !source) return;
+        if (string.IsNullOrWhiteSpace(text)) { ClearPrompt(source); return; }
         instance.prompts[source] = text;
         instance.promptOrder.Remove(source);
         instance.promptOrder.Add(source);
