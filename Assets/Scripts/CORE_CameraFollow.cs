@@ -12,5 +12,12 @@ public sealed class CORE_CameraFollow : MonoBehaviour
         Vector3 p = target.position + offset; p.x = Mathf.Clamp(p.x, xLimits.x, xLimits.y);
         transform.position = Vector3.Lerp(transform.position, p, Time.deltaTime * smooth);
     }
-    public void SetTarget(Transform value) { target = value; }
+    public void SetTarget(Transform value)
+    {
+        target = value;
+        if (!target) return;
+        Vector3 position = target.position + offset;
+        position.x = Mathf.Clamp(position.x, xLimits.x, xLimits.y);
+        transform.position = position;
+    }
 }

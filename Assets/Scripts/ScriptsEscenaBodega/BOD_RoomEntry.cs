@@ -9,6 +9,7 @@ public sealed class BOD_RoomEntry : MonoBehaviour
 
     private void Start()
     {
+        if (SAL_Progress.Act < 4) SAL_Progress.SetAct(4);
         var player = PlayerPersistence.Instance
             ? PlayerPersistence.Instance.GetComponent<CORE_PlayerController>()
             : FindFirstObjectByType<CORE_PlayerController>();

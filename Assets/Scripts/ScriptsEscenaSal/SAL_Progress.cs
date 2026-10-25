@@ -21,13 +21,13 @@ public static class SAL_Progress
     private static readonly HashSet<string> Flags = new HashSet<string>();
     public static event Action<string, bool> FlagChanged;
     public static event Action<int> ActChanged;
-    public static int Act { get; private set; } = 3;
+    public static int Act { get; private set; } = 1;
 
     [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStaticsOnPlay()
     {
         Flags.Clear();
-        Act = 3;
+        Act = 1;
         FlagChanged = null;
         ActChanged = null;
     }
@@ -55,7 +55,7 @@ public static class SAL_Progress
     public static void ResetForNewGame()
     {
         Flags.Clear();
-        Act = 3;
+        Act = 1;
         ActChanged?.Invoke(Act);
     }
 }

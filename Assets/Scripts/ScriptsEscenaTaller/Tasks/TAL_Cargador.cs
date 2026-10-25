@@ -18,6 +18,7 @@ public class TAL_Cargador : MonoBehaviour
 
     void Start()
     {
+        if (SAL_Progress.Act < 2) SAL_Progress.SetAct(2);
         PrepareNotebook();
         RefreshNote();
     }

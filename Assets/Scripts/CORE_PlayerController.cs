@@ -41,6 +41,11 @@ public sealed class CORE_PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (NotebookController.Instance && NotebookController.Instance.IsOpen)
+        {
+            horizontalInput = 0;
+            return;
+        }
         float actionX = moveAction != null ? moveAction.ReadValue<Vector2>().x : 0f;
         float keyboardX = 0f;
         if (Keyboard.current != null)

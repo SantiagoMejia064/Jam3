@@ -32,10 +32,26 @@ public sealed class CORE_ScreenWake : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (!SAL_Progress.HasFlag(onceFlag)) WakeFromInteraction();
+        else
+        {
+            wakeStarted = true;
+            SetSurfaceColor(awakeColor);
+            if (display) display.text = openingMessage;
+        }
+    }
+
     /// <summary>Called by the scene-authored E interaction on the dock screen.</summary>
     public void WakeFromInteraction()
     {
-        if (wakeStarted) return;
+        if (wakeStarted)
+        {
+            if (SAL_Progress.HasFlag(onceFlag) && SAL_AudioDirector.Instance)
+                SAL_AudioDirector.Instance.PlayLog(audioLogId, SAL_Progress.HasFlag(SAL_Progress.Revealed), subtitleSeconds);
+            return;
+        }
         wakeStarted = true;
         StartCoroutine(WakeSequence());
     }

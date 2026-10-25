@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public sealed class SpawnPoint : MonoBehaviour
 {
     [SerializeField] private string sceneName;
+    [SerializeField] private string entryFromScene;
 
     public bool Matches(string loadedSceneName)
     {
@@ -13,14 +14,17 @@ public sealed class SpawnPoint : MonoBehaviour
             : sceneName == loadedSceneName;
     }
 
-    public static SpawnPoint FindForScene(string loadedSceneName)
+    public static SpawnPoint FindForScene(string loadedSceneName, string fromScene = "")
     {
+        SpawnPoint fallback = null;
         foreach (SpawnPoint point in FindObjectsByType<SpawnPoint>(FindObjectsSortMode.None))
         {
             if (point.gameObject.scene == SceneManager.GetActiveScene() && point.Matches(loadedSceneName))
-                return point;
+            {
+                if (!string.IsNullOrEmpty(fromScene) && point.entryFromScene == fromScene) return point;
+                if (string.IsNullOrEmpty(point.entryFromScene)) fallback = point;
+            }
         }
-
-        return null;
+        return fallback;
     }
 }

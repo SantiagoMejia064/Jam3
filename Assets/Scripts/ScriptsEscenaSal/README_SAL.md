@@ -1,5 +1,7 @@
 # Sala de máquinas (SAL)
 
+> Este documento describe el prototipo original. Para el juego integrado inicia **Javier** y consulta [GUIA_FlujoJuego](../GUIA_FlujoJuego.md). En la integración actual `Standalone Demo` está desactivado, el sello ◆ está en Taller, el panel requiere N2 y los tres sellos, y SAL utiliza el inventario, Cuaderno y HUD compartidos. No reconstruyas la escena integrada con el generador del prototipo.
+
 Esta carpeta contiene únicamente la implementación de la Persona 3. La escena está en `Assets/Scenes/SAL.unity`; el generador editable está en `Assets/Scripts/ScriptsEscenaSal/Editor/SAL_SceneBuilder.cs`.
 
 ## Abrir la escena
