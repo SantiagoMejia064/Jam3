@@ -72,6 +72,7 @@ public sealed class SAL_RoomController : MonoBehaviour
                 break;
             case SAL_Interactable.Kind.Trash:
                 SAL_Progress.SetFlag(SAL_Progress.DrawingsFound);
+                RegisterNote("N6", 5, "Los dibujos de Ella");
                 Tell("N6 · Ella es una planta. Sus dibujos quedaron aquí.", 5f);
                 break;
             case SAL_Interactable.Kind.Drawings:
@@ -88,6 +89,7 @@ public sealed class SAL_RoomController : MonoBehaviour
                 {
                     SAL_Progress.SetFlag(SAL_Progress.LabelRead);
                     SAL_Progress.SetFlag(SAL_Progress.WarningInspected);
+                    RegisterNote("N7", 6, "Etiqueta del Filtro 14");
                     Tell("N7 · Filtro 14: cambiar. Hay letras bajo la etiqueta.", 5f);
                 }
                 break;
@@ -124,6 +126,7 @@ public sealed class SAL_RoomController : MonoBehaviour
         if (panelInput == "▲◆✚")
         {
             SAL_Progress.SetFlag(SAL_Progress.PanelSolved);
+            RegisterNote("N5", 4, "Orden de la ronda");
             Tell("N5 · El orden de la ronda abrió el compactador.");
         }
         else
@@ -149,6 +152,7 @@ public sealed class SAL_RoomController : MonoBehaviour
         if (index != 3) { Tell("El bloque no lleva mi firma. Debo mirar los otros."); return; }
         SAL_Progress.SetFlag(SAL_Progress.SeedObtained);
         CORE_InventoryBridge.AddItem("Semilla");
+        RegisterNote("N9", 8, "La semilla de Ella");
         if (SAL_Progress.Act < 5) SAL_Progress.SetAct(5);
         Tell("Semilla obtenida. N9 · Aquí. No la sueltes.", 6f);
     }
@@ -170,6 +174,19 @@ public sealed class SAL_RoomController : MonoBehaviour
                 : note.visibleText + (string.IsNullOrEmpty(note.revealedText) ? string.Empty : "  [tachado ilegible]");
         }
         return string.Empty;
+    }
+
+    private void RegisterNote(string id, int notebookIndex, string title)
+    {
+        NotebookController notebook = NotebookController.Instance;
+        if (!notebook) return;
+
+        foreach (SAL_NoteData note in notes)
+        {
+            if (!note || note.id != id) continue;
+            notebook.CollectNote(notebookIndex, title, note.visibleText, note.revealedText);
+            return;
+        }
     }
 
     private void Refresh()

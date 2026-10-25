@@ -56,29 +56,29 @@ public class TAL_ObjetivoUI : MonoBehaviour
         else if (SeedObtained())
         {
             if (!SAL_Progress.HasFlag(TAL_Cargador.NoteFound))
-                SetObjective("Algo quedó detrás de mi Cargador.", "Con la semilla en mis manos, recuerdo el panel trasero del Cargador. Debo limpiarlo.");
+                SetObjective("Limpia detrás del Cargador para recoger N10.", "Vuelve al Taller. Con la semilla, ya puedes limpiar el polvo del panel trasero del Cargador.");
             else
                 SetObjective("Debo llevar la semilla al Invernadero.", "Lleva la semilla y las cuatro piezas al Invernadero. El Cortador abre el paso.");
         }
-        else if (act == 1 && !Collected("Pelota"))
-            SetObjective("Debo revisar mi muelle.", "Limpia el brazo del muelle del Laboratorio. Mira lo que cayó debajo.");
+        else if (!Collected("Pelota"))
+            SetObjective("Revisa el Reactor de muestras y recoge la Pelota.", "Limpia el brazo polvoriento del Laboratorio y mira lo que cae debajo.");
         else if (!Collected("Cortador") ||
                  (!Collected("Cable") && !SAL_Progress.HasFlag("TAL_CableInstalado")))
-            SetObjective("Necesito las herramientas del banco.", "En el banco del Taller están el Cortador y el Cable. Recógelos.");
+            SetObjective("Recoge el Cortador y el Cable del banco del Taller.", "Lleva el Cortador y el Cable a la pulidora. Después limpia el motor y conecta el cable.");
         else if (!SAL_Progress.HasFlag("TAL_CasilleroAbierto"))
             SetObjective("Quiero abrir el casillero atascado.", Collected("Pelota")
                 ? "Selecciona la Pelota y úsala en el casillero de limpieza. Puede hacer de agarradero."
                 : "Necesito la Pelota para tirar del casillero. Busca bajo el muelle del Laboratorio.");
         else if (!SAL_Progress.HasFlag("TAL_N3Encontrada"))
-            SetObjective("Debo mirar el estante por reparar.", "La tablilla del estante muestra cuatro marcas. Solo una tiene una pieza.");
+            SetObjective("Busca la tablilla N3 en el estante por reparar.", "Lee las cuatro marcas de la tablilla para saber qué piezas necesita la pulidora.");
         else if (!Collected("PiezaPulso"))
         {
             if (!SAL_Progress.HasFlag("TAL_MotorLimpio"))
-                SetObjective("Debo limpiar el motor de la pulidora.", "Mantén E frente al motor sucio. Bajo la grasa puedo ver la avería.");
+                SetObjective("Limpia el motor de la pulidora.", "Mantén E frente al motor sucio hasta quitar la grasa.");
             else if (!SAL_Progress.HasFlag("TAL_CableInstalado"))
-                SetObjective("Debo conectar el Cable a la pulidora.", "Selecciona el Cable y pulsa E en la pulidora para conectarlo al borne libre.");
+                SetObjective("Conecta el Cable a la pulidora.", "Selecciona Cable en el inventario y pulsa E junto al borne libre de la pulidora.");
             else
-                SetObjective("La pulidora está lista para probarla.", "Pulsa E otra vez en la pulidora. Escucha su ritmo.");
+                SetObjective("Prueba la pulidora reparada.", "Pulsa E junto a la pulidora y recoge la Pieza Pulso.");
         }
         else if (act < 4 && !SAL_Progress.HasFlag(SAL_Progress.DrawingsFound))
             SetObjective("Quiero saber quién es ella.", "Busca entre los dibujos del basurero de la Sala de máquinas.");

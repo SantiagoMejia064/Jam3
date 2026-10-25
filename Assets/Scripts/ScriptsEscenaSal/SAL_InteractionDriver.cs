@@ -13,7 +13,17 @@ public sealed class SAL_InteractionDriver : MonoBehaviour
     public SAL_Interactable Target { get; private set; }
     public float HoldProgress => holdProgress;
 
-    private void Start() { targets = FindObjectsByType<SAL_Interactable>(FindObjectsInactive.Include, FindObjectsSortMode.None); readyAt = Time.time + .35f; }
+    private void Start()
+    {
+        // SAL ya no usa el Siete local duplicado de la escena; toma al jugador persistente que viene del Pasillo.
+        if (!player || !player.isActiveAndEnabled)
+        {
+            PlayerPersistence persistentPlayer = PlayerPersistence.Instance;
+            if (persistentPlayer) player = persistentPlayer.GetComponent<CORE_PlayerController>();
+        }
+        targets = FindObjectsByType<SAL_Interactable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        readyAt = Time.time + .35f;
+    }
 
     private void Update()
     {
