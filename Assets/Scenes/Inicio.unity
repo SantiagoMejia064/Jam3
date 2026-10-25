@@ -1334,6 +1334,7 @@ MonoBehaviour:
   cleanSeconds: 1
   completedMessage: Sello de rondas revelado.
   prompt: "Mant\xE9n E - Limpiar y revelar el sello"
+  showHoldProgress: 0
   onCleaned:
     m_PersistentCalls:
       m_Calls: []
@@ -8470,6 +8471,7 @@ MonoBehaviour:
   cleanSeconds: 1
   completedMessage: Muelle limpio. Pelota descubierta.
   prompt: "Mant\xE9n E - Limpiar el muelle"
+  showHoldProgress: 0
   onCleaned:
     m_PersistentCalls:
       m_Calls: []
@@ -10728,7 +10730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Bodega
   requiredItem: Cortador
-  ignoreRequirementForDebug: 0
+  ignoreRequirementForDebug: 1
   additionalRequiredItem: 
   requireSelectedItem: 1
   requiredFlag: 
