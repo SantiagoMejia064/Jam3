@@ -1,0 +1,1266 @@
+fileFormatVersion: 2
+guid: 5e60d3f25e1c1c644b5325aa9e7a2e83
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: b2a9591990af98743ba3ff7cf1000886, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 1
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 1000
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 51695dbd331a16a428ecf0c446fae8c2
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+    spritePosition: {x: 0, y: 0}
+  multiSpriteImportData: []
+  layeredSpriteImportData:
+  - name: Ojos
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 1818
+      y: 524
+      width: 334
+      height: 226
+    spriteID: 9703866cc2991fb40b56611a29ff0e73
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1818, y: 524}
+    spritePosition: {x: 965, y: 1309}
+  - name: OjosBrillo
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 2160
+      y: 524
+      width: 314
+      height: 199
+    spriteID: 23c0e45af251b32418395defbcbc5700
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2160, y: 524}
+    spritePosition: {x: 976, y: 1320}
+  - name: OjosColorBase
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 3116
+      y: 508
+      width: 336
+      height: 225
+    spriteID: 88af4ede05fdcc9438ccc0b518d0eb3b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 3116, y: 508}
+    spritePosition: {x: 963, y: 1309}
+  - name: OjosGlow
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 2729
+      y: 508
+      width: 379
+      height: 268
+    spriteID: debdc3a793f94be41969428fc23e9fd8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2729, y: 508}
+    spritePosition: {x: 943, y: 1289}
+  - name: Antena
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 3928
+      y: 791
+      width: 84
+      height: 431
+    spriteID: 5fdd6d02abf41cf45b73b5db1fa28b29
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 3928, y: 791}
+    spritePosition: {x: 611, y: 1470}
+  - name: BrilloAntena
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 1796
+      width: 78
+      height: 422
+    spriteID: a5d5f22e79339834f9ef0d4ce872d6d9
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 1796}
+    spritePosition: {x: 614, y: 1476}
+  - name: Cabeza
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 1818
+      y: 4
+      width: 903
+      height: 512
+    spriteID: f73ab1f702063214b9f8e3c9f5b3b32b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1818, y: 4}
+    spritePosition: {x: 488, y: 1163}
+  - name: BrilloCabeza
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 2729
+      y: 4
+      width: 886
+      height: 496
+    spriteID: 9df8a1e5af28b224286708c0ff61bf4b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2729, y: 4}
+    spritePosition: {x: 496, y: 1171}
+  - name: Cuello
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 833
+      y: 1291
+      width: 316
+      height: 179
+    spriteID: f0fd190f14efc0f4ea6c74bd6ae060eb
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 833, y: 1291}
+    spritePosition: {x: 776, y: 1065}
+  - name: BrilloCuello
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 3077
+      y: 1120
+      width: 163
+      height: 132
+    spriteID: 0af5bbf282c078d4c936eebf0121359e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 3077, y: 1120}
+    spritePosition: {x: 914, y: 1075}
+  - name: ColorBaseCuello
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 1157
+      y: 1291
+      width: 296
+      height: 169
+    spriteID: 89c0c5131c135204a9c7ca16677f44a9
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1157, y: 1291}
+    spritePosition: {x: 780, y: 1072}
+  - name: BrazoDelantero
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 791
+      width: 546
+      height: 492
+    spriteID: 00b2b74005edd6b49b9c9d611548fca9
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 791}
+    spritePosition: {x: 597, y: 557}
+  - name: BrilloBrazoDelantero
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 558
+      y: 791
+      width: 542
+      height: 488
+    spriteID: 8dca9f4a602e41c42abfc1029eeef863
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 558, y: 791}
+    spritePosition: {x: 599, y: 559}
+  - name: Torso
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 959
+      height: 779
+    spriteID: 80a467d474ef4294ab5cd40015be72f3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+    spritePosition: {x: 457, y: 432}
+  - name: BrilloToso
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 971
+      y: 4
+      width: 839
+      height: 772
+    spriteID: 1a4b095409001b84e90622405b704028
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 971, y: 4}
+    spritePosition: {x: 461, y: 436}
+  - name: BrazoTrasero
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 3542
+      y: 791
+      width: 378
+      height: 364
+    spriteID: 5328dd2c42302c24eadc6259795e065c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 3542, y: 791}
+    spritePosition: {x: 1152, y: 666}
+  - name: BrilloBrazoTrasero
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 3623
+      y: 4
+      width: 368
+      height: 357
+    spriteID: 8928658fa2458e7468ae27f712d8137f
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 3623, y: 4}
+    spritePosition: {x: 1157, y: 669}
+  - name: GuardaBarros-Trasero
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 2482
+      y: 524
+      width: 157
+      height: 165
+    spriteID: f1d943af52907d74f91c458e631a6ed9
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2482, y: 524}
+    spritePosition: {x: 1261, y: 638}
+  - name: BrilloGuardaBarrosTrasero
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 3366
+      y: 1120
+      width: 122
+      height: 128
+    spriteID: 2245d1b2e7bca864aaffa44a56d253ee
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 3366, y: 1120}
+    spritePosition: {x: 1277, y: 670}
+  - name: ColorBaseGuardaBarros
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 2919
+      y: 1120
+      width: 150
+      height: 158
+    spriteID: 1bd5fb6f0c722b24b9edff45ab5006f1
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2919, y: 1120}
+    spritePosition: {x: 1264, y: 639}
+  - name: RuedaDeltantera
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 1291
+      width: 479
+      height: 497
+    spriteID: 849f719e8b838524784f205c7deedad3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 1291}
+    spritePosition: {x: 408, y: 153}
+  - name: RuedaDelanteraBrillo
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 3460
+      y: 508
+      width: 136
+      height: 227
+    spriteID: dc1d7fd2151ddde45b26830e2dc8fb30
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 3460, y: 508}
+    spritePosition: {x: 753, y: 231}
+  - name: RuedaDeltanteraColorBase
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 1789
+      y: 791
+      width: 473
+      height: 491
+    spriteID: b9c790dda8725784dbe0db7bbd1006e5
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1789, y: 791}
+    spritePosition: {x: 411, y: 156}
+  - name: Base
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 1108
+      y: 791
+      width: 673
+      height: 366
+    spriteID: c0f2487c5a9575441b2bcb0de85f36b5
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1108, y: 791}
+    spritePosition: {x: 575, y: 341}
+  - name: BrilloBase
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 2919
+      y: 791
+      width: 615
+      height: 321
+    spriteID: 8d4716a1a1b00874fb40a4de1e788cc1
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2919, y: 791}
+    spritePosition: {x: 600, y: 382}
+  - name: BaseColorBase
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 2270
+      y: 791
+      width: 641
+      height: 356
+    spriteID: 17f1f3b58635ac94b9bdb4533266563e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2270, y: 791}
+    spritePosition: {x: 600, y: 348}
+  - name: RuedaTrasera
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 3623
+      y: 369
+      width: 340
+      height: 368
+    spriteID: b388fc13ffb78ea46b4cb43935887228
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 3623, y: 369}
+    spritePosition: {x: 1077, y: 432}
+  - name: BrilloRuedaTrasera
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 3248
+      y: 1120
+      width: 110
+      height: 148
+    spriteID: 853760e059d52fb49897a2ab92af5f56
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 3248, y: 1120}
+    spritePosition: {x: 1306, y: 484}
+  - name: RuedaTraseraColorBase
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 491
+      y: 1291
+      width: 334
+      height: 362
+    spriteID: bc82926ab7c6a5b489f70afeb23dba16
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 491, y: 1291}
+    spritePosition: {x: 1080, y: 435}
+  spriteImportData: []
+  rigSpriteImportData: []
+  sharedRigSpriteImportData: []
+  mosaicSpriteImportData: []
+  platformSettings:
+  - name: DefaultTexturePlatform
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Standalone
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Android
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: WebGL
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  mosaicLayers: 1
+  characterMode: 1
+  documentPivot: {x: 0, y: 0}
+  documentAlignment: 7
+  importHiddenLayers: 0
+  layerMappingOption: 2
+  generatePhysicsShape: 0
+  paperDollMode: 0
+  keepDupilcateSpriteName: 1
+  generateTileAssets: 0
+  tilePaletteCellLayout: 0
+  tilePaletteHexagonLayout: 0
+  tilePaletteCellSize: {x: 1, y: 1, z: 0}
+  tilePaletteCellSizing: 0
+  transparencySortMode: 0
+  transparencySortAxis: {x: 0, y: 0, z: 1}
+  tileTemplate: {instanceID: 0}
+  padding: 4
+  spriteSizeExpand: 0
+  skeletonAssetReferenceID: 
+  pipeline: {instanceID: 0}
+  pipelineVersion: 
+  spritePackingTag: 
+  resliceFromLayer: 0
+  pSDLayerImportSetting: []
+  psdLayers:
+  - name: Ojos
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 5d1d8a8eb7eb05f428c3a283f97b0414
+    layerID: 196
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: Ojos
+    spriteName: Ojos
+    isGroup: 0
+    parentIndex: 0
+    spriteID: 9703866cc2991fb40b56611a29ff0e73
+    layerID: 32
+    mosaicPosition: {x: 1818, y: 524}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: OjosBrillo
+    spriteName: OjosBrillo
+    isGroup: 0
+    parentIndex: 0
+    spriteID: 23c0e45af251b32418395defbcbc5700
+    layerID: 183
+    mosaicPosition: {x: 2160, y: 524}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: OjosColorBase
+    spriteName: OjosColorBase
+    isGroup: 0
+    parentIndex: 0
+    spriteID: 88af4ede05fdcc9438ccc0b518d0eb3b
+    layerID: 152
+    mosaicPosition: {x: 3116, y: 508}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: OjosGlow
+    spriteName: OjosGlow
+    isGroup: 0
+    parentIndex: 0
+    spriteID: debdc3a793f94be41969428fc23e9fd8
+    layerID: 186
+    mosaicPosition: {x: 2729, y: 508}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Antena
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 9394ab1d5340549489265089a20c7565
+    layerID: 199
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: Antena
+    spriteName: Antena
+    isGroup: 0
+    parentIndex: 5
+    spriteID: 5fdd6d02abf41cf45b73b5db1fa28b29
+    layerID: 38
+    mosaicPosition: {x: 3928, y: 791}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrilloAntena
+    spriteName: BrilloAntena
+    isGroup: 0
+    parentIndex: 5
+    spriteID: a5d5f22e79339834f9ef0d4ce872d6d9
+    layerID: 198
+    mosaicPosition: {x: 4, y: 1796}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Cabeza
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 3f472d89101b3da48b2727908ddd5204
+    layerID: 201
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: Cabeza
+    spriteName: Cabeza
+    isGroup: 0
+    parentIndex: 8
+    spriteID: f73ab1f702063214b9f8e3c9f5b3b32b
+    layerID: 39
+    mosaicPosition: {x: 1818, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrilloCabeza
+    spriteName: BrilloCabeza
+    isGroup: 0
+    parentIndex: 8
+    spriteID: 9df8a1e5af28b224286708c0ff61bf4b
+    layerID: 188
+    mosaicPosition: {x: 2729, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Cuello
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: a96c9e7d1046af74f8526322a73608e1
+    layerID: 203
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: Cuello
+    spriteName: Cuello
+    isGroup: 0
+    parentIndex: 11
+    spriteID: f0fd190f14efc0f4ea6c74bd6ae060eb
+    layerID: 40
+    mosaicPosition: {x: 833, y: 1291}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrilloCuello
+    spriteName: BrilloCuello
+    isGroup: 0
+    parentIndex: 11
+    spriteID: 0af5bbf282c078d4c936eebf0121359e
+    layerID: 205
+    mosaicPosition: {x: 3077, y: 1120}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: ColorBaseCuello
+    spriteName: ColorBaseCuello
+    isGroup: 0
+    parentIndex: 11
+    spriteID: 89c0c5131c135204a9c7ca16677f44a9
+    layerID: 172
+    mosaicPosition: {x: 1157, y: 1291}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrazoDelantero
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 3e46275a26ba29f448eebfffbf977a90
+    layerID: 208
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: BrazoDelantero
+    spriteName: BrazoDelantero
+    isGroup: 0
+    parentIndex: 15
+    spriteID: 00b2b74005edd6b49b9c9d611548fca9
+    layerID: 130
+    mosaicPosition: {x: 4, y: 791}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrilloBrazoDelantero
+    spriteName: BrilloBrazoDelantero
+    isGroup: 0
+    parentIndex: 15
+    spriteID: 8dca9f4a602e41c42abfc1029eeef863
+    layerID: 195
+    mosaicPosition: {x: 558, y: 791}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Torso
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: a4d2bcf5b6e7c074e876b6ac53b88417
+    layerID: 210
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: Torso
+    spriteName: Torso
+    isGroup: 0
+    parentIndex: 18
+    spriteID: 80a467d474ef4294ab5cd40015be72f3
+    layerID: 49
+    mosaicPosition: {x: 4, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrilloToso
+    spriteName: BrilloToso
+    isGroup: 0
+    parentIndex: 18
+    spriteID: 1a4b095409001b84e90622405b704028
+    layerID: 189
+    mosaicPosition: {x: 971, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrazoTrasero
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 5073972d9dcaadc44b34d3dd40b4db58
+    layerID: 212
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: BrazoTrasero
+    spriteName: BrazoTrasero
+    isGroup: 0
+    parentIndex: 21
+    spriteID: 5328dd2c42302c24eadc6259795e065c
+    layerID: 148
+    mosaicPosition: {x: 3542, y: 791}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrilloBrazoTrasero
+    spriteName: BrilloBrazoTrasero
+    isGroup: 0
+    parentIndex: 21
+    spriteID: 8928658fa2458e7468ae27f712d8137f
+    layerID: 191
+    mosaicPosition: {x: 3623, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: GuardaBarrosTrasero
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 622235d87bab51d458217a8e818bdc58
+    layerID: 214
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: GuardaBarros-Trasero
+    spriteName: GuardaBarros-Trasero
+    isGroup: 0
+    parentIndex: 24
+    spriteID: f1d943af52907d74f91c458e631a6ed9
+    layerID: 167
+    mosaicPosition: {x: 2482, y: 524}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrilloGuardaBarrosTrasero
+    spriteName: BrilloGuardaBarrosTrasero
+    isGroup: 0
+    parentIndex: 24
+    spriteID: 2245d1b2e7bca864aaffa44a56d253ee
+    layerID: 192
+    mosaicPosition: {x: 3366, y: 1120}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: ColorBaseGuardaBarros
+    spriteName: ColorBaseGuardaBarros
+    isGroup: 0
+    parentIndex: 24
+    spriteID: 1bd5fb6f0c722b24b9edff45ab5006f1
+    layerID: 170
+    mosaicPosition: {x: 2919, y: 1120}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: RuedaDelantera
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 1edae2bcce1b34e418ab7f5440e03aaa
+    layerID: 216
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: RuedaDeltantera
+    spriteName: RuedaDeltantera
+    isGroup: 0
+    parentIndex: 28
+    spriteID: 849f719e8b838524784f205c7deedad3
+    layerID: 80
+    mosaicPosition: {x: 4, y: 1291}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: RuedaDelanteraBrillo
+    spriteName: RuedaDelanteraBrillo
+    isGroup: 0
+    parentIndex: 28
+    spriteID: dc1d7fd2151ddde45b26830e2dc8fb30
+    layerID: 194
+    mosaicPosition: {x: 3460, y: 508}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: RuedaDeltanteraColorBase
+    spriteName: RuedaDeltanteraColorBase
+    isGroup: 0
+    parentIndex: 28
+    spriteID: b9c790dda8725784dbe0db7bbd1006e5
+    layerID: 176
+    mosaicPosition: {x: 1789, y: 791}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Base
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 465fbcc79a117ae45a2e2e28c8f48a2c
+    layerID: 218
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: Base
+    spriteName: Base
+    isGroup: 0
+    parentIndex: 32
+    spriteID: c0f2487c5a9575441b2bcb0de85f36b5
+    layerID: 103
+    mosaicPosition: {x: 1108, y: 791}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrilloBase
+    spriteName: BrilloBase
+    isGroup: 0
+    parentIndex: 32
+    spriteID: 8d4716a1a1b00874fb40a4de1e788cc1
+    layerID: 220
+    mosaicPosition: {x: 2919, y: 791}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BaseColorBase
+    spriteName: BaseColorBase
+    isGroup: 0
+    parentIndex: 32
+    spriteID: 17f1f3b58635ac94b9bdb4533266563e
+    layerID: 173
+    mosaicPosition: {x: 2270, y: 791}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: RuedaTrasera
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 115521d4495c5b34ea447633bf6ba48a
+    layerID: 221
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: RuedaTrasera
+    spriteName: RuedaTrasera
+    isGroup: 0
+    parentIndex: 36
+    spriteID: b388fc13ffb78ea46b4cb43935887228
+    layerID: 81
+    mosaicPosition: {x: 3623, y: 369}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BrilloRuedaTrasera
+    spriteName: BrilloRuedaTrasera
+    isGroup: 0
+    parentIndex: 36
+    spriteID: 853760e059d52fb49897a2ab92af5f56
+    layerID: 193
+    mosaicPosition: {x: 3248, y: 1120}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: RuedaTraseraColorBase
+    spriteName: RuedaTraseraColorBase
+    isGroup: 0
+    parentIndex: 36
+    spriteID: bc82926ab7c6a5b489f70afeb23dba16
+    layerID: 174
+    mosaicPosition: {x: 491, y: 1291}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Inspo
+    spriteName: 
+    isGroup: 0
+    parentIndex: -1
+    spriteID: bc4957a725a426e41a4ce57f01ef5a87
+    layerID: 9
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 0
+  - name: Boceto2
+    spriteName: 
+    isGroup: 0
+    parentIndex: -1
+    spriteID: c5acab971a6faf4428d2f6184e67fb33
+    layerID: 4
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 0
+  - name: Boceto
+    spriteName: 
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 6227eab444888d7498a96fa9b1100124
+    layerID: 3
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 0
+  - name: Background
+    spriteName: 
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 2a73cb0a3ddbdad47940c31cdf4ec25b
+    layerID: 1
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 0
+  mosaicPSDLayers: []
+  rigPSDLayers: []
+  sharedRigPSDLayers: []
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  spriteSizeExpandChanged: 0
+  generateGOHierarchy: 1
+  textureAssetName: 
+  prefabAssetName: 
+  spriteLibAssetName: 
+  skeletonAssetName: 
+  secondarySpriteTextures: []
