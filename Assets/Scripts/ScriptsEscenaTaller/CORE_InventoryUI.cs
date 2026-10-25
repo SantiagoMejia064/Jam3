@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -10,6 +9,7 @@ public class CORE_InventoryUI : MonoBehaviour
 
     public GameObject slotPrefab;
     public Transform slotsParent;
+    public CORE_ItemUI[] slots = new CORE_ItemUI[4];
 
     public TMP_Text pageText;
     public TMP_Text selectedText;
@@ -17,13 +17,13 @@ public class CORE_InventoryUI : MonoBehaviour
     public Button previousButton;
     public Button nextButton;
 
-    private List<CORE_ItemUI> slots = new List<CORE_ItemUI>();
-
     private int page = 0;
-    private int slotsPerPage = 4;
 
     void Awake()
     {
+        if ((slots == null || slots.Length == 0) && slotsParent != null)
+            slots = slotsParent.GetComponentsInChildren<CORE_ItemUI>(true);
+
         if (previousButton != null)
         {
             previousButton.onClick.RemoveListener(PreviousPage);
@@ -38,21 +38,8 @@ public class CORE_InventoryUI : MonoBehaviour
 
     public void Refresh()
     {
-        if (inventory == null || slotPrefab == null || slotsParent == null) return;
-        // Creamos las cuatro casillas una sola vez.
-        if (slots.Count == 0)
-        {
-            for (int i = 0; i < slotsPerPage; i++)
-            {
-                GameObject slotObject =
-                    Instantiate(slotPrefab, slotsParent, false);
-
-                CORE_ItemUI slot =
-                    slotObject.GetComponent<CORE_ItemUI>();
-
-                slots.Add(slot);
-            }
-        }
+        if (inventory == null || slots == null || slots.Length == 0) return;
+        int slotsPerPage = slots.Length;
 
         int totalPages = Mathf.Max(1, Mathf.CeilToInt(inventory.items.Count / (float)slotsPerPage));
 
@@ -69,7 +56,8 @@ public class CORE_InventoryUI : MonoBehaviour
 
             bool selected = item != null && item == inventory.selectedItem;
 
-            slots[i].Initialize(item, i + 1, selected);
+            if (slots[i] != null)
+                slots[i].Initialize(item, i + 1, selected);
         }
 
         pageText.text = (page + 1) + " / " + totalPages;
@@ -96,7 +84,7 @@ public class CORE_InventoryUI : MonoBehaviour
 
         Keyboard keyboard = Keyboard.current;
 
-        if (keyboard == null || slots.Count == 0)
+        if (keyboard == null || slots == null || slots.Length == 0)
             return;
 
         if (keyboard.digit1Key.wasPressedThisFrame)

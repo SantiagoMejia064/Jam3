@@ -8,6 +8,8 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
 {
     [SerializeField] private string destinationScene;
     [SerializeField] private string requiredItem;
+    [SerializeField, Tooltip("Acceso de prueba: omite los requisitos de esta puerta.")]
+    private bool ignoreRequirementForDebug;
     [SerializeField] private string additionalRequiredItem;
     [SerializeField] private bool requireSelectedItem;
     [SerializeField] private string requiredFlag;
@@ -58,22 +60,22 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
             return;
         }
         if (!player.InteractPressed || loadingScene) return;
-        if (!string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem))
+        if (!ignoreRequirementForDebug && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem))
         {
             CORE_InteractionHUD.ShowMessage(lockedMessage);
             return;
         }
-        if (requireSelectedItem && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.IsSelected(requiredItem))
+        if (!ignoreRequirementForDebug && requireSelectedItem && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.IsSelected(requiredItem))
         {
             CORE_InteractionHUD.ShowMessage("Selecciona " + requiredItem + " en el inventario.");
             return;
         }
-        if (!string.IsNullOrEmpty(additionalRequiredItem) && !CORE_InventoryBridge.HasItem(additionalRequiredItem))
+        if (!ignoreRequirementForDebug && !string.IsNullOrEmpty(additionalRequiredItem) && !CORE_InventoryBridge.HasItem(additionalRequiredItem))
         {
             CORE_InteractionHUD.ShowMessage(lockedMessage);
             return;
         }
-        if (!string.IsNullOrEmpty(requiredFlag) && !SAL_Progress.HasFlag(requiredFlag))
+        if (!ignoreRequirementForDebug && !string.IsNullOrEmpty(requiredFlag) && !SAL_Progress.HasFlag(requiredFlag))
         {
             CORE_InteractionHUD.ShowMessage(string.IsNullOrEmpty(missingFlagMessage) ? lockedMessage : missingFlagMessage);
             return;

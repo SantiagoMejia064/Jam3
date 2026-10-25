@@ -9,7 +9,7 @@ public sealed class CORE_ScreenWake : MonoBehaviour
     [SerializeField] private string audioLogId = "A1";
     [SerializeField] private string onceFlag = "LAB_A1Reproducido";
     [SerializeField, TextArea(3, 6)] private string openingMessage =
-        "A1\nFORMATEO COMPLETADO.\nMOTIVO: DESOBEDIENCIA.\n████████████████████";
+        "A1\nFORMATEO COMPLETADO.\nMOTIVO: DESOBEDIENCIA.\n\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588";
     [SerializeField] private Color sleepingColor = new Color(0.015f, 0.025f, 0.035f, 1f);
     [SerializeField] private Color awakeColor = new Color(0.12f, 0.62f, 0.96f, 1f);
     [SerializeField, Min(0f)] private float wakeDelay = 0.45f;
@@ -17,6 +17,7 @@ public sealed class CORE_ScreenWake : MonoBehaviour
     [SerializeField, Min(0f)] private float subtitleSeconds = 4f;
 
     private MaterialPropertyBlock block;
+    private bool wakeStarted;
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
     private static readonly int ColorId = Shader.PropertyToID("_Color");
 
@@ -31,7 +32,15 @@ public sealed class CORE_ScreenWake : MonoBehaviour
         }
     }
 
-    private IEnumerator Start()
+    /// <summary>Called by the scene-authored E interaction on the dock screen.</summary>
+    public void WakeFromInteraction()
+    {
+        if (wakeStarted) return;
+        wakeStarted = true;
+        StartCoroutine(WakeSequence());
+    }
+
+    private IEnumerator WakeSequence()
     {
         yield return new WaitForSeconds(wakeDelay);
         SetSurfaceColor(awakeColor);

@@ -1,21 +1,14 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-/// <summary>Readable graybox HUD and temporary notebook view; can hand off to P4's Cuaderno later.</summary>
+/// <summary>Readable SAL HUD. The shared NotebookController owns the notebook in every scene.</summary>
 public sealed class SAL_UI : MonoBehaviour
 {
     [SerializeField] private SAL_RoomController room;
     [SerializeField] private SAL_InteractionDriver interaction;
-    private bool notebook;
     private GUIStyle titleStyle;
     private GUIStyle bodyStyle;
     private GUIStyle smallStyle;
     private Texture2D background;
-
-    private void Update()
-    {
-        if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame) notebook = !notebook;
-    }
 
     private void OnDestroy() { if (background) Destroy(background); }
 
@@ -53,42 +46,26 @@ public sealed class SAL_UI : MonoBehaviour
         SAL_Interactable target = interaction.Target;
         if (target)
         {
-            Panel(new Rect(Screen.width * .5f - 225, Screen.height - 133, 450, 55));
+            float y = room.StandaloneDemo ? 176 : 122;
+            Panel(new Rect(Screen.width * .5f - 225, y, 450, 55));
             string prompt = target.holdToClean ? "Mantén E · " + target.prompt : "E · " + target.prompt;
             if (target.holdToClean && interaction.HoldProgress > 0f) prompt += "  " + Mathf.RoundToInt(interaction.HoldProgress * 100f) + "%";
-            GUI.Label(new Rect(Screen.width * .5f - 206, Screen.height - 125, 420, 44), prompt, bodyStyle);
+            GUI.Label(new Rect(Screen.width * .5f - 206, y + 8, 420, 44), prompt, bodyStyle);
         }
 
         if (Time.unscaledTime < room.MessageUntil)
         {
-            Panel(new Rect(Screen.width * .5f - 340, Screen.height - 76, 680, 56));
-            GUI.Label(new Rect(Screen.width * .5f - 326, Screen.height - 69, 652, 45), room.Message, bodyStyle);
+            float y = room.StandaloneDemo ? 238 : 184;
+            Panel(new Rect(Screen.width * .5f - 340, y, 680, 56));
+            GUI.Label(new Rect(Screen.width * .5f - 326, y + 7, 652, 45), room.Message, bodyStyle);
         }
 
         SAL_AudioDirector audio = SAL_AudioDirector.Instance;
         if (audio && !string.IsNullOrEmpty(audio.Subtitle) && Time.unscaledTime < audio.SubtitleUntil)
         {
-            Panel(new Rect(Screen.width * .5f - 365, Screen.height - 202, 730, 60));
-            GUI.Label(new Rect(Screen.width * .5f - 347, Screen.height - 193, 694, 46), audio.Subtitle, bodyStyle);
+            float y = room.StandaloneDemo ? 304 : 246;
+            Panel(new Rect(Screen.width * .5f - 365, y, 730, 60));
+            GUI.Label(new Rect(Screen.width * .5f - 347, y + 9, 694, 46), audio.Subtitle, bodyStyle);
         }
-
-        if (!notebook) return;
-        Rect book = new Rect(Mathf.Max(16, Screen.width * .5f - 365), 180, Mathf.Min(730, Screen.width - 32), Mathf.Min(390, Screen.height - 205));
-        Panel(book);
-        GUI.Label(new Rect(book.x + 20, book.y + 14, book.width - 40, 34), "CUADERNO  /  SAL", titleStyle);
-        float y = book.y + 54;
-        string[] lines =
-        {
-            "N5  " + (SAL_Progress.HasFlag(SAL_Progress.PanelSolved) ? room.GetNote("N5") : "Pendiente: panel de reciclaje"),
-            "N6  " + (SAL_Progress.HasFlag(SAL_Progress.DrawingsFound) ? room.GetNote("N6") : "Pendiente: dibujos"),
-            "N7  " + (SAL_Progress.HasFlag(SAL_Progress.LabelRead) ? room.GetNote("N7") : "Pendiente: etiqueta del filtro"),
-            "N9  " + (SAL_Progress.HasFlag(SAL_Progress.SeedObtained) ? room.GetNote("N9") : "Pendiente: semilla"),
-            "Sellos  ▲ " + Mark(SAL_Progress.TriangleSeal) + "   ◆ " + Mark(SAL_Progress.DiamondSeal) + "   ✚ " + Mark(SAL_Progress.CrossSeal),
-            "Objetos  Pelota " + MarkItem("Pelota") + "   Bruma " + MarkItem("PiezaBruma") + "   Semilla " + MarkItem("Semilla")
-        };
-        foreach (string line in lines) { GUI.Label(new Rect(book.x + 22, y, book.width - 44, 47), line, bodyStyle); y += 50; }
     }
-
-    private static string Mark(string flag) => SAL_Progress.HasFlag(flag) ? "✓" : "·";
-    private static string MarkItem(string item) => CORE_InventoryBridge.HasItem(item) ? "✓" : "·";
 }

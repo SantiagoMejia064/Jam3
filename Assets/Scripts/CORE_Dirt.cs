@@ -8,6 +8,7 @@ public sealed class CORE_Dirt : MonoBehaviour
     [SerializeField, Min(0.1f)] private float cleanSeconds = 1f;
     [SerializeField] private string completedMessage = "Action completed.";
     [SerializeField] private string prompt = "Mantén E · Limpiar";
+    [SerializeField] private bool showHoldProgress;
     [SerializeField] private UnityEvent onCleaned = new UnityEvent();
     [SerializeField] private GameObject promptVisual;
     [SerializeField] private GameObject dustVisual;
@@ -37,6 +38,8 @@ public sealed class CORE_Dirt : MonoBehaviour
     private MaterialPropertyBlock pulseBlock;
     private float progress;
     private bool cleaned;
+    public float Progress01 => Mathf.Clamp01(progress / cleanSeconds);
+    public bool IsCleaning => isActiveAndEnabled && !cleaned && progress > 0f;
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
     private static readonly int ColorId = Shader.PropertyToID("_Color");
 
@@ -91,6 +94,11 @@ public sealed class CORE_Dirt : MonoBehaviour
 
     private void Update()
     {
+        if (NotebookController.Instance != null && NotebookController.Instance.IsOpen)
+        {
+            progress = 0;
+            return;
+        }
         if (!cleaned) PulseDust();
         if (!PlayerIsInRange())
         {
@@ -103,10 +111,12 @@ public sealed class CORE_Dirt : MonoBehaviour
         if (cleaned || !player || !player.InteractHeld)
         {
             if (!cleaned) progress = 0;
+            if (!cleaned && showHoldProgress) ShowHoldPrompt();
             return;
         }
 
         progress += Time.deltaTime;
+        if (showHoldProgress) ShowHoldPrompt();
         if (progress < cleanSeconds) return;
 
         cleaned = true;
@@ -155,6 +165,13 @@ public sealed class CORE_Dirt : MonoBehaviour
         if (material && material.HasProperty(BaseColorId)) pulseBlock.SetColor(BaseColorId, pulsingColor);
         if (material && material.HasProperty(ColorId)) pulseBlock.SetColor(ColorId, pulsingColor);
         pulseRenderer.SetPropertyBlock(pulseBlock);
+    }
+
+    private void ShowHoldPrompt()
+    {
+        float elapsed = Mathf.Min(progress, cleanSeconds);
+        CORE_InteractionHUD.SetPrompt(this,
+            $"{prompt} · {elapsed:0.0} / {cleanSeconds:0.0} s ({Mathf.RoundToInt(elapsed / cleanSeconds * 100)}%)");
     }
 
     private void ClearPulse()

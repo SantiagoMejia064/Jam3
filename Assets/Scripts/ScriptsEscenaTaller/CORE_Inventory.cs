@@ -18,15 +18,6 @@ public class CORE_Inventory : MonoBehaviour
     // Recordamos los recogidos, aunque después se utilicen.
     private List<string> collectedItems = new List<string>();
 
-    // Permite iniciar desde cualquier sala con el mismo inventario configurado.
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    static void CreateInventory()
-    {
-        if (Instance != null) return;
-        GameObject prefab = Resources.Load<GameObject>("CORE_Inventario");
-        if (prefab != null) Instantiate(prefab);
-    }
-
     void Awake()
     {
         if (Instance != null && Instance != this)

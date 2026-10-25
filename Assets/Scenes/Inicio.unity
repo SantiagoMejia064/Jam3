@@ -1067,9 +1067,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 303333420}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 5}
+  m_AnchorMin: {x: 0, y: 0.76}
+  m_AnchorMax: {x: 1, y: 0.89}
+  m_AnchoredPosition: {x: 0, y: -4}
   m_SizeDelta: {x: -44, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!21 &117047491
@@ -1334,6 +1334,7 @@ MonoBehaviour:
   cleanSeconds: 1
   completedMessage: Sello de rondas revelado.
   prompt: "Mant\xE9n E - Limpiar y revelar el sello"
+  showHoldProgress: 0
   onCleaned:
     m_PersistentCalls:
       m_Calls: []
@@ -1341,7 +1342,21 @@ MonoBehaviour:
   dustVisual: {fileID: 0}
   revealOnClean: {fileID: 2103804667}
   revealOnCleanExtra: {fileID: 0}
+  cleanSound: {fileID: 0}
+  cleanAudioSource: {fileID: 0}
+  glowColor: {r: 0.15, g: 0.9, b: 1, a: 1}
+  glowStrength: 0.7
+  glowPulsesPerSecond: 1.8
   stampId: 
+  cleanFlag: 
+  resultFlag: 
+  notebookIndex: -1
+  noteTitle: 
+  noteContent: 
+  noteRereading: 
+  rollRevealedBall: 0
+  revealedBallImpulse: 1.8
+  revealedBallSpinImpulse: 2.5
 --- !u!23 &147372051
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2709,8 +2724,16 @@ MonoBehaviour:
   destinationScene: Inicio
   requiredItem: 
   ignoreRequirementForDebug: 0
+  additionalRequiredItem: 
+  requireSelectedItem: 0
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: E - Volver a Inicio
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 0}
 --- !u!23 &324513793
 MeshRenderer:
@@ -4486,8 +4509,16 @@ MonoBehaviour:
   destinationScene: SalaMaquinas
   requiredItem: 
   ignoreRequirementForDebug: 0
+  additionalRequiredItem: 
+  requireSelectedItem: 0
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: E - Entrar a Sala de Maquinas
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 0}
 --- !u!23 &516672822
 MeshRenderer:
@@ -4774,6 +4805,24 @@ MonoBehaviour:
   resultItem: 
   lockedMessage: "No sirve aqu\xED."
   responseMessage: "A2 \xB7 \xA1No puedes sacar eso de aqu\xED!"
+  secondResponseMessage: 
+  alternateResponseMessage: 
+  revealFlag: 
+  messageSeconds: 3.5
+  audioLogId: 
+  playOnStart: 0
+  playAudioOnApproach: 0
+  playOnStartOnceFlag: 
+  requiredFlag: 
+  resultFlag: 
+  triggerOnApproach: 0
+  responseAudio: {fileID: 0}
+  requireSelectedItem: 0
+  notebookIndex: -1
+  notebookTitle: 
+  notebookContent: 
+  notebookRereading: 
+  successVisualsToHide: []
   promptVisual: {fileID: 0}
   oneShot: 1
 --- !u!23 &547446021
@@ -4886,9 +4935,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 303333420}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.48}
+  m_AnchorMin: {x: 0, y: 0.9}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -5}
+  m_AnchoredPosition: {x: 0, y: -8}
   m_SizeDelta: {x: -44, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &573347205
@@ -5916,8 +5965,16 @@ MonoBehaviour:
   destinationScene: Invernadero
   requiredItem: Cortador
   ignoreRequirementForDebug: 0
+  additionalRequiredItem: 
+  requireSelectedItem: 0
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: E - Entrar a Invernadero
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 0}
 --- !u!23 &694539194
 MeshRenderer:
@@ -6544,6 +6601,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 9100000000000000002}
   - {fileID: 1435003872}
   - {fileID: 1077328905}
   - {fileID: 817613771}
@@ -8414,6 +8472,7 @@ MonoBehaviour:
   cleanSeconds: 1
   completedMessage: Muelle limpio. Pelota descubierta.
   prompt: "Mant\xE9n E - Limpiar el muelle"
+  showHoldProgress: 0
   onCleaned:
     m_PersistentCalls:
       m_Calls: []
@@ -8421,7 +8480,21 @@ MonoBehaviour:
   dustVisual: {fileID: 1197263902}
   revealOnClean: {fileID: 2097081780}
   revealOnCleanExtra: {fileID: 2113606955}
+  cleanSound: {fileID: 0}
+  cleanAudioSource: {fileID: 0}
+  glowColor: {r: 0.15, g: 0.9, b: 1, a: 1}
+  glowStrength: 0.7
+  glowPulsesPerSecond: 1.8
   stampId: 
+  cleanFlag: 
+  resultFlag: 
+  notebookIndex: -1
+  noteTitle: 
+  noteContent: 
+  noteRereading: 
+  rollRevealedBall: 0
+  revealedBallImpulse: 1.8
+  revealedBallSpinImpulse: 2.5
 --- !u!23 &1015386896
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10659,8 +10732,16 @@ MonoBehaviour:
   destinationScene: Bodega
   requiredItem: Cortador
   ignoreRequirementForDebug: 1
+  additionalRequiredItem: 
+  requireSelectedItem: 1
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: "E \xB7 Entrar a Bodega"
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 216701494}
 --- !u!23 &1386550383
 MeshRenderer:
@@ -11465,6 +11546,24 @@ MonoBehaviour:
   resultItem: PiezaOscuridad
   lockedMessage: No agarra. Prueba con la Pelota.
   responseMessage: 'Gabinete abierto: pieza Oscuridad obtenida.'
+  secondResponseMessage: 
+  alternateResponseMessage: 
+  revealFlag: 
+  messageSeconds: 3.5
+  audioLogId: 
+  playOnStart: 0
+  playAudioOnApproach: 0
+  playOnStartOnceFlag: 
+  requiredFlag: 
+  resultFlag: 
+  triggerOnApproach: 0
+  responseAudio: {fileID: 0}
+  requireSelectedItem: 0
+  notebookIndex: -1
+  notebookTitle: 
+  notebookContent: 
+  notebookRereading: 
+  successVisualsToHide: []
   promptVisual: {fileID: 0}
   oneShot: 0
 --- !u!23 &1457215528
@@ -13530,8 +13629,16 @@ MonoBehaviour:
   destinationScene: Taller
   requiredItem: 
   ignoreRequirementForDebug: 0
+  additionalRequiredItem: 
+  requireSelectedItem: 0
+  requiredFlag: 
+  missingFlagMessage: 
   prompt: E - Entrar a Taller
   lockedMessage: "Est\xE1 sellada."
+  openMessage: 
+  alternateOpenMessage: 
+  revealFlag: 
+  openMessageSeconds: 2
   promptVisual: {fileID: 0}
 --- !u!23 &1834667358
 MeshRenderer:
@@ -15621,6 +15728,24 @@ MonoBehaviour:
   resultItem: 
   lockedMessage: "No sirve aqu\xED."
   responseMessage: "A3 \xB7 La unidad ya no distingue lo \xFAtil de lo bello."
+  secondResponseMessage: 
+  alternateResponseMessage: 
+  revealFlag: 
+  messageSeconds: 3.5
+  audioLogId: 
+  playOnStart: 0
+  playAudioOnApproach: 0
+  playOnStartOnceFlag: 
+  requiredFlag: 
+  resultFlag: 
+  triggerOnApproach: 0
+  responseAudio: {fileID: 0}
+  requireSelectedItem: 0
+  notebookIndex: -1
+  notebookTitle: 
+  notebookContent: 
+  notebookRereading: 
+  successVisualsToHide: []
   promptVisual: {fileID: 0}
   oneShot: 0
 --- !u!65 &2081488532
@@ -16595,3 +16720,125 @@ SceneRoots:
   - {fileID: 2064869420}
   - {fileID: 421056846}
   - {fileID: 724620184}
+--- !u!1001 &9100000000000000001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 724620184}
+    m_Modifications:
+    - target: {fileID: 1090328933322950873, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4283084282
+      objectReference: {fileID: 0}
+    - target: {fileID: 1090328933322950873, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641075639815811613, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_Pivot.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -24
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -18
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4131034750496648837, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_Name
+      value: ObjetivoHUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 5259794496987963827, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4291946736
+      objectReference: {fileID: 0}
+    - target: {fileID: 5259794496987963827, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+--- !u!224 &9100000000000000002 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2355726346195673177, guid: 197e53570a612da4aa370f314d4909b3, type: 3}
+  m_PrefabInstance: {fileID: 9100000000000000001}
+  m_PrefabAsset: {fileID: 0}

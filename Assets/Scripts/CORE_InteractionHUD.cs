@@ -19,8 +19,7 @@ public sealed class CORE_InteractionHUD : MonoBehaviour
 
     private void Update()
     {
-        if (messageTime <= 0f) return;
-        messageTime -= Time.deltaTime;
+        if (messageTime > 0f) messageTime -= Time.deltaTime;
         if (messageTime <= 0f && messageText) messageText.text = string.Empty;
         Refresh();
     }
@@ -42,6 +41,8 @@ public sealed class CORE_InteractionHUD : MonoBehaviour
         instance.Refresh();
     }
 
+    public static bool HasPrompt(Object source) => instance && source && instance.prompts.ContainsKey(source);
+
     public static void ShowMessage(string text, float seconds = 3.5f)
     {
         if (!instance || !instance.messageText) return;
@@ -62,6 +63,8 @@ public sealed class CORE_InteractionHUD : MonoBehaviour
         }
         promptText.text = activePrompt;
         if (messageTime <= 0f) messageText.text = string.Empty;
-        panel.SetActive(!string.IsNullOrEmpty(activePrompt) || !string.IsNullOrEmpty(messageText.text));
+        bool notebookOpen = NotebookController.Instance && NotebookController.Instance.IsOpen;
+        panel.SetActive(!notebookOpen &&
+            (!string.IsNullOrEmpty(activePrompt) || !string.IsNullOrEmpty(messageText.text)));
     }
 }

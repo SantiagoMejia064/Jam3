@@ -9,39 +9,19 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>Authors missing, editable Javier scene objects in the Editor, never during Play.</summary>
-[InitializeOnLoad]
 internal static class JavierHierarchySetup
 {
     private const string ScenePath = "Assets/Scenes/Javier.unity";
     private const string NotebookName = "Canvas_Cuaderno";
     private static bool running;
 
-    static JavierHierarchySetup()
-    {
-        EditorApplication.delayCall += EnsureJavierSceneObjects;
-        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-        EditorApplication.update += EnsureWhenEditorIsReady;
-    }
-
-    private static void EnsureWhenEditorIsReady()
-    {
-        if (EditorApplication.isPlayingOrWillChangePlaymode) return;
-        EditorApplication.update -= EnsureWhenEditorIsReady;
-        EnsureJavierSceneObjects();
-    }
-
-    private static void OnPlayModeStateChanged(PlayModeStateChange state)
-    {
-        if (state == PlayModeStateChange.EnteredEditMode)
-            EditorApplication.delayCall += EnsureJavierSceneObjects;
-    }
-
     [MenuItem("Jam3/Prepare Javier Editable Objects")]
     private static void PrepareFromMenu() => EnsureJavierSceneObjects();
 
     private static void EnsureJavierSceneObjects()
     {
-        if (running || EditorApplication.isPlayingOrWillChangePlaymode || !System.IO.File.Exists(ScenePath)) return;
+        if (running || Application.isPlaying || EditorApplication.isPlaying ||
+            EditorApplication.isPlayingOrWillChangePlaymode || !System.IO.File.Exists(ScenePath)) return;
         running = true;
         Scene scene = SceneManager.GetSceneByPath(ScenePath);
         bool wasLoaded = scene.IsValid() && scene.isLoaded;
