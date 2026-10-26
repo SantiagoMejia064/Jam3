@@ -3379,7 +3379,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.75, g: 0.35, b: 0.98, a: 1}
-  m_Intensity: 1.894128
+  m_Intensity: 1.4000485
   m_Range: 2.4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -27074,7 +27074,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2128336613
 Transform:
   m_ObjectHideFlags: 0

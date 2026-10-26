@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/inicio/MenuInicio.unity
     guid: 06c3675c1c7f2ee47bb0afde92b4b6ff
   - enabled: 1
+    path: Assets/Scenes/Inicio.unity
+    guid: e46a9ecc55cd7da44a9c5606a7e78f48
+  - enabled: 1
     path: Assets/Scenes/Javier.unity
     guid: 4cd5c6dc5196a3f41ab79b942a2eabdf
   - enabled: 1
