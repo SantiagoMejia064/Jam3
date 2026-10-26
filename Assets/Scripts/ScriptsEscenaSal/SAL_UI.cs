@@ -15,8 +15,6 @@ public sealed class SAL_UI : MonoBehaviour
         }
         var target = interaction.Target;
         string prompt = (target.holdToClean ? "Mantén E · " : "E · ") + target.prompt;
-        if (target.holdToClean && interaction.HoldProgress > 0)
-            prompt += "  " + Mathf.RoundToInt(interaction.HoldProgress * 100) + "%";
         CORE_InteractionHUD.SetPrompt(this, prompt);
     }
 

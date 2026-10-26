@@ -14,6 +14,7 @@ public sealed class BOD_Tray : MonoBehaviour
     private bool cleaned;
     private bool waitingForRelease;
     public bool IsCleaning { get; private set; }
+    public float Progress01 => Mathf.Clamp01(elapsed / cleanSeconds);
 
     private void Awake()
     {
@@ -57,7 +58,7 @@ public sealed class BOD_Tray : MonoBehaviour
         }
         elapsed = player.InteractHeld ? Mathf.Min(cleanSeconds, elapsed + Time.deltaTime) : 0f;
         IsCleaning = player.InteractHeld && elapsed < cleanSeconds;
-        CORE_InteractionHUD.SetPrompt(this, $"Mantén E para limpiar · {elapsed:0.0} / {cleanSeconds:0.0} s ({Mathf.RoundToInt(elapsed / cleanSeconds * 100)}%)");
+        CORE_InteractionHUD.SetPrompt(this, "Mantén E · Limpiar bandeja");
         if (elapsed < cleanSeconds) return;
         cleaned = true;
         SAL_Progress.SetFlag(cleanFlag);
