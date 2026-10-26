@@ -376,22 +376,22 @@ public static class INV_SceneSetup
             new Color(0.6f, 0.6f, 0.68f), TextAlignmentOptions.Center);
         SetSerializedField(revUI, "cardNumberText", numTxt);
 
-        var vegaTxt = CreateText(panel.transform, "VegaVoice", "Vega: \"...\"", 28,
+        var vegaTxt = CreateText(panel.transform, "VegaVoice", "", 28,
             new Vector2(0.5f, 0.68f), new Vector2(0.5f, 0.68f), Vector2.zero, new Vector2(1100, 90),
             new Color(0.95f, 0.95f, 0.98f), TextAlignmentOptions.Center);
         SetSerializedField(revUI, "vegaVoiceText", vegaTxt);
 
-        var read1Txt = CreateText(panel.transform, "Reading1", "Lectura 1...", 20,
+        var read1Txt = CreateText(panel.transform, "Reading1", "", 20,
             new Vector2(0.5f, 0.48f), new Vector2(0.5f, 0.48f), Vector2.zero, new Vector2(1000, 50),
             new Color(0.5f, 0.5f, 0.55f), TextAlignmentOptions.Center);
         SetSerializedField(revUI, "reading1Text", read1Txt);
 
-        var read2Txt = CreateText(panel.transform, "Reading2", "Lectura 2...", 24,
+        var read2Txt = CreateText(panel.transform, "Reading2", "", 24,
             new Vector2(0.5f, 0.32f), new Vector2(0.5f, 0.32f), Vector2.zero, new Vector2(1100, 90),
             new Color(0.94f, 0.35f, 0.35f), TextAlignmentOptions.Center);
         SetSerializedField(revUI, "reading2Text", read2Txt);
 
-        var advanceTxt = CreateText(panel.transform, "AdvanceHint", "Pulsa [E] o [Espacio] para continuar...", 18,
+        var advanceTxt = CreateText(panel.transform, "AdvanceHint", "E o Espacio: continuar", 18,
             new Vector2(0.5f, 0.12f), new Vector2(0.5f, 0.12f), Vector2.zero, new Vector2(600, 30),
             new Color(0.7f, 0.7f, 0.75f), TextAlignmentOptions.Center);
         SetSerializedField(revUI, "hintAdvanceText", advanceTxt);

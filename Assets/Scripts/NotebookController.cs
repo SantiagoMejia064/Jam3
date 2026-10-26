@@ -184,14 +184,14 @@ public sealed class NotebookController : MonoBehaviour
         {
             preview.gameObject.SetActive(!showingStamps && (!reading || selectedPage < 0));
             preview.text = selectedPage < 0
-                ? "Selecciona una nota del índice.\n\nSolo puedes consultar las notas que hayas recogido."
-                : $"{titles[selectedPage]}\n\nPágina abierta.\nPulsa otra vez su botón del índice para leer la nota.";
+                ? "Selecciona una nota del índice para leerla."
+                : $"{titles[selectedPage]}\n\nPulsa de nuevo en el índice para leer la nota.";
         }
     }
 
     private string ReadableContent(int index)
     {
-        string body = contents[index] ?? "Contenido pendiente.";
+        string body = contents[index] ?? string.Empty;
         return !SAL_Progress.HasFlag(SAL_Progress.Revealed) || string.IsNullOrEmpty(rereadings[index]) ? body
             : body + "\n\nRelectura\n" + rereadings[index];
     }

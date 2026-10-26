@@ -100,8 +100,8 @@ public class CinematicaIntroController : MonoBehaviour
     public Color colorVerdeFosforo = new Color(0.28f, 1.00f, 0.48f, 1f);
 
     [Header("Textos Fijos de Interfaz (UI de Terminal)")]
-    public string textoAlertaSuperior1 = "[ALERTA CRITICA: PROTOCOLO DE PURGA ACTIVADO]";
-    public string textoAlertaSuperior2 = "REINICIO DE FABRICA - BORRANDO RECUERDOS DE \"ELLA\"";
+    public string textoAlertaSuperior1 = "ALERTA CRÍTICA: PROTOCOLO DE PURGA ACTIVADO";
+    public string textoAlertaSuperior2 = "REINICIO DE FÁBRICA · BORRANDO RECUERDOS DE ELLA";
     public string etiquetaVega = "VEGA";
     public string etiquetaSiete = "SIETE";
     public string textoBotonSaltar = "Saltar intro";
@@ -1045,7 +1045,7 @@ public class CinematicaIntroController : MonoBehaviour
             if (!tieneSprite)
             {
                 if (tmpPlaceholderNumero != null)
-                    tmpPlaceholderNumero.text = $"[ REGISTRO DE MEMORIA {indiceCeroBase + 1:00} / {Mathf.Max(1, cuadros.Count):00} ]";
+                    tmpPlaceholderNumero.text = $"Registro de memoria {indiceCeroBase + 1:00} de {Mathf.Max(1, cuadros.Count):00}";
                 if (tmpPlaceholderTitulo != null)
                     tmpPlaceholderTitulo.text = cuadro.ObtenerNombreVisible(indiceCeroBase + 1);
             }
@@ -1334,9 +1334,9 @@ public class CinematicaIntroController : MonoBehaviour
 
     public void ConstruirOVincularUI()
     {
-        TMP_FontAsset fuenteTMP = TMP_Settings.defaultFontAsset;
+        TMP_FontAsset fuenteTMP = Resources.Load<TMP_FontAsset>("Fonts & Materials/Manrope-VariableFont_wght SDF");
         if (fuenteTMP == null)
-            fuenteTMP = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+            fuenteTMP = TMP_Settings.defaultFontAsset;
 
         canvasRaiz = GetComponent<Canvas>();
         if (canvasRaiz == null)
@@ -1433,7 +1433,7 @@ public class CinematicaIntroController : MonoBehaviour
 
             RectTransform rtHead = CrearRect("EncabezadoTerminal", rtTerm, new Vector2(0f, 0.86f), new Vector2(1f, 1f), Vector2.zero, Vector2.zero);
             tmpEncabezadoTerminal = CrearTMP(rtHead.gameObject, fuenteTMP, 19f, TextAlignmentOptions.BottomLeft, new Color(0.22f, 0.78f, 0.38f, 0.72f));
-            tmpEncabezadoTerminal.text = "// MEMORIA_RESIDUAL_PROTEGIDA :: CANAL OCULTO DE SIETE";
+            tmpEncabezadoTerminal.text = "Memoria residual protegida · Canal de Siete";
 
             RectTransform rtBody = CrearRect("CuerpoTerminalVerde", rtTerm, new Vector2(0f, 0f), new Vector2(1f, 0.82f), Vector2.zero, Vector2.zero);
             tmpCuerpoTerminalVerde = CrearTMP(rtBody.gameObject, fuenteTMP, 30f, TextAlignmentOptions.TopLeft, colorVerdeFosforo);
@@ -1814,6 +1814,14 @@ public class CinematicaIntroController : MonoBehaviour
         TextMeshProUGUI tmp = AsegurarComp<TextMeshProUGUI>(go);
         if (fuente != null)
             tmp.font = fuente;
+        string nombre = tmp.gameObject.name;
+        string fuenteEspecifica = nombre == "TextoSubtitulo" ? "Merienda-VariableFont_wght" :
+            nombre == "PlaceholderTitulo" ? "Metamorphous-Regular" :
+            nombre.Contains("Terminal") || nombre.Contains("Alerta") || nombre == "TextoCierre" ||
+            nombre == "TextoBarraPorcentaje" || nombre == "PlaceholderNumero" ? "IBMPlexMono-Regular" : null;
+        if (fuenteEspecifica != null)
+            tmp.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/" + fuenteEspecifica + " SDF");
+        if (nombre == "TextoSubtitulo") tmp.fontWeight = FontWeight.Medium;
         tmp.fontSize = tamano;
         tmp.alignment = alineacion;
         tmp.color = color;

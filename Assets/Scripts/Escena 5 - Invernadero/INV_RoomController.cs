@@ -707,7 +707,7 @@ public sealed class INV_RoomController : MonoBehaviour
         if (Application.isEditor && Input.GetKeyDown(KeyCode.F5))
         {
             InjectDebugItems();
-            CORE_InteractionHUD.ShowMessage("[DEBUG] Items de prueba inyectados (Semilla y 4 Piezas).", 3f);
+            Debug.Log("Invernadero: ítems de prueba inyectados (Semilla y 4 Piezas).", this);
         }
     }
 }

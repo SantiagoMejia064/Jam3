@@ -252,7 +252,7 @@ public sealed class INV_RevelationUI : MonoBehaviour
         if (vegaVoiceText) vegaVoiceText.text = $"Vega: {c.vegaLine}";
         if (reading1Text) reading1Text.text = $"<color=#888888>{c.reading1Title}</color>";
         if (reading2Text) reading2Text.text = $"<color=#EF4444>{c.reading2Title}</color>\n<size=22><color=#F3F4F6>{c.reading2Detail}</color></size>";
-        if (hintAdvanceText) hintAdvanceText.text = "[E / Espacio / Clic] Siguiente    |    [ESC] Saltar";
+        if (hintAdvanceText) hintAdvanceText.text = "E, Espacio o clic: siguiente · Esc: saltar";
 
         autoAdvanceTime = Time.unscaledTime + 8f;
     }
@@ -284,7 +284,7 @@ public sealed class INV_RevelationUI : MonoBehaviour
         if (reading1Text) reading1Text.text = "";
         if (vegaVoiceText) vegaVoiceText.text = "Vega: \"Se parece a lo que mató las semillas de la Tierra...\"";
         if (reading2Text) reading2Text.text = "<color=#EF4444>Vega: \"Quitaste el filtro 14. Mi aire pasa por ahí...\"</color>";
-        if (hintAdvanceText) hintAdvanceText.text = "[E / Espacio / Clic] Continuar";
+        if (hintAdvanceText) hintAdvanceText.text = "E, Espacio o clic: continuar";
         autoAdvanceTime = Time.unscaledTime + 5f;
     }
 
@@ -293,7 +293,7 @@ public sealed class INV_RevelationUI : MonoBehaviour
         PlayVegaCue(3);
         if (vegaVoiceText) vegaVoiceText.text = "Vega: \"Suéltala, Siete. Por favor.\"";
         if (reading2Text) reading2Text.text = "<color=#EF4444>La incubadora ahora tiene ruedas. Debo llevarla a la esclusa.</color>";
-        if (hintAdvanceText) hintAdvanceText.text = "[E / Espacio / Clic] Salir al Invernadero";
+        if (hintAdvanceText) hintAdvanceText.text = "E, Espacio o clic: volver al Invernadero";
         autoAdvanceTime = Time.unscaledTime + 5f;
     }
 
@@ -353,19 +353,19 @@ public sealed class INV_RevelationUI : MonoBehaviour
             new Vector2(0.5f, 0.85f), Vector2.zero, new Vector2(800, 35),
             new Color(0.6f, 0.6f, 0.68f), TextAlignmentOptions.Center);
 
-        vegaVoiceText = CreateRuntimeText(panel.transform, "VegaVoice", "Vega: \"...\"", 28,
+        vegaVoiceText = CreateRuntimeText(panel.transform, "VegaVoice", "", 28,
             new Vector2(0.5f, 0.68f), Vector2.zero, new Vector2(1100, 90),
             new Color(0.95f, 0.95f, 0.98f), TextAlignmentOptions.Center);
 
-        reading1Text = CreateRuntimeText(panel.transform, "Reading1", "Lectura 1...", 20,
+        reading1Text = CreateRuntimeText(panel.transform, "Reading1", "", 20,
             new Vector2(0.5f, 0.48f), Vector2.zero, new Vector2(1000, 50),
             new Color(0.5f, 0.5f, 0.55f), TextAlignmentOptions.Center);
 
-        reading2Text = CreateRuntimeText(panel.transform, "Reading2", "Lectura 2...", 24,
+        reading2Text = CreateRuntimeText(panel.transform, "Reading2", "", 24,
             new Vector2(0.5f, 0.32f), Vector2.zero, new Vector2(1100, 90),
             new Color(0.94f, 0.35f, 0.35f), TextAlignmentOptions.Center);
 
-        hintAdvanceText = CreateRuntimeText(panel.transform, "AdvanceHint", "[E / Espacio / Clic] Siguiente    |    [ESC] Saltar", 18,
+        hintAdvanceText = CreateRuntimeText(panel.transform, "AdvanceHint", "E, Espacio o clic: siguiente · Esc: saltar", 18,
             new Vector2(0.5f, 0.12f), Vector2.zero, new Vector2(700, 30),
             new Color(0.7f, 0.7f, 0.75f), TextAlignmentOptions.Center);
     }
@@ -380,6 +380,11 @@ public sealed class INV_RevelationUI : MonoBehaviour
         rect.anchoredPosition = pos; rect.sizeDelta = delta;
 
         var tmp = go.AddComponent<TextMeshProUGUI>();
+        string fontName = name == "VegaVoice" ? "Merienda-VariableFont_wght" :
+            name == "Reading1" || name == "Reading2" ? "Caveat-VariableFont_wght" :
+            name == "CardNumber" ? "Metamorphous-Regular" : "Manrope-VariableFont_wght";
+        tmp.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/" + fontName + " SDF");
+        if (name == "VegaVoice") tmp.fontWeight = FontWeight.Medium;
         tmp.text = content;
         tmp.fontSize = size;
         tmp.color = color;

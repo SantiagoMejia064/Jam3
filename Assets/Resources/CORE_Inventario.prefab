@@ -188,14 +188,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: Selecciona un objeto
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4293979624
   m_fontColor: {r: 0.91, g: 0.93, b: 0.94, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -316,7 +316,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 10
@@ -452,14 +452,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: <
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4283611391
   m_fontColor: {r: 1, g: 0.72, b: 0.32, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -472,7 +472,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -850,14 +850,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: '>'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4283611391
   m_fontColor: {r: 1, g: 0.72, b: 0.32, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -870,7 +870,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -987,14 +987,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: "1\u20134 o clic: seleccionar  \xB7  E: interactuar"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4290424990
   m_fontColor: {r: 0.62, g: 0.69, b: 0.73, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1007,7 +1007,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1124,14 +1124,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: 1 / 1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4293979624
   m_fontColor: {r: 0.91, g: 0.93, b: 0.94, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1144,7 +1144,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1336,14 +1336,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: HERRAMIENTAS
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dfb0a8420f066ce40835844608643715, type: 2}
+  m_sharedMaterial: {fileID: 8019579680191362093, guid: dfb0a8420f066ce40835844608643715, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4283611391
   m_fontColor: {r: 1, g: 0.72, b: 0.32, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1356,7 +1356,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1480,6 +1480,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6649048565638479541}
     m_Modifications:
+    - target: {fileID: 984597959924091423, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4283611391
+      objectReference: {fileID: 0}
     - target: {fileID: 8289302346756333454, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_Name
       value: Casilla 4
@@ -1494,19 +1498,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1563,6 +1567,10 @@ PrefabInstance:
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208474747120129262, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4293979624
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1593,6 +1601,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6649048565638479541}
     m_Modifications:
+    - target: {fileID: 984597959924091423, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4283611391
+      objectReference: {fileID: 0}
     - target: {fileID: 8289302346756333454, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_Name
       value: Casilla 1
@@ -1607,19 +1619,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1676,6 +1688,10 @@ PrefabInstance:
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208474747120129262, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4293979624
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1706,6 +1722,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6649048565638479541}
     m_Modifications:
+    - target: {fileID: 984597959924091423, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4283611391
+      objectReference: {fileID: 0}
     - target: {fileID: 8289302346756333454, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_Name
       value: Casilla 3
@@ -1720,19 +1740,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1789,6 +1809,10 @@ PrefabInstance:
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208474747120129262, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4293979624
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1819,6 +1843,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6649048565638479541}
     m_Modifications:
+    - target: {fileID: 984597959924091423, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4283611391
+      objectReference: {fileID: 0}
     - target: {fileID: 8289302346756333454, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_Name
       value: Casilla 2
@@ -1833,19 +1861,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1902,6 +1930,10 @@ PrefabInstance:
     - target: {fileID: 8469764554151252775, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208474747120129262, guid: 28a578a5e4d1404f419b104d575fda61, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4293979624
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

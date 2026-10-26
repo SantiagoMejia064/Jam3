@@ -484,6 +484,8 @@ public sealed class INV_IncubatorUI : MonoBehaviour
         rect.anchoredPosition = pos; rect.sizeDelta = delta;
 
         var tmp = go.AddComponent<TextMeshProUGUI>();
+        tmp.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/" +
+            (name == "Titulo" ? "Metamorphous-Regular" : "Manrope-VariableFont_wght") + " SDF");
         tmp.text = content;
         tmp.fontSize = size;
         tmp.color = color;

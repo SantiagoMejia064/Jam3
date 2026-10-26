@@ -58,12 +58,7 @@ public sealed class INV_TestingSetup : MonoBehaviour
 
         InjectAllForScene5();
 
-        CORE_InteractionHUD.ShowMessage(
-            "<color=#38BDF8><b>[ESCENA 5 - INVERNADERO PREPARADA]</b></color>\n" +
-            "Tienes la Semilla y las 4 Piezas en tu inventario.\n" +
-            "Explora libremente: lee la mesa con [E], examina la maceta y monta la incubadora.",
-            5.5f
-        );
+        Debug.Log("Invernadero: inventario de pruebas preparado.", this);
     }
 
     /// <summary>Garantiza que el sistema de inventario esté instanciado en la escena si no venimos de Javier.</summary>
@@ -150,16 +145,16 @@ public sealed class INV_TestingSetup : MonoBehaviour
         if (!nb) return;
 
         // Notas previas del GDD:
-        nb.CollectNote(0, "N1 · Registro del reactor", "Bitácora inicial de Vega sobre el reactor y anomalías en la nave.");
-        nb.CollectNote(1, "N2 · Ruta de escape", "Esquema del casillero en el Taller indicando rutas de servicio.");
-        nb.CollectNote(2, "N3 · Diagrama del motor", "Instrucciones de cableado y prueba de la pulidora.");
-        nb.CollectNote(3, "N4 · Placa de la Bodega Fría", "4 bandejas en gradiente de oscuridad: 7294 abre la cámara de Calor.");
-        nb.CollectNote(4, "N5 · Combinación de sellos", "Secuencia de consola ▲◆✚ registrada tras verificar los sellos de ronda.");
-        nb.CollectNote(5, "N6 · Dibujos infantiles", "Bosquejos de Vega representando a Ella brotando.");
-        nb.CollectNote(6, "N7 · Etiqueta del filtro", "Especificaciones del sistema de ventilación y advertencias de condensación.");
+        nb.CollectNote(0, "N1 · La ronda", "Limpia donde nadie mira. Ahí empieza.", "El sensor del pasillo marcó algo. Lo apagué.");
+        nb.CollectNote(1, "N2 · Ruta de la ronda", "Nunca cambies el orden. Él no lo sabe.");
+        nb.CollectNote(2, "N3 · Por reparar", "");
+        nb.CollectNote(3, "Placa de la Bodega Fría", "Él mató las otras semillas.", "¿Por qué más grises junto al ducto?");
+        nb.CollectNote(4, "N5 · Combinación de sellos", "▲  ◆  ✚");
+        nb.CollectNote(5, "N6 · Dibujos infantiles", "Los dibujos de Ella. Firma: ||·.", "Las otras plantas ya estaban grises.");
+        nb.CollectNote(6, "N7 · Etiqueta del filtro", "Filtro 14: cambiar.", "Filtro 14: NO retirar. Es la barrera.");
         // Nota 7 (N8) queda bloqueada intencionalmente para que Siete la recoja de la mesa en el Invernadero!
-        nb.CollectNote(8, "N9 · Secuencia de extracción", "Firma ||· bloque de índice 3 entrega la Semilla.");
-        nb.CollectNote(9, "N10 · Registro del cargador", "Vega no sabe que hay semillas. Yo sí.");
+        nb.CollectNote(8, "N9 · Secuencia de extracción", "Aquí. No la sueltes.", "Ella no se parece a nada de aquí.");
+        nb.CollectNote(9, "N10 · Detrás del Cargador", "Mentí. Fue la primera vez.", "Mi tarea era proteger a la tripulación.");
 
         // Sellos de ronda
         if (unlockRoundStamps)
@@ -184,14 +179,14 @@ public sealed class INV_TestingSetup : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F2))
         {
             InjectInventoryItems();
-            CORE_InteractionHUD.ShowMessage("<color=#38BDF8>[F2] Ítems reinyectados en el inventario.</color>", 3f);
+            Debug.Log("[F2] Ítems reinyectados en el inventario.", this);
         }
 
         // [F3] Montar piezas instantáneamente en la incubadora
         if (Input.GetKeyDown(KeyCode.F3))
         {
             SAL_Progress.SetFlag(INV_IncubatorPuzzle.FlagMontada, true);
-            CORE_InteractionHUD.ShowMessage("<color=#38BDF8>[F3] Piezas montadas en la incubadora. Listo para afinar.</color>", 3f);
+            Debug.Log("[F3] Piezas montadas en la incubadora. Listo para afinar.", this);
         }
 
         // [F4] Abrir panel de afinación
@@ -211,7 +206,7 @@ public sealed class INV_TestingSetup : MonoBehaviour
         {
             SAL_Progress.SetAct(7);
             SAL_Progress.SetFlag(INV_IncubatorPuzzle.FlagFlorecio, true);
-            CORE_InteractionHUD.ShowMessage("<color=#C084FC>[F5] Ella ha florecido (Luz violeta activa).</color>", 3f);
+            Debug.Log("[F5] Ella ha florecido (Luz violeta activa).", this);
         }
 
         // [F6] Revelación / Alarma de esporas
@@ -222,13 +217,13 @@ public sealed class INV_TestingSetup : MonoBehaviour
             INV_RoomController.Instance?.ApplyDesaturation();
             var revUI = FindFirstObjectByType<INV_RevelationUI>(FindObjectsInactive.Include);
             if (revUI) revUI.StartSequence(null);
-            CORE_InteractionHUD.ShowMessage("<color=#EF4444>[F6] Alarma activada y tarjetas de revelación mostradas.</color>", 3f);
+            Debug.Log("[F6] Alarma activada y tarjetas de revelación mostradas.", this);
         }
     }
 
     private void ShowHelpMessage()
     {
-        CORE_InteractionHUD.ShowMessage(
+        Debug.Log(
             "<b>ATAJOS DE TESTING (ESCENA 5):</b>\n" +
             "• <b>[F2]</b> Reinyectar Semilla + 4 Piezas + Cortador\n" +
             "• <b>[F3]</b> Montar piezas en la incubadora\n" +
@@ -236,7 +231,7 @@ public sealed class INV_TestingSetup : MonoBehaviour
             "• <b>[F5]</b> Forzar floración de Ella (Acto 7, Luz violeta)\n" +
             "• <b>[F6]</b> Forzar revelación (Acto 8, Alarma y tarjetas)\n" +
             "• <b>[Tab]</b> Abrir Cuaderno con notas y sellos",
-            8f
+            this
         );
     }
 }

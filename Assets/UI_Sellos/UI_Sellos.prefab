@@ -105,8 +105,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: '?'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f53a7954e207904191510266f148c38, type: 2}
-  m_sharedMaterial: {fileID: 8943754610289853935, guid: 8f53a7954e207904191510266f148c38, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -242,8 +242,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: '?'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f53a7954e207904191510266f148c38, type: 2}
-  m_sharedMaterial: {fileID: 8943754610289853935, guid: 8f53a7954e207904191510266f148c38, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -379,8 +379,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u271A SELLO RECOGIDO\n<size=22>Rev\xEDsalo en el Cuaderno (Tab)</size>"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f53a7954e207904191510266f148c38, type: 2}
-  m_sharedMaterial: {fileID: 8943754610289853935, guid: 8f53a7954e207904191510266f148c38, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -399,7 +399,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -516,8 +516,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Taller
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f53a7954e207904191510266f148c38, type: 2}
-  m_sharedMaterial: {fileID: 8943754610289853935, guid: 8f53a7954e207904191510266f148c38, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -536,7 +536,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -695,8 +695,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Laboratorio
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f53a7954e207904191510266f148c38, type: 2}
-  m_sharedMaterial: {fileID: 8943754610289853935, guid: 8f53a7954e207904191510266f148c38, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -715,7 +715,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -832,8 +832,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Sellos
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f53a7954e207904191510266f148c38, type: 2}
-  m_sharedMaterial: {fileID: 8943754610289853935, guid: 8f53a7954e207904191510266f148c38, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -852,7 +852,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1090,8 +1090,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Volver a notas
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f53a7954e207904191510266f148c38, type: 2}
-  m_sharedMaterial: {fileID: 8943754610289853935, guid: 8f53a7954e207904191510266f148c38, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1110,7 +1110,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1227,8 +1227,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Bodega
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f53a7954e207904191510266f148c38, type: 2}
-  m_sharedMaterial: {fileID: 8943754610289853935, guid: 8f53a7954e207904191510266f148c38, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1247,7 +1247,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1561,8 +1561,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: '?'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f53a7954e207904191510266f148c38, type: 2}
-  m_sharedMaterial: {fileID: 8943754610289853935, guid: 8f53a7954e207904191510266f148c38, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
+  m_sharedMaterial: {fileID: -405402718556413793, guid: f0d99b8b41b6d0a4b9d50e5eec58f745, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1581,7 +1581,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2

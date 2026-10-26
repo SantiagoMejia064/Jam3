@@ -47,7 +47,7 @@ public sealed class MENU_MainMenu : MonoBehaviour
         if (playButton) playButton.interactable = false;
         if (quitButton) quitButton.interactable = false;
         if (loadingPanel) loadingPanel.SetActive(true);
-        if (loadingText) loadingText.text = "INICIANDO RONDA…";
+        if (loadingText) loadingText.text = "Cargando…";
         StartCoroutine(LoadGame());
     }
 

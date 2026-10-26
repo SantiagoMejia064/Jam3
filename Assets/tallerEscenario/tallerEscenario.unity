@@ -158,7 +158,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: ad3024a533c67e240a376639ee181662, type: 3}
     m_FontSize: 23
     m_FontStyle: 0
     m_BestFit: 0
@@ -304,6 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
   sceneName: tallerEscenario
+  entryFromScene: 
 --- !u!4 &986930064
 Transform:
   m_ObjectHideFlags: 0
@@ -430,6 +431,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
   destinationScene: Javier
   requiredItem: 
+  ignoreRequirementForDebug: 0
+  openedFlag: 
   additionalRequiredItem: 
   requireSelectedItem: 0
   requiredFlag: 
@@ -662,7 +665,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: ad3024a533c67e240a376639ee181662, type: 3}
     m_FontSize: 30
     m_FontStyle: 1
     m_BestFit: 0
@@ -905,7 +908,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: ad3024a533c67e240a376639ee181662, type: 3}
     m_FontSize: 23
     m_FontStyle: 1
     m_BestFit: 0
@@ -917,7 +920,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: A / D  -  MOVER       E  -  INTERACTUAR
+  m_Text: "A/D: mover \xB7 E: interactuar"
 --- !u!222 &1905474245
 CanvasRenderer:
   m_ObjectHideFlags: 0
