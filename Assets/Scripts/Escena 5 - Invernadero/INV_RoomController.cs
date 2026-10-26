@@ -1,0 +1,369 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+/// <summary>Gestor general de la escena Invernadero (Persona 5). Controla el umbral A4, detección y fijación de posición del jugador y la cámara, giro A/D de Siete, preservación de INV_Gameplay y efectos de revelación.</summary>
+public sealed class INV_RoomController : MonoBehaviour
+{
+    public const string FlagUmbralA4 = "INV_UmbralA4Played";
+
+    public static INV_RoomController Instance { get; private set; }
+
+    [Header("Posición del Jugador")]
+    [Tooltip("Detecta automáticamente la posición en la que dejaste a CORE_Siete en la escena")]
+    [SerializeField] private bool autoDetectScenePosition = true;
+    [SerializeField] private Vector3 fallbackPlayerPosition = new Vector3(-13.5714f, 2.3f, 16.48871f);
+
+    [Header("Preservación de Cámara")]
+    [Tooltip("Conserva automáticamente la posición y encuadre en la que dejaste INV_Camara_25D")]
+    [SerializeField] private bool autoPreserveCamera = true;
+
+    [Header("Configuración de Entrada")]
+    [SerializeField] private bool autoTriggerA4 = true;
+    [SerializeField] private float a4SubtitleDuration = 4.5f;
+
+    [Header("Elementos de Escenario")]
+    [SerializeField] private GameObject[] greenPlantsToGray;
+    [SerializeField] private Material grayPlantMaterial;
+
+    [Header("Pruebas en Editor")]
+    [SerializeField] private bool injectTestItemsIfMissing = false;
+
+    private CORE_PlayerController activePlayer;
+    private FieldInfo fixedZField;
+    private Vector3 resolvedPlayerPos;
+    private bool hasResolvedPlayerPos = false;
+
+    private CORE_CameraFollow cameraFollow;
+    private Vector3 cameraAuthoredPos;
+    private Quaternion cameraAuthoredRot;
+    private bool hasCameraAuthoredPos = false;
+    private FieldInfo camOffsetField;
+    private FieldInfo camLimitsField;
+    private FieldInfo camTargetField;
+
+    // Diccionario para congelar las posiciones de todos los objetos en INV_Gameplay tal como se dejaron en Scene
+    private readonly Dictionary<Transform, Vector3> gameplayAuthoredPositions = new Dictionary<Transform, Vector3>();
+    private readonly Dictionary<Transform, Quaternion> gameplayAuthoredRotations = new Dictionary<Transform, Quaternion>();
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
+        fixedZField = typeof(CORE_PlayerController).GetField("fixedZ", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        // 1. Congelar y preservar absolutamente todo lo que esté dentro de INV_Gameplay
+        CaptureGameplayAuthoredPositions();
+
+        // 2. Detectar la posición original de CORE_Siete en la escena de Invernadero
+        CaptureSceneAuthoredPositions();
+
+        // 3. Detectar la posición y encuadre original de INV_Camara_25D
+        CaptureCameraAuthoredPosition();
+    }
+
+    private void CaptureGameplayAuthoredPositions()
+    {
+        GameObject gameplayRoot = GameObject.Find("INV_Gameplay");
+        if (gameplayRoot != null)
+        {
+            foreach (Transform t in gameplayRoot.GetComponentsInChildren<Transform>(true))
+            {
+                if (t != null)
+                {
+                    if (t.GetComponent<INV_IncubatorCart>() != null || t.GetComponentInParent<INV_IncubatorCart>() != null)
+                    {
+                        continue;
+                    }
+                    gameplayAuthoredPositions[t] = t.position;
+                    gameplayAuthoredRotations[t] = t.rotation;
+                }
+            }
+        }
+    }
+
+    private void CaptureSceneAuthoredPositions()
+    {
+        resolvedPlayerPos = fallbackPlayerPosition;
+
+        if (autoDetectScenePosition)
+        {
+            foreach (Transform t in FindObjectsByType<Transform>(FindObjectsSortMode.None))
+            {
+                if (t.gameObject.scene == gameObject.scene && (t.name == "CORE_Siete" || t.name == "CORE_Siete_SAL"))
+                {
+                    resolvedPlayerPos = t.position;
+                    hasResolvedPlayerPos = true;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            hasResolvedPlayerPos = true;
+        }
+    }
+
+    private void CaptureCameraAuthoredPosition()
+    {
+        if (!autoPreserveCamera) return;
+
+        cameraFollow = FindFirstObjectByType<CORE_CameraFollow>();
+        if (!cameraFollow)
+        {
+            var cam = GameObject.Find("INV_Camara_25D");
+            if (cam) cameraFollow = cam.GetComponent<CORE_CameraFollow>();
+        }
+
+        if (cameraFollow != null)
+        {
+            cameraAuthoredPos = cameraFollow.transform.position;
+            cameraAuthoredRot = cameraFollow.transform.rotation;
+            hasCameraAuthoredPos = true;
+
+            camOffsetField = typeof(CORE_CameraFollow).GetField("offset", BindingFlags.NonPublic | BindingFlags.Instance);
+            camLimitsField = typeof(CORE_CameraFollow).GetField("xLimits", BindingFlags.NonPublic | BindingFlags.Instance);
+            camTargetField = typeof(CORE_CameraFollow).GetField("target", BindingFlags.NonPublic | BindingFlags.Instance);
+        }
+    }
+
+    private void Start()
+    {
+        // 1. Asegurar Acto mínimo 6 en Invernadero
+        if (SAL_Progress.Act < 6)
+        {
+            SAL_Progress.SetAct(6);
+        }
+
+        // 2. Auto-descubrir plantas si no están asignadas
+        if (greenPlantsToGray == null || greenPlantsToGray.Length == 0)
+        {
+            var list = new List<GameObject>();
+            var p1 = GameObject.Find("07_Plantas_Instancias_ROOT");
+            var p2 = GameObject.Find("INV_Enredaderas");
+            if (p1) list.Add(p1);
+            if (p2) list.Add(p2);
+            greenPlantsToGray = list.ToArray();
+        }
+
+        // 3. Alinear jugador en su posición detectada de la escena y activar giro A/D sin dañar sombras
+        LocateAndAlignPlayer();
+
+        // 4. Alinear cámara conservando su encuadre exacto
+        AlignCameraWithPlayer();
+
+        StartCoroutine(SetupPlayerRoutine());
+
+        // 5. Audio A4 en el umbral
+        if (autoTriggerA4 && !SAL_Progress.HasFlag(FlagUmbralA4))
+        {
+            SAL_Progress.SetFlag(FlagUmbralA4);
+            StartCoroutine(PlayA4UmbralRoutine());
+        }
+
+        // 6. Restaurar estado de revelación si aplica
+        if (SAL_Progress.HasFlag(SAL_Progress.Revealed))
+        {
+            ApplyDesaturation();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        // Asegurar que ningún script secundario ni física mueva jamás los objetos estáticos de INV_Gameplay de donde fueron colocados
+        if (gameplayAuthoredPositions.Count > 0)
+        {
+            foreach (var kvp in gameplayAuthoredPositions)
+            {
+                if (kvp.Key != null)
+                {
+                    if (kvp.Key.position != kvp.Value)
+                    {
+                        kvp.Key.position = kvp.Value;
+                        kvp.Key.rotation = gameplayAuthoredRotations[kvp.Key];
+                    }
+                }
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Al salir de Invernadero restaurar fixedZ = 0 para Javier / Pasillo
+        if (activePlayer != null && fixedZField != null)
+        {
+            try { fixedZField.SetValue(activePlayer, 0f); }
+            catch { }
+        }
+
+        if (Instance == this) Instance = null;
+    }
+
+    private IEnumerator SetupPlayerRoutine()
+    {
+        yield return null;
+
+        LocateAndAlignPlayer();
+        AlignCameraWithPlayer();
+
+        if (injectTestItemsIfMissing)
+        {
+            InjectDebugItems();
+        }
+    }
+
+    public void LocateAndAlignPlayer()
+    {
+        CORE_PlayerController foundPlayer = null;
+        if (PlayerPersistence.Instance)
+        {
+            foundPlayer = PlayerPersistence.Instance.GetComponent<CORE_PlayerController>();
+        }
+        if (!foundPlayer)
+        {
+            // Priorizar el objeto raíz con CapsuleCollider (CORE_Siete) frente al rig visual hijo (SietePlayer)
+            var allControllers = FindObjectsByType<CORE_PlayerController>(FindObjectsSortMode.None);
+            foreach (var pc in allControllers)
+            {
+                if (pc != null && pc.GetComponent<CapsuleCollider>() != null)
+                {
+                    foundPlayer = pc;
+                    break;
+                }
+            }
+            if (!foundPlayer && allControllers.Length > 0)
+            {
+                foundPlayer = allControllers[0];
+            }
+        }
+
+        if (foundPlayer)
+        {
+            activePlayer = foundPlayer;
+
+            // Evitar error de Concave Mesh Colliders en dynamic Rigidbody (Generador de sombra)
+            foreach (var mc in activePlayer.GetComponentsInChildren<MeshCollider>(true))
+            {
+                mc.convex = true;
+            }
+
+            // Asegurar giro izquierda/derecha (A / D) protegiendo las sombras y limpiando física duplicada hija
+            var facing = activePlayer.GetComponent<INV_PlayerFacing>();
+            if (facing == null)
+            {
+                facing = activePlayer.gameObject.AddComponent<INV_PlayerFacing>();
+            }
+            facing.PrepareRig();
+
+            // Fijar la posición exacta detectada
+            Vector3 targetPos = hasResolvedPlayerPos ? resolvedPlayerPos : activePlayer.transform.position;
+            activePlayer.transform.position = targetPos;
+
+            if (activePlayer.TryGetComponent(out Rigidbody body) && !body.isKinematic)
+            {
+                body.position = targetPos;
+                body.linearVelocity = Vector3.zero;
+            }
+
+            // Ajustar fixedZ en el controlador del jugador para que FixedUpdate no lo mueva
+            if (fixedZField != null)
+            {
+                fixedZField.SetValue(activePlayer, targetPos.z);
+            }
+        }
+    }
+
+    public void AlignCameraWithPlayer()
+    {
+        if (!autoPreserveCamera || cameraFollow == null || !hasCameraAuthoredPos || activePlayer == null) return;
+
+        Vector3 targetPos = activePlayer.transform.position;
+        Vector3 exactOffset = cameraAuthoredPos - targetPos;
+
+        // Establecer el offset para que target.position + offset = cameraAuthoredPos
+        camOffsetField?.SetValue(cameraFollow, exactOffset);
+        camTargetField?.SetValue(cameraFollow, activePlayer.transform);
+
+        if (camLimitsField != null)
+        {
+            Vector2 limits = (Vector2)camLimitsField.GetValue(cameraFollow);
+            limits.x = Mathf.Min(limits.x, cameraAuthoredPos.x - 35f);
+            limits.y = Mathf.Max(limits.y, cameraAuthoredPos.x + 45f);
+            camLimitsField.SetValue(cameraFollow, limits);
+        }
+
+        // Fijar la posición y rotación inmediatamente
+        cameraFollow.transform.position = cameraAuthoredPos;
+        cameraFollow.transform.rotation = cameraAuthoredRot;
+    }
+
+    private IEnumerator PlayA4UmbralRoutine()
+    {
+        yield return new WaitForSeconds(0.6f);
+
+        if (SAL_AudioDirector.Instance)
+        {
+            SAL_AudioDirector.Instance.PlayLog("A4", false, a4SubtitleDuration);
+        }
+        else
+        {
+            CORE_InteractionHUD.ShowMessage("Vega: \"Siete, no la busques. Por favor.\"", a4SubtitleDuration);
+        }
+    }
+
+    /// <summary>Vuelve grises las plantas del jardín al desatarse las esporas.</summary>
+    public void ApplyDesaturation()
+    {
+        if (greenPlantsToGray != null)
+        {
+            foreach (GameObject plant in greenPlantsToGray)
+            {
+                if (!plant) continue;
+                var renderers = plant.GetComponentsInChildren<MeshRenderer>(true);
+                foreach (var r in renderers)
+                {
+                    if (grayPlantMaterial)
+                    {
+                        r.sharedMaterial = grayPlantMaterial;
+                    }
+                    else
+                    {
+                        foreach (var m in r.materials)
+                        {
+                            m.color = new Color(0.42f, 0.42f, 0.45f);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>Permite probar directamente el Invernadero en modo Play del editor.</summary>
+    public void InjectDebugItems()
+    {
+        CORE_InventoryBridge.TryAddItem("Semilla");
+        CORE_InventoryBridge.TryAddItem("PiezaCalor");
+        CORE_InventoryBridge.TryAddItem("PiezaOscuridad");
+        CORE_InventoryBridge.TryAddItem("PiezaPulso");
+        CORE_InventoryBridge.TryAddItem("PiezaBruma");
+        CORE_InventoryBridge.TryAddItem("Cortador");
+    }
+
+    private void Update()
+    {
+        // Tecla de atajo de depuración F5 para recargar items de prueba en Play Mode
+        if (Application.isEditor && Input.GetKeyDown(KeyCode.F5))
+        {
+            InjectDebugItems();
+            CORE_InteractionHUD.ShowMessage("[DEBUG] Items de prueba inyectados (Semilla y 4 Piezas).", 3f);
+        }
+    }
+}
