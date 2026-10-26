@@ -5244,7 +5244,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 0.45
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -21543,6 +21543,7 @@ MonoBehaviour:
   clipMontajeBruma: {fileID: 0}
   clipGerminacionElla: {fileID: 8300000, guid: 9e52c918785a64c47b5058ebdb027a52, type: 3}
   clipAlarmaEsporas: {fileID: 8300000, guid: 00be5aa7258dea94f95a6be3f8b54451, type: 3}
+  duracionAlarmaSegundos: 15
   clipVegaAlerta1: {fileID: 0}
   clipVegaAlerta2: {fileID: 0}
   clipVegaAlerta3: {fileID: 0}
