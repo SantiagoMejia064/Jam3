@@ -5,10 +5,17 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>Gestor general de la escena Invernadero (Persona 5). Controla el umbral A4, detección y fijación de posición del jugador y la cámara, giro A/D de Siete, preservación de INV_Gameplay y efectos de revelación.</summary>
+/// <summary>Gestor general de la escena Invernadero (Persona 5). Controla el umbral A4, detección y fijación de posición del jugador y la cámara, giro A/D de Siete, preservación de INV_Gameplay y el marchitamiento a negro de las hojas por esporas.</summary>
 public sealed class INV_RoomController : MonoBehaviour
 {
     public const string FlagUmbralA4 = "INV_UmbralA4Played";
+
+    private static readonly string[] TargetLeafMaterialNames =
+    {
+        "inv_hoja_clara",
+        "inv_hoja_oscura",
+        "inv_hoja_salvia"
+    };
 
     public static INV_RoomController Instance { get; private set; }
 
@@ -25,12 +32,25 @@ public sealed class INV_RoomController : MonoBehaviour
     [SerializeField] private bool autoTriggerA4 = true;
     [SerializeField] private float a4SubtitleDuration = 4.5f;
 
-    [Header("Elementos de Escenario")]
+    [Header("Marchitamiento de Hojas (Alerta de Esporas)")]
     [SerializeField] private GameObject[] greenPlantsToGray;
     [SerializeField] private Material grayPlantMaterial;
+    [SerializeField] private float leafWitherDuration = 5.8f;
+    [SerializeField] private Color witheredBlackColor = new Color(0.022f, 0.022f, 0.026f, 1f);
 
     [Header("Pruebas en Editor")]
     [SerializeField] private bool injectTestItemsIfMissing = false;
+
+    private sealed class LeafMaterialCloneEntry
+    {
+        public Material runtimeClone;
+        public Color initialColor;
+        public float initialSmoothness;
+    }
+
+    private readonly Dictionary<Material, LeafMaterialCloneEntry> leafMaterialClones = new Dictionary<Material, LeafMaterialCloneEntry>();
+    private Coroutine witherRoutine;
+    private bool witherPrepared = false;
 
     private CORE_PlayerController activePlayer;
     private FieldInfo fixedZField;
@@ -80,6 +100,10 @@ public sealed class INV_RoomController : MonoBehaviour
                 if (t != null)
                 {
                     if (t.GetComponent<INV_IncubatorCart>() != null || t.GetComponentInParent<INV_IncubatorCart>() != null)
+                    {
+                        continue;
+                    }
+                    if (t.GetComponent<INV_EllaGerminationSequence>() != null || t.GetComponentInParent<INV_EllaGerminationSequence>() != null)
                     {
                         continue;
                     }
@@ -169,10 +193,10 @@ public sealed class INV_RoomController : MonoBehaviour
             StartCoroutine(PlayA4UmbralRoutine());
         }
 
-        // 6. Restaurar estado de revelación si aplica
+        // 6. Restaurar estado marchito en negro si ya ocurrió la revelación antes de entrar
         if (SAL_Progress.HasFlag(SAL_Progress.Revealed))
         {
-            ApplyDesaturation();
+            TriggerSporeWithering(instant: true);
         }
     }
 
@@ -204,6 +228,16 @@ public sealed class INV_RoomController : MonoBehaviour
             catch { }
         }
 
+        // Destruir clones runtime de materiales sin tocar los assets .mat en disco
+        foreach (var kvp in leafMaterialClones)
+        {
+            if (kvp.Value != null && kvp.Value.runtimeClone != null)
+            {
+                Destroy(kvp.Value.runtimeClone);
+            }
+        }
+        leafMaterialClones.Clear();
+
         if (Instance == this) Instance = null;
     }
 
@@ -229,7 +263,6 @@ public sealed class INV_RoomController : MonoBehaviour
         }
         if (!foundPlayer)
         {
-            // Priorizar el objeto raíz con CapsuleCollider (CORE_Siete) frente al rig visual hijo (SietePlayer)
             var allControllers = FindObjectsByType<CORE_PlayerController>(FindObjectsSortMode.None);
             foreach (var pc in allControllers)
             {
@@ -249,13 +282,11 @@ public sealed class INV_RoomController : MonoBehaviour
         {
             activePlayer = foundPlayer;
 
-            // Evitar error de Concave Mesh Colliders en dynamic Rigidbody (Generador de sombra)
             foreach (var mc in activePlayer.GetComponentsInChildren<MeshCollider>(true))
             {
                 mc.convex = true;
             }
 
-            // Asegurar giro izquierda/derecha (A / D) protegiendo las sombras y limpiando física duplicada hija
             var facing = activePlayer.GetComponent<INV_PlayerFacing>();
             if (facing == null)
             {
@@ -263,7 +294,6 @@ public sealed class INV_RoomController : MonoBehaviour
             }
             facing.PrepareRig();
 
-            // Fijar la posición exacta detectada
             Vector3 targetPos = hasResolvedPlayerPos ? resolvedPlayerPos : activePlayer.transform.position;
             activePlayer.transform.position = targetPos;
 
@@ -273,7 +303,6 @@ public sealed class INV_RoomController : MonoBehaviour
                 body.linearVelocity = Vector3.zero;
             }
 
-            // Ajustar fixedZ en el controlador del jugador para que FixedUpdate no lo mueva
             if (fixedZField != null)
             {
                 fixedZField.SetValue(activePlayer, targetPos.z);
@@ -288,7 +317,6 @@ public sealed class INV_RoomController : MonoBehaviour
         Vector3 targetPos = activePlayer.transform.position;
         Vector3 exactOffset = cameraAuthoredPos - targetPos;
 
-        // Establecer el offset para que target.position + offset = cameraAuthoredPos
         camOffsetField?.SetValue(cameraFollow, exactOffset);
         camTargetField?.SetValue(cameraFollow, activePlayer.transform);
 
@@ -300,7 +328,6 @@ public sealed class INV_RoomController : MonoBehaviour
             camLimitsField.SetValue(cameraFollow, limits);
         }
 
-        // Fijar la posición y rotación inmediatamente
         cameraFollow.transform.position = cameraAuthoredPos;
         cameraFollow.transform.rotation = cameraAuthoredRot;
     }
@@ -319,29 +346,166 @@ public sealed class INV_RoomController : MonoBehaviour
         }
     }
 
-    /// <summary>Vuelve grises las plantas del jardín al desatarse las esporas.</summary>
+    /// <summary>Compatibilidad con llamadas existentes: inicia la transición hacia negro de las hojas del invernadero.</summary>
     public void ApplyDesaturation()
     {
-        if (greenPlantsToGray != null)
+        TriggerSporeWithering(instant: false);
+    }
+
+    /// <summary>
+    /// Clona en runtime los materiales inv_hoja_clara, inv_hoja_oscura e inv_hoja_salvia en toda la escena
+    /// (sin modificar los archivos .mat en disco) y los transiciona suavemente hacia negro al soltarse las esporas.
+    /// </summary>
+    public void TriggerSporeWithering(bool instant = false)
+    {
+        PrepareLeafMaterialClones();
+
+        if (witherRoutine != null)
         {
-            foreach (GameObject plant in greenPlantsToGray)
+            StopCoroutine(witherRoutine);
+            witherRoutine = null;
+        }
+
+        if (instant || leafWitherDuration <= 0.05f)
+        {
+            ApplyWitherFactor(1f);
+        }
+        else
+        {
+            witherRoutine = StartCoroutine(WitherLeavesToBlackRoutine());
+        }
+    }
+
+    private void PrepareLeafMaterialClones()
+    {
+        if (witherPrepared && leafMaterialClones.Count > 0) return;
+        witherPrepared = true;
+
+        var allRenderers = FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Renderer r in allRenderers)
+        {
+            if (r == null) continue;
+            if (r.GetComponentInParent<INV_EllaGerminationSequence>() != null) continue;
+            if (r.GetComponentInParent<INV_IncubatorCart>() != null) continue;
+
+            Material[] shared = r.sharedMaterials;
+            if (shared == null || shared.Length == 0) continue;
+
+            bool changedAny = false;
+            for (int i = 0; i < shared.Length; i++)
             {
-                if (!plant) continue;
-                var renderers = plant.GetComponentsInChildren<MeshRenderer>(true);
-                foreach (var r in renderers)
+                Material srcMat = shared[i];
+                if (srcMat == null) continue;
+
+                // Si ya fue asignado uno de nuestros clones runtime, continuar
+                bool alreadyClone = false;
+                foreach (var existing in leafMaterialClones.Values)
                 {
-                    if (grayPlantMaterial)
+                    if (existing.runtimeClone == srcMat)
                     {
-                        r.sharedMaterial = grayPlantMaterial;
-                    }
-                    else
-                    {
-                        foreach (var m in r.materials)
-                        {
-                            m.color = new Color(0.42f, 0.42f, 0.45f);
-                        }
+                        alreadyClone = true;
+                        break;
                     }
                 }
+                if (alreadyClone) continue;
+
+                if (!IsTargetLeafMaterial(srcMat.name)) continue;
+
+                if (!leafMaterialClones.TryGetValue(srcMat, out LeafMaterialCloneEntry entry))
+                {
+                    Material clone = new Material(srcMat);
+                    clone.name = srcMat.name + "_WitherRuntime";
+
+                    Color startCol = clone.HasProperty("_BaseColor")
+                        ? clone.GetColor("_BaseColor")
+                        : clone.color;
+                    float startSmooth = clone.HasProperty("_Smoothness")
+                        ? clone.GetFloat("_Smoothness")
+                        : 0.28f;
+
+                    entry = new LeafMaterialCloneEntry
+                    {
+                        runtimeClone = clone,
+                        initialColor = startCol,
+                        initialSmoothness = startSmooth
+                    };
+                    leafMaterialClones[srcMat] = entry;
+                }
+
+                shared[i] = entry.runtimeClone;
+                changedAny = true;
+            }
+
+            if (changedAny)
+            {
+                r.sharedMaterials = shared;
+            }
+        }
+    }
+
+    private static bool IsTargetLeafMaterial(string matName)
+    {
+        if (string.IsNullOrEmpty(matName)) return false;
+        for (int i = 0; i < TargetLeafMaterialNames.Length; i++)
+        {
+            if (matName.IndexOf(TargetLeafMaterialNames[i], StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private IEnumerator WitherLeavesToBlackRoutine()
+    {
+        float elapsed = 0f;
+        float duration = Mathf.Max(0.5f, leafWitherDuration);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            ApplyWitherFactor(Mathf.SmoothStep(0f, 1f, t));
+            yield return null;
+        }
+
+        ApplyWitherFactor(1f);
+        witherRoutine = null;
+    }
+
+    private void ApplyWitherFactor(float t)
+    {
+        // Transición orgánica: Verde vivo -> Oliva necrótico seco -> Negro marchito mate
+        Color necroticMid = new Color(0.11f, 0.09f, 0.06f, 1f);
+
+        foreach (var kvp in leafMaterialClones)
+        {
+            LeafMaterialCloneEntry entry = kvp.Value;
+            if (entry == null || entry.runtimeClone == null) continue;
+
+            Color c;
+            if (t < 0.42f)
+            {
+                c = Color.Lerp(entry.initialColor, necroticMid, t / 0.42f);
+            }
+            else
+            {
+                c = Color.Lerp(necroticMid, witheredBlackColor, (t - 0.42f) / 0.58f);
+            }
+            c.a = entry.initialColor.a;
+
+            entry.runtimeClone.color = c;
+            if (entry.runtimeClone.HasProperty("_BaseColor"))
+            {
+                entry.runtimeClone.SetColor("_BaseColor", c);
+            }
+            if (entry.runtimeClone.HasProperty("_Color"))
+            {
+                entry.runtimeClone.SetColor("_Color", c);
+            }
+            if (entry.runtimeClone.HasProperty("_Smoothness"))
+            {
+                entry.runtimeClone.SetFloat("_Smoothness", Mathf.Lerp(entry.initialSmoothness, 0.04f, t));
             }
         }
     }
@@ -359,7 +523,6 @@ public sealed class INV_RoomController : MonoBehaviour
 
     private void Update()
     {
-        // Tecla de atajo de depuración F5 para recargar items de prueba en Play Mode
         if (Application.isEditor && Input.GetKeyDown(KeyCode.F5))
         {
             InjectDebugItems();

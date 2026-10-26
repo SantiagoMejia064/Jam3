@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>Controlador integral de la incubadora: Montaje, Afinación, Floración, Revelación y Extracción al Carrito 3D.</summary>
+/// <summary>Controlador integral de la incubadora: Montaje, Afinación, Germinación 3D en Cámara de Cultivo, Alerta de Esporas y Extracción al Carrito 3D.</summary>
 [RequireComponent(typeof(Collider))]
 public sealed class INV_IncubatorPuzzle : MonoBehaviour
 {
@@ -22,6 +22,7 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
     [Header("Carrito Portátil 3D")]
     [SerializeField] private INV_IncubatorCart portableCart;
 
+    private INV_EllaGerminationSequence chamberGermination;
     private CORE_PlayerController activePlayer;
     private bool inRange;
     private bool isMounting = false;
@@ -57,11 +58,9 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
             portableCart = FindFirstObjectByType<INV_IncubatorCart>(FindObjectsInactive.Include);
         }
 
-        // Mantener oculto el cubo placeholder antiguo si existiera en la escena
-        if (incubatorCartVisual)
-        {
-            incubatorCartVisual.SetActive(false);
-        }
+        // Ocultar placeholders antiguos 2D/cubo
+        if (incubatorCartVisual) incubatorCartVisual.SetActive(false);
+        if (ellaSproutVisual) ellaSproutVisual.SetActive(false);
 
         heatHum = INV_SoundHelper.CreateHeatHum();
         darkClick = INV_SoundHelper.CreateDarkClick();
@@ -77,16 +76,52 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
 
     private void Start()
     {
+        bool montada = SAL_Progress.HasFlag(FlagMontada);
         bool florecio = SAL_Progress.HasFlag(FlagFlorecio);
         bool revelado = SAL_Progress.HasFlag(SAL_Progress.Revealed);
         bool enCarrito = SAL_Progress.HasFlag(INV_IncubatorCart.FlagEllaEnCarrito);
 
-        if (ellaSproutVisual) ellaSproutVisual.SetActive(florecio && !enCarrito);
-        if (violetChamberLight) violetChamberLight.enabled = florecio && !enCarrito;
-        if (redAlarmLight) redAlarmLight.enabled = revelado;
+        if (ellaSproutVisual) ellaSproutVisual.SetActive(false);
         if (incubatorCartVisual) incubatorCartVisual.SetActive(false);
+        if (redAlarmLight) redAlarmLight.enabled = revelado;
+
+        EnsureChamberGerminationExists();
+        if (chamberGermination != null)
+        {
+            if (enCarrito)
+            {
+                chamberGermination.ShowFullBloomImmediate();
+                chamberGermination.HidePlantKeepEmptyTray();
+            }
+            else if (florecio)
+            {
+                chamberGermination.ShowFullBloomImmediate();
+            }
+            else if (montada)
+            {
+                chamberGermination.ShowDormantSeed();
+            }
+            else
+            {
+                chamberGermination.HideAll();
+            }
+        }
 
         EnsurePortableCartExists();
+    }
+
+    private void EnsureChamberGerminationExists()
+    {
+        if (chamberGermination != null) return;
+
+        chamberGermination = FindFirstObjectByType<INV_EllaGerminationSequence>(FindObjectsInactive.Include);
+        if (chamberGermination == null)
+        {
+            GameObject germGo = new GameObject("INV_SemillaGerminacion_Camara");
+            germGo.transform.position = transform.position;
+            chamberGermination = germGo.AddComponent<INV_EllaGerminationSequence>();
+        }
+        chamberGermination.InitializeInsideChamber(violetChamberLight);
     }
 
     private void EnsurePortableCartExists()
@@ -121,55 +156,14 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
                 lightGo.transform.localPosition = new Vector3(0, 1.2f, 0);
                 violetChamberLight = lightGo.AddComponent<Light>();
                 violetChamberLight.type = LightType.Point;
-                violetChamberLight.color = new Color(0.72f, 0.35f, 0.98f);
-                violetChamberLight.range = 5f;
-                violetChamberLight.intensity = 4.5f;
+                violetChamberLight.color = new Color(0.76f, 0.38f, 1.0f);
+                violetChamberLight.range = 6.5f;
+                violetChamberLight.intensity = 4.8f;
                 violetChamberLight.enabled = false;
             }
         }
 
-        // 2. Brote de Ella si no fue asignado
-        if (!ellaSproutVisual)
-        {
-            Transform existingSprout = transform.Find("INV_Brote_Ella_Visual");
-            if (existingSprout)
-            {
-                ellaSproutVisual = existingSprout.gameObject;
-            }
-            else
-            {
-                GameObject sproutRoot = new GameObject("INV_Brote_Ella_Visual");
-                sproutRoot.transform.SetParent(transform, false);
-                sproutRoot.transform.localPosition = new Vector3(0, 0.6f, 0);
-
-                // Tallo central
-                GameObject stem = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                stem.name = "Tallo_Ella";
-                stem.transform.SetParent(sproutRoot.transform, false);
-                stem.transform.localPosition = new Vector3(0, 0.3f, 0);
-                stem.transform.localScale = new Vector3(0.06f, 0.3f, 0.06f);
-                DestroyImmediate(stem.GetComponent<Collider>());
-                SetProceduralColor(stem, new Color(0.35f, 0.75f, 0.55f), true);
-
-                // Flores colgantes tipo farolito
-                for (int i = 0; i < 3; i++)
-                {
-                    float angle = i * 120f * Mathf.Deg2Rad;
-                    GameObject flower = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    flower.name = "Farolito_" + i;
-                    flower.transform.SetParent(sproutRoot.transform, false);
-                    flower.transform.localPosition = new Vector3(Mathf.Cos(angle) * 0.18f, 0.45f, Mathf.Sin(angle) * 0.18f);
-                    flower.transform.localScale = new Vector3(0.12f, 0.16f, 0.12f);
-                    DestroyImmediate(flower.GetComponent<Collider>());
-                    SetProceduralColor(flower, new Color(0.78f, 0.42f, 1f), true);
-                }
-
-                sproutRoot.SetActive(false);
-                ellaSproutVisual = sproutRoot;
-            }
-        }
-
-        // 3. Luz de alarma roja si no fue asignada
+        // 2. Luz de alarma roja si no fue asignada
         if (!redAlarmLight)
         {
             Transform existingAlarm = transform.Find("Luz_Alarma_Roja");
@@ -185,27 +179,11 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
                 redAlarmLight = alarmGo.AddComponent<Light>();
                 redAlarmLight.type = LightType.Point;
                 redAlarmLight.color = new Color(1f, 0.15f, 0.15f);
-                redAlarmLight.range = 9f;
-                redAlarmLight.intensity = 3.5f;
+                redAlarmLight.range = 12f;
+                redAlarmLight.intensity = 4.5f;
                 redAlarmLight.enabled = false;
             }
         }
-    }
-
-    private static void SetProceduralColor(GameObject go, Color color, bool emissive)
-    {
-        var renderer = go.GetComponent<MeshRenderer>();
-        if (!renderer) return;
-        Shader s = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-        Material m = new Material(s);
-        m.color = color;
-        if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", color);
-        if (emissive)
-        {
-            m.EnableKeyword("_EMISSION");
-            m.SetColor("_EmissionColor", color * 1.4f);
-        }
-        renderer.sharedMaterial = m;
     }
 
     private void SetPlayerMovement(bool canMove)
@@ -265,7 +243,7 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         }
         else if (SAL_Progress.HasFlag(FlagFlorecio))
         {
-            CORE_InteractionHUD.SetPrompt(this, "E · Contemplar el brote de Ella");
+            CORE_InteractionHUD.SetPrompt(this, "Observando la germinación de Ella...");
         }
         else if (SAL_Progress.HasFlag(FlagMontada))
         {
@@ -328,10 +306,14 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
     private void ExtractEllaToCart()
     {
         EnsurePortableCartExists();
+        EnsureChamberGerminationExists();
 
-        // Retirar a Ella del marco fijo y colocarla dentro de la cápsula del carrito 3D frente a Siete
+        // Retirar a Ella de la Cámara de Cultivo (dejando la bandeja y las cáscaras abiertas) y pasarla al carrito 3D
         if (ellaSproutVisual) ellaSproutVisual.SetActive(false);
-        if (violetChamberLight) violetChamberLight.enabled = false;
+        if (chamberGermination != null)
+        {
+            chamberGermination.HidePlantKeepEmptyTray();
+        }
 
         if (portableCart != null)
         {
@@ -382,9 +364,8 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         isMounting = true;
         UpdatePrompt();
 
-        CORE_InteractionHUD.ShowMessage("Instalando la Semilla y las 4 piezas en el marco...", 2.2f);
+        CORE_InteractionHUD.ShowMessage("Instalando la Semilla y las 4 piezas en la Cámara de Cultivo...", 2.2f);
 
-        // Sonidos secuenciales según el GDD (zumbido, clic, tum-tum, siseo) sin congelar a Siete
         if (audioSource && heatHum) audioSource.PlayOneShot(heatHum, 0.7f);
         yield return new WaitForSeconds(0.32f);
 
@@ -397,7 +378,6 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         if (audioSource && mistHiss) audioSource.PlayOneShot(mistHiss, 0.7f);
         yield return new WaitForSeconds(0.32f);
 
-        // Consumir objetos del inventario
         CORE_InventoryBridge.RemoveItem("Semilla");
         CORE_InventoryBridge.RemoveItem("PiezaCalor");
         CORE_InventoryBridge.RemoveItem("PiezaOscuridad");
@@ -406,9 +386,13 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
 
         SAL_Progress.SetFlag(FlagMontada);
         isMounting = false;
+
+        // Mostrar la semilla colocada dentro de la Cámara de Cultivo lista para germinar
+        EnsureChamberGerminationExists();
+        chamberGermination?.ShowDormantSeed();
+
         UpdatePrompt();
 
-        // Abrir inmediatamente el panel de afinación de las 4 perillas
         OpenTuningUI();
     }
 
@@ -434,28 +418,31 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
 
     private IEnumerator FloracionSequenceRoutine()
     {
-        // 1. Floración (Acto 7)
+        // 1. Germinación y Floración en la Cámara de Cultivo (Acto 7)
         SAL_Progress.SetAct(7);
         SAL_Progress.SetFlag(FlagFlorecio);
+        triggerAlarmNow = false;
 
-        // Movimiento activo: Siete NUNCA queda congelado
+        // Siete NUNCA queda congelado
         SetPlayerMovement(true);
 
         if (audioSource && bloomHarmonic) audioSource.PlayOneShot(bloomHarmonic, 0.95f);
 
-        if (ellaSproutVisual) ellaSproutVisual.SetActive(true);
-        if (violetChamberLight)
+        EnsureChamberGerminationExists();
+        if (chamberGermination != null)
         {
-            violetChamberLight.enabled = true;
-            violetChamberLight.color = new Color(0.72f, 0.35f, 0.98f);
-            violetChamberLight.intensity = 4.5f;
+            chamberGermination.PlayGerminationAnimation(4.6f);
         }
 
-        CORE_InteractionHUD.ShowMessage("<color=#C084FC><b>¡Ella brota!</b></color>\nVenas azul violeta resplandecen y las flores cuelgan como farolitos.", 6f);
+        CORE_InteractionHUD.ShowMessage(
+            "<color=#C084FC><b>¡La semilla germina en la Cámara de Cultivo!</b></color>\n" +
+            "La cáscara se abre, el tallo crece y brotan los farolitos violetas de Ella.",
+            6.5f
+        );
         UpdatePrompt();
 
-        // Permitir que el jugador admire la floración libremente por 6s (o interactúe con Ella)
-        float timer = 6.0f;
+        // Dar tiempo a ver toda la animación de crecimiento (4.6s) + contemplar a Ella florecida (~3s)
+        float timer = 7.4f;
         while (timer > 0f)
         {
             if (triggerAlarmNow) break;
@@ -463,13 +450,13 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
             yield return null;
         }
 
-        // Transición a la Revelación (Acto 8)
+        // Transición a la Alerta de Esporas y Marchitamiento (Acto 8)
         yield return StartCoroutine(AlarmaAndRevelationRoutine());
     }
 
     private IEnumerator AlarmaAndRevelationRoutine()
     {
-        // 2. Revelación (Acto 8)
+        // 2. Alerta de Esporas y Revelación (Acto 8)
         SAL_Progress.SetAct(8);
         SAL_Progress.SetFlag(SAL_Progress.Revealed);
 
@@ -485,30 +472,43 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
 
         if (redAlarmLight) redAlarmLight.enabled = true;
 
-        // Desaturar plantas a gris (GDD pág 10 & 15)
-        INV_RoomController.Instance?.ApplyDesaturation();
+        // Iniciar la transición suave hacia NEGRO de inv_hoja_clara, inv_hoja_oscura e inv_hoja_salvia
+        INV_RoomController.Instance?.TriggerSporeWithering(instant: false);
 
         EnsurePortableCartExists();
 
-        // SIETE NUNCA SE QUEDA QUIETO: Movimiento 100% activo y fluido
+        // Siete mantiene 100% su movimiento activo
         SetPlayerMovement(true);
         UpdatePrompt();
 
         string doorDirectionHint = GetExitDoorDirectionHint();
 
-        // Diálogos narrativos de Vega en el HUD mientras juegas libremente
-        CORE_InteractionHUD.ShowMessage("<color=#EF4444><b>[¡ALARMA BIOLÓGICA DE ESPORAS!]</b></color>\nVega: \"Siete... ¿qué hiciste? ¡Las puertas selladas eran cuarentena biológica!\"", 5.5f);
+        // Alerta de esporas indicando explícitamente que las plantas de toda la nave se están marchitando
+        CORE_InteractionHUD.ShowMessage(
+            "<color=#EF4444><b>[¡ALERTA DE ESPORAS!] Las plantas de toda la nave se están marchitando.</b></color>\n" +
+            "Vega: \"Siete... ¿qué hiciste? ¡Las puertas selladas eran cuarentena biológica!\"",
+            6.0f
+        );
+        yield return new WaitForSeconds(5.2f);
+
+        CORE_InteractionHUD.ShowMessage(
+            "Vega: \"Quitaste el filtro 14. Mi aire pasa por ahí... Se parece a lo que mató las semillas de la Tierra...\"",
+            5.5f
+        );
         yield return new WaitForSeconds(4.5f);
 
-        CORE_InteractionHUD.ShowMessage("Vega: \"Quitaste el filtro 14. Mi aire pasa por ahí... Se parece a lo que mató las semillas de la Tierra...\"", 5.5f);
-        yield return new WaitForSeconds(4.5f);
-
-        CORE_InteractionHUD.ShowMessage("Vega: \"Suéltala, Siete. Por favor... Llévala a la esclusa de carga.\"", 5f);
+        CORE_InteractionHUD.ShowMessage(
+            "Vega: \"Suéltala, Siete. Por favor... Llévala a la esclusa de carga.\"",
+            5.0f
+        );
         yield return new WaitForSeconds(3.5f);
 
         if (!SAL_Progress.HasFlag(INV_IncubatorCart.FlagEllaEnCarrito))
         {
-            CORE_InteractionHUD.ShowMessage($"<color=#38BDF8><b>[OBJETIVO]</b></color> Pulsa <b>[E]</b> en la incubadora para sacar a Ella en el carrito y llévala al Pasillo ({doorDirectionHint}).", 6.5f);
+            CORE_InteractionHUD.ShowMessage(
+                $"<color=#38BDF8><b>[OBJETIVO]</b></color> Pulsa <b>[E]</b> en la incubadora para sacar a Ella en el carrito y llévala al Pasillo ({doorDirectionHint}).",
+                6.5f
+            );
         }
     }
 }
