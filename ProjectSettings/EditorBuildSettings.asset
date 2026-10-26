@@ -5,15 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/Inicio.unity
-    guid: e46a9ecc55cd7da44a9c5606a7e78f48
-  - enabled: 0
-    path: Assets/tallerEscenario/tallerEscenario.unity
-    guid: f84ce72f90954854d94cdd1d486588c4
-  - enabled: 0
-    path: Assets/Scenes/SalaMaquinas.unity
-    guid: 9f1b301fb2272a446acb1619372fd9fb
   - enabled: 1
     path: Assets/inicio/MenuInicio.unity
     guid: 06c3675c1c7f2ee47bb0afde92b4b6ff
@@ -24,14 +15,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Taller.unity
     guid: 44706a8189631d646b881bce39a0d128
   - enabled: 1
+    path: Assets/Scenes/SAL.unity
+    guid: 5e01aab2d7aa4a66a362b58b4c85a321
+  - enabled: 1
     path: Assets/Scenes/Bodega.unity
     guid: ddfb661ea14e26a4883ca1f06c17b01b
   - enabled: 1
     path: Assets/Scenes/Invernadero.unity
     guid: 7b23749d4259c464dbea7d419d28c390
-  - enabled: 1
-    path: Assets/Scenes/SAL.unity
-    guid: 5e01aab2d7aa4a66a362b58b4c85a321
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
