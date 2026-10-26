@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Modelo 3D procedural y controlador del Carrito Portátil de Incubación.
 /// Al extraer a Ella tras la alarma, se coloca al frente de Siete, gira con él (A = izquierda, D = derecha),
-/// rueda girando sus 4 llantas y emite el pulso "tum... tum...".
+/// rueda girando sus 4 llantas y reproduce los AudioSources de extracción y rodaje.
 /// </summary>
 [ExecuteAlways]
 public sealed class INV_IncubatorCart : MonoBehaviour
@@ -23,6 +23,14 @@ public sealed class INV_IncubatorCart : MonoBehaviour
     [SerializeField] private float followLerpSpeed = 18f;
     [SerializeField] private float sideTurnSpeed = 10f;
 
+    [Header("AudioSources del Carrito (hijos en Hierarchy)")]
+    [SerializeField] private AudioSource sacarEllaSource;
+    [SerializeField] private AudioSource ruedasCarritoSource;
+
+    [Header("Clips Opcionales (o arrástralos directo en cada AudioSource hijo)")]
+    [SerializeField] private AudioClip clipSacarEllaCarrito;
+    [SerializeField] private AudioClip clipRuedasCarrito;
+
     public bool IsAttached => isAttached;
 
     private bool isAttached = false;
@@ -32,13 +40,11 @@ public sealed class INV_IncubatorCart : MonoBehaviour
     private float lastCartX;
     private float wheelSpinDegrees = 0f;
     private float pulseTimer = 0f;
+    private float stopRollGraceTimer = 0f;
 
     private GameObject ellaInsideRoot;
     private Light ellaDomeLight;
     private readonly List<Transform> wheelPivots = new List<Transform>();
-
-    private AudioSource audioSource;
-    private AudioClip stepPulseClip;
 
     private void Awake()
     {
@@ -56,13 +62,20 @@ public sealed class INV_IncubatorCart : MonoBehaviour
             return;
         }
 
-        audioSource = GetComponent<AudioSource>();
-        if (!audioSource) audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 0f;
-        stepPulseClip = INV_SoundHelper.CreateStepPulse();
-
+        EnsureCartAudioSources();
         lastCartX = transform.position.x;
+    }
+
+    private void EnsureCartAudioSources()
+    {
+        if (!sacarEllaSource)
+        {
+            sacarEllaSource = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Sacar_Ella_Carrito", 0.85f, loop: false);
+        }
+        if (!ruedasCarritoSource)
+        {
+            ruedasCarritoSource = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Ruedas_Carrito", 0.55f, loop: true);
+        }
     }
 
     private void OnEnable()
@@ -76,6 +89,8 @@ public sealed class INV_IncubatorCart : MonoBehaviour
     private void Start()
     {
         if (!Application.isPlaying) return;
+
+        EnsureCartAudioSources();
 
         bool alreadyExtracted = SAL_Progress.HasFlag(FlagEllaEnCarrito);
         SetEllaVisible(alreadyExtracted);
@@ -94,6 +109,7 @@ public sealed class INV_IncubatorCart : MonoBehaviour
     public void DeployInFrontOfPlayer(CORE_PlayerController player, bool playSound = true)
     {
         Ensure3DModel();
+        EnsureCartAudioSources();
 
         if (player == null)
         {
@@ -131,9 +147,14 @@ public sealed class INV_IncubatorCart : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, facing >= 0 ? 0f : 180f, 0f);
         lastCartX = startPos.x;
 
-        if (playSound && audioSource != null && stepPulseClip != null)
+        if (playSound && sacarEllaSource != null)
         {
-            audioSource.PlayOneShot(stepPulseClip, 0.75f);
+            INV_SoundHelper.PlayEffect(
+                sacarEllaSource,
+                clipSacarEllaCarrito,
+                INV_SoundHelper.CreateCartDeploySound(),
+                0.85f
+            );
         }
     }
 
@@ -218,9 +239,12 @@ public sealed class INV_IncubatorCart : MonoBehaviour
             Time.deltaTime * 720f
         );
 
-        // Girar las 4 ruedas según el desplazamiento real sobre el piso
-        if (Mathf.Abs(dxWorld) > 0.0001f)
+        bool movingCart = Mathf.Abs(dxWorld) > 0.0004f && Time.timeScale > 0f;
+
+        if (movingCart)
         {
+            stopRollGraceTimer = 0.14f;
+
             float forwardSign = facingSign >= 0 ? 1f : -1f;
             float localForwardDelta = dxWorld * forwardSign;
             const float wheelRadius = 0.13f;
@@ -235,15 +259,54 @@ public sealed class INV_IncubatorCart : MonoBehaviour
                 }
             }
 
-            // Pulso rítmico "tum... tum..." mientras rueda
+            UpdateRollingAudio(isMoving: true);
+        }
+        else
+        {
+            if (stopRollGraceTimer > 0f)
+            {
+                stopRollGraceTimer -= Time.deltaTime;
+            }
+            else
+            {
+                UpdateRollingAudio(isMoving: false);
+            }
+        }
+    }
+
+    private void UpdateRollingAudio(bool isMoving)
+    {
+        if (ruedasCarritoSource == null) return;
+
+        bool hasUserClip = INV_SoundHelper.HasUserAssignedAudio(ruedasCarritoSource, clipRuedasCarrito);
+
+        // Si el usuario asignó un audio de ruedas en Loop, suena continuo mientras rueda y se detiene al frenar
+        if (hasUserClip && ruedasCarritoSource.loop)
+        {
+            if (isMoving)
+            {
+                INV_SoundHelper.PlayLoop(ruedasCarritoSource, clipRuedasCarrito, null, 0.55f);
+            }
+            else if (ruedasCarritoSource.isPlaying)
+            {
+                ruedasCarritoSource.Stop();
+            }
+            return;
+        }
+
+        // Si no hay clip asignado (o Loop está desmarcado), pulso rítmico "tum... tum..." mientras rueda
+        if (isMoving)
+        {
             pulseTimer += Time.deltaTime;
-            if (pulseTimer >= 0.95f)
+            if (pulseTimer >= 0.92f)
             {
                 pulseTimer = 0f;
-                if (audioSource != null && stepPulseClip != null)
-                {
-                    audioSource.PlayOneShot(stepPulseClip, 0.42f);
-                }
+                INV_SoundHelper.PlayEffect(
+                    ruedasCarritoSource,
+                    clipRuedasCarrito,
+                    INV_SoundHelper.CreateStepPulse(),
+                    0.48f
+                );
             }
         }
     }
@@ -333,7 +396,6 @@ public sealed class INV_IncubatorCart : MonoBehaviour
         Color violetGlow = new Color(0.76f, 0.38f, 1.0f);
         Color stemTeal = new Color(0.32f, 0.82f, 0.62f);
 
-        // 1. 4 Ruedas giratorias con llanta, rin, rayos y horquilla
         wheelPivots.Clear();
         float[] wheelXs = { -0.32f, 0.32f };
         float[] wheelZs = { -0.24f, 0.24f };
@@ -371,7 +433,6 @@ public sealed class INV_IncubatorCart : MonoBehaviour
             }
         }
 
-        // 2. Plataforma metálica y parachoques frontal (+X)
         CreatePart(root.transform, "Plataforma_Base", PrimitiveType.Cube,
             new Vector3(0f, 0.26f, 0f), Vector3.zero, new Vector3(0.92f, 0.065f, 0.60f),
             gunmetal, 0.45f);
@@ -388,7 +449,6 @@ public sealed class INV_IncubatorCart : MonoBehaviour
             new Vector3(0.02f, 0.33f, -0.28f), Vector3.zero, new Vector3(0.84f, 0.045f, 0.035f),
             steelLight, 0.55f);
 
-        // 3. Manubrio trasero (-X) a la altura exacta de las pinzas de Siete
         CreatePart(root.transform, "Poste_Manubrio_Izq", PrimitiveType.Cylinder,
             new Vector3(-0.46f, 0.46f, 0.22f), new Vector3(0f, 0f, 16f), new Vector3(0.042f, 0.21f, 0.042f),
             steelLight, 0.6f);
@@ -401,17 +461,16 @@ public sealed class INV_IncubatorCart : MonoBehaviour
             new Vector3(-0.52f, 0.64f, 0f), new Vector3(90f, 0f, 0f), new Vector3(0.05f, 0.26f, 0.05f),
             tireRubber, 0.25f);
 
-        // 4. Módulo de soporte vital portátil (batería y 4 indicadores N8)
         CreatePart(root.transform, "Modulo_Soporte", PrimitiveType.Cube,
             new Vector3(-0.28f, 0.40f, 0f), Vector3.zero, new Vector3(0.18f, 0.22f, 0.42f),
             new Color(0.13f, 0.15f, 0.19f), 0.35f);
 
         Color[] ledColors =
         {
-            new Color(1.0f, 0.45f, 0.15f), // Calor
-            new Color(0.55f, 0.38f, 0.95f), // Oscuridad
-            new Color(0.25f, 0.85f, 0.95f), // Pulso
-            new Color(0.35f, 0.92f, 0.65f)  // Bruma
+            new Color(1.0f, 0.45f, 0.15f),
+            new Color(0.55f, 0.38f, 0.95f),
+            new Color(0.25f, 0.85f, 0.95f),
+            new Color(0.35f, 0.92f, 0.65f)
         };
         for (int i = 0; i < 4; i++)
         {
@@ -422,7 +481,6 @@ public sealed class INV_IncubatorCart : MonoBehaviour
             SetEmissive(led, ledColors[i], 1.6f);
         }
 
-        // 5. Cápsula de contención con domo de cristal traslúcido
         CreatePart(root.transform, "Capsula_Anillo_Base", PrimitiveType.Cylinder,
             new Vector3(0.10f, 0.33f, 0f), Vector3.zero, new Vector3(0.48f, 0.045f, 0.48f),
             brassRing, 0.5f);
@@ -443,7 +501,6 @@ public sealed class INV_IncubatorCart : MonoBehaviour
             new Vector3(0.10f, 0.85f, 0f), Vector3.zero, new Vector3(0.18f, 0.025f, 0.18f),
             steelLight, 0.6f);
 
-        // 6. Brote de Ella dentro del carrito (se activa al sacarla de la incubadora fija)
         ellaInsideRoot = new GameObject("Ella_En_Carrito");
         ellaInsideRoot.transform.SetParent(root.transform, false);
         ellaInsideRoot.transform.localPosition = new Vector3(0.10f, 0.36f, 0f);
@@ -560,7 +617,6 @@ public sealed class INV_IncubatorCart : MonoBehaviour
         if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", tint);
         if (mat.HasProperty("_Smoothness")) mat.SetFloat("_Smoothness", 0.92f);
 
-        // Configurar transparencia limpia para URP Lit
         if (mat.HasProperty("_Surface"))
         {
             mat.SetFloat("_Surface", 1f);

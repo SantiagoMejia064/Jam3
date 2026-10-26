@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-/// <summary>Gestor general de la escena Invernadero (Persona 5). Controla el umbral A4, detección y fijación de posición del jugador y la cámara, giro A/D de Siete, preservación de INV_Gameplay y el marchitamiento a negro de las hojas por esporas.</summary>
+/// <summary>Gestor general de la escena Invernadero (Persona 5). Controla el umbral A4, audio ambiental y de Vega, posición del jugador y la cámara, giro A/D de Siete, preservación de INV_Gameplay y el marchitamiento a negro de las hojas por esporas.</summary>
 public sealed class INV_RoomController : MonoBehaviour
 {
     public const string FlagUmbralA4 = "INV_UmbralA4Played";
@@ -28,7 +27,7 @@ public sealed class INV_RoomController : MonoBehaviour
     [Tooltip("Conserva automáticamente la posición y encuadre en la que dejaste INV_Camara_25D")]
     [SerializeField] private bool autoPreserveCamera = true;
 
-    [Header("Configuración de Entrada")]
+    [Header("Configuración de Entrada (Umbral A4 de Vega)")]
     [SerializeField] private bool autoTriggerA4 = true;
     [SerializeField] private float a4SubtitleDuration = 4.5f;
 
@@ -37,6 +36,16 @@ public sealed class INV_RoomController : MonoBehaviour
     [SerializeField] private Material grayPlantMaterial;
     [SerializeField] private float leafWitherDuration = 5.8f;
     [SerializeField] private Color witheredBlackColor = new Color(0.022f, 0.022f, 0.026f, 1f);
+
+    [Header("Audio del Invernadero (AudioSources hijos en Hierarchy)")]
+    [SerializeField] private AudioSource ambienteInvernaderoSource;
+    [SerializeField] private AudioSource vegaEntradaA4Source;
+    [SerializeField] private AudioSource marchitamientoPlantasSource;
+
+    [Header("Clips Opcionales (o arrástralos directo en cada AudioSource)")]
+    [SerializeField] private AudioClip clipAmbienteInvernadero;
+    [SerializeField] private AudioClip clipVegaEntradaA4;
+    [SerializeField] private AudioClip clipMarchitamientoPlantas;
 
     [Header("Pruebas en Editor")]
     [SerializeField] private bool injectTestItemsIfMissing = false;
@@ -54,6 +63,8 @@ public sealed class INV_RoomController : MonoBehaviour
 
     private CORE_PlayerController activePlayer;
     private FieldInfo fixedZField;
+    private FieldInfo movRobotClipField;
+    private FieldInfo movRobotSourceField;
     private Vector3 resolvedPlayerPos;
     private bool hasResolvedPlayerPos = false;
 
@@ -79,6 +90,10 @@ public sealed class INV_RoomController : MonoBehaviour
         Instance = this;
 
         fixedZField = typeof(CORE_PlayerController).GetField("fixedZ", BindingFlags.NonPublic | BindingFlags.Instance);
+        movRobotClipField = typeof(CORE_PlayerController).GetField("movimientoRobot", BindingFlags.NonPublic | BindingFlags.Instance);
+        movRobotSourceField = typeof(CORE_PlayerController).GetField("movimientoSource", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        EnsureRoomAudioSources();
 
         // 1. Congelar y preservar absolutamente todo lo que esté dentro de INV_Gameplay
         CaptureGameplayAuthoredPositions();
@@ -86,8 +101,61 @@ public sealed class INV_RoomController : MonoBehaviour
         // 2. Detectar la posición original de CORE_Siete en la escena de Invernadero
         CaptureSceneAuthoredPositions();
 
-        // 3. Detectar la posición y encuadre original de INV_Camara_25D
+        // 3. Detectar la posición y encuadre original de INV_Camara_25D y garantizar un único AudioListener activo
         CaptureCameraAuthoredPosition();
+        EnsureSingleActiveAudioListener();
+    }
+
+    private void EnsureRoomAudioSources()
+    {
+        if (!ambienteInvernaderoSource)
+        {
+            ambienteInvernaderoSource = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Ambiente_Invernadero", 0.32f, loop: true);
+        }
+        if (!vegaEntradaA4Source)
+        {
+            vegaEntradaA4Source = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Vega_Entrada_A4", 0.90f, loop: false);
+        }
+        if (!marchitamientoPlantasSource)
+        {
+            marchitamientoPlantasSource = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Marchitamiento_Plantas", 0.80f, loop: false);
+        }
+    }
+
+    private void EnsureSingleActiveAudioListener()
+    {
+        Camera targetCam = null;
+        if (cameraFollow != null)
+        {
+            targetCam = cameraFollow.GetComponent<Camera>();
+        }
+        if (targetCam == null)
+        {
+            GameObject camGo = GameObject.Find("INV_Camara_25D");
+            if (camGo != null) targetCam = camGo.GetComponent<Camera>();
+        }
+        if (targetCam == null)
+        {
+            targetCam = Camera.main;
+        }
+
+        if (targetCam != null && targetCam.gameObject.activeInHierarchy)
+        {
+            AudioListener mainListener = targetCam.GetComponent<AudioListener>();
+            if (mainListener == null)
+            {
+                mainListener = targetCam.gameObject.AddComponent<AudioListener>();
+            }
+            mainListener.enabled = true;
+
+            foreach (AudioListener listener in FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
+            {
+                if (listener != null && listener != mainListener && listener.enabled)
+                {
+                    listener.enabled = false;
+                }
+            }
+        }
     }
 
     private void CaptureGameplayAuthoredPositions()
@@ -120,9 +188,9 @@ public sealed class INV_RoomController : MonoBehaviour
 
         if (autoDetectScenePosition)
         {
-            foreach (Transform t in FindObjectsByType<Transform>(FindObjectsSortMode.None))
+            foreach (Transform t in FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
-                if (t.gameObject.scene == gameObject.scene && (t.name == "CORE_Siete" || t.name == "CORE_Siete_SAL"))
+                if (t != null && t.gameObject.scene == gameObject.scene && (t.name == "CORE_Siete" || t.name == "CORE_Siete_SAL"))
                 {
                     resolvedPlayerPos = t.position;
                     hasResolvedPlayerPos = true;
@@ -140,11 +208,14 @@ public sealed class INV_RoomController : MonoBehaviour
     {
         if (!autoPreserveCamera) return;
 
-        cameraFollow = FindFirstObjectByType<CORE_CameraFollow>();
+        var cam = GameObject.Find("INV_Camara_25D");
+        if (cam != null)
+        {
+            cameraFollow = cam.GetComponent<CORE_CameraFollow>();
+        }
         if (!cameraFollow)
         {
-            var cam = GameObject.Find("INV_Camara_25D");
-            if (cam) cameraFollow = cam.GetComponent<CORE_CameraFollow>();
+            cameraFollow = FindFirstObjectByType<CORE_CameraFollow>();
         }
 
         if (cameraFollow != null)
@@ -181,19 +252,31 @@ public sealed class INV_RoomController : MonoBehaviour
         // 3. Alinear jugador en su posición detectada de la escena y activar giro A/D sin dañar sombras
         LocateAndAlignPlayer();
 
-        // 4. Alinear cámara conservando su encuadre exacto
+        // 4. Alinear cámara conservando su encuadre exacto y su AudioListener
         AlignCameraWithPlayer();
+        EnsureSingleActiveAudioListener();
 
         StartCoroutine(SetupPlayerRoutine());
 
-        // 5. Audio A4 en el umbral
+        // 5. Iniciar audio de ambiente del Invernadero
+        if (ambienteInvernaderoSource != null)
+        {
+            INV_SoundHelper.PlayLoop(
+                ambienteInvernaderoSource,
+                clipAmbienteInvernadero,
+                INV_SoundHelper.CreateGreenhouseAmbience(),
+                0.22f
+            );
+        }
+
+        // 6. Audio A4 de Vega en el umbral al entrar al Invernadero
         if (autoTriggerA4 && !SAL_Progress.HasFlag(FlagUmbralA4))
         {
             SAL_Progress.SetFlag(FlagUmbralA4);
             StartCoroutine(PlayA4UmbralRoutine());
         }
 
-        // 6. Restaurar estado marchito en negro si ya ocurrió la revelación antes de entrar
+        // 7. Restaurar estado marchito en negro si ya ocurrió la revelación antes de entrar
         if (SAL_Progress.HasFlag(SAL_Progress.Revealed))
         {
             TriggerSporeWithering(instant: true);
@@ -221,6 +304,11 @@ public sealed class INV_RoomController : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (ambienteInvernaderoSource != null)
+        {
+            ambienteInvernaderoSource.Stop();
+        }
+
         // Al salir de Invernadero restaurar fixedZ = 0 para Javier / Pasillo
         if (activePlayer != null && fixedZField != null)
         {
@@ -247,6 +335,7 @@ public sealed class INV_RoomController : MonoBehaviour
 
         LocateAndAlignPlayer();
         AlignCameraWithPlayer();
+        EnsureSingleActiveAudioListener();
 
         if (injectTestItemsIfMissing)
         {
@@ -263,8 +352,8 @@ public sealed class INV_RoomController : MonoBehaviour
         }
         if (!foundPlayer)
         {
-            var allControllers = FindObjectsByType<CORE_PlayerController>(FindObjectsSortMode.None);
-            foreach (var pc in allControllers)
+            var allActive = FindObjectsByType<CORE_PlayerController>(FindObjectsSortMode.None);
+            foreach (var pc in allActive)
             {
                 if (pc != null && pc.GetComponent<CapsuleCollider>() != null)
                 {
@@ -272,9 +361,40 @@ public sealed class INV_RoomController : MonoBehaviour
                     break;
                 }
             }
-            if (!foundPlayer && allControllers.Length > 0)
+            if (!foundPlayer && allActive.Length > 0)
             {
-                foundPlayer = allControllers[0];
+                foundPlayer = allActive[0];
+            }
+        }
+
+        // Si probamos Invernadero directamente desde el Editor y CORE_Siete estaba desactivado en la escena, activarlo limpio
+        if (!foundPlayer)
+        {
+            var allIncludingInactive = FindObjectsByType<CORE_PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var pc in allIncludingInactive)
+            {
+                if (pc != null && pc.GetComponent<CapsuleCollider>() != null)
+                {
+                    foundPlayer = pc;
+                    break;
+                }
+            }
+            if (!foundPlayer && allIncludingInactive.Length > 0)
+            {
+                foundPlayer = allIncludingInactive[0];
+            }
+
+            if (foundPlayer != null && !foundPlayer.gameObject.activeInHierarchy)
+            {
+                Transform p = foundPlayer.transform;
+                while (p != null)
+                {
+                    if (!p.gameObject.activeSelf)
+                    {
+                        p.gameObject.SetActive(true);
+                    }
+                    p = p.parent;
+                }
             }
         }
 
@@ -286,6 +406,8 @@ public sealed class INV_RoomController : MonoBehaviour
             {
                 mc.convex = true;
             }
+
+            SyncPlayerMovementAudio(activePlayer);
 
             var facing = activePlayer.GetComponent<INV_PlayerFacing>();
             if (facing == null)
@@ -307,6 +429,33 @@ public sealed class INV_RoomController : MonoBehaviour
             {
                 fixedZField.SetValue(activePlayer, targetPos.z);
             }
+        }
+    }
+
+    /// <summary>
+    /// Conecta en runtime el AudioSource de CORE_Siete con CORE_PlayerController (sin editar scripts de otras escenas),
+    /// permitiendo arrastrar el sonido de pasos tanto en el AudioSource como en Movimiento Robot.
+    /// </summary>
+    private void SyncPlayerMovementAudio(CORE_PlayerController player)
+    {
+        if (player == null || movRobotSourceField == null || movRobotClipField == null) return;
+
+        AudioSource existingSource = movRobotSourceField.GetValue(player) as AudioSource;
+        AudioSource goSource = player.GetComponent<AudioSource>();
+
+        if (existingSource == null && goSource != null)
+        {
+            goSource.playOnAwake = false;
+            goSource.loop = true;
+            goSource.spatialBlend = 0f;
+            movRobotSourceField.SetValue(player, goSource);
+            existingSource = goSource;
+        }
+
+        AudioClip currentMovClip = movRobotClipField.GetValue(player) as AudioClip;
+        if (currentMovClip == null && existingSource != null && existingSource.clip != null)
+        {
+            movRobotClipField.SetValue(player, existingSource.clip);
         }
     }
 
@@ -336,13 +485,36 @@ public sealed class INV_RoomController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.6f);
 
-        if (SAL_AudioDirector.Instance)
+        bool directorPlayedRealVoice = false;
+        if (SAL_AudioDirector.Instance != null)
         {
             SAL_AudioDirector.Instance.PlayLog("A4", false, a4SubtitleDuration);
+
+            // Verificar si SAL_AudioDirector tenía un clip real asignado para A4
+            FieldInfo voiceField = typeof(SAL_AudioDirector).GetField("voiceSource", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (voiceField != null)
+            {
+                AudioSource salVoice = voiceField.GetValue(SAL_AudioDirector.Instance) as AudioSource;
+                if (salVoice != null && salVoice.isPlaying && salVoice.clip != null)
+                {
+                    directorPlayedRealVoice = true;
+                }
+            }
         }
         else
         {
             CORE_InteractionHUD.ShowMessage("Vega: \"Siete, no la busques. Por favor.\"", a4SubtitleDuration);
+        }
+
+        // Reproducir siempre el sonido de Vega al hablar en el umbral (salvo que SAL_AudioDirector ya esté sonando su voz)
+        if (!directorPlayedRealVoice && vegaEntradaA4Source != null)
+        {
+            INV_SoundHelper.PlayEffect(
+                vegaEntradaA4Source,
+                clipVegaEntradaA4,
+                INV_SoundHelper.CreateVegaVoiceTransmission(0),
+                0.90f
+            );
         }
     }
 
@@ -359,6 +531,22 @@ public sealed class INV_RoomController : MonoBehaviour
     public void TriggerSporeWithering(bool instant = false)
     {
         PrepareLeafMaterialClones();
+
+        // Volver más sombrío el ambiente del invernadero durante la cuarentena
+        if (ambienteInvernaderoSource != null)
+        {
+            ambienteInvernaderoSource.pitch = 0.82f;
+        }
+
+        if (!instant && marchitamientoPlantasSource != null)
+        {
+            INV_SoundHelper.PlayEffect(
+                marchitamientoPlantasSource,
+                clipMarchitamientoPlantas,
+                INV_SoundHelper.CreateSporeWitherSound(),
+                0.80f
+            );
+        }
 
         if (witherRoutine != null)
         {
@@ -397,7 +585,6 @@ public sealed class INV_RoomController : MonoBehaviour
                 Material srcMat = shared[i];
                 if (srcMat == null) continue;
 
-                // Si ya fue asignado uno de nuestros clones runtime, continuar
                 bool alreadyClone = false;
                 foreach (var existing in leafMaterialClones.Values)
                 {
@@ -475,7 +662,6 @@ public sealed class INV_RoomController : MonoBehaviour
 
     private void ApplyWitherFactor(float t)
     {
-        // Transición orgánica: Verde vivo -> Oliva necrótico seco -> Negro marchito mate
         Color necroticMid = new Color(0.11f, 0.09f, 0.06f, 1f);
 
         foreach (var kvp in leafMaterialClones)

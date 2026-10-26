@@ -14,8 +14,23 @@ public sealed class INV_WorkTable : MonoBehaviour
     [SerializeField] private string noteTachado = "Vega no sabe que hay semillas. Yo sí.";
     [SerializeField] private GameObject noteVisualSheet;
 
+    [Header("Audio (AudioSource en este mismo objeto)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip clipLeerPlanilla;
+
     private CORE_PlayerController player;
     private bool inRange;
+
+    private void Awake()
+    {
+        if (!audioSource)
+        {
+            audioSource = GetComponent<AudioSource>();
+            if (!audioSource) audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+    }
 
     private void Start()
     {
@@ -26,7 +41,8 @@ public sealed class INV_WorkTable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out CORE_PlayerController pc))
+        var pc = other.GetComponentInParent<CORE_PlayerController>();
+        if (pc != null)
         {
             player = pc;
             inRange = true;
@@ -36,7 +52,7 @@ public sealed class INV_WorkTable : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<CORE_PlayerController>())
+        if (other.GetComponentInParent<CORE_PlayerController>() != null)
         {
             player = null;
             inRange = false;
@@ -64,6 +80,13 @@ public sealed class INV_WorkTable : MonoBehaviour
 
     public void CollectN8()
     {
+        INV_SoundHelper.PlayEffect(
+            audioSource,
+            clipLeerPlanilla,
+            INV_SoundHelper.CreatePaperRustleSound(),
+            0.80f
+        );
+
         // Registro en el cuaderno persistente (índice 7 es N8)
         if (NotebookController.Instance)
         {

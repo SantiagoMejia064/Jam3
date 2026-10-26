@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
 
-/// <summary>Presentación de las seis tarjetas de revelación de doble lectura según el GDD.</summary>
+/// <summary>Presentación de las seis tarjetas de revelación de doble lectura según el GDD, con sonido de voz/radio de Vega.</summary>
 public sealed class INV_RevelationUI : MonoBehaviour
 {
     [Serializable]
@@ -24,6 +23,10 @@ public sealed class INV_RevelationUI : MonoBehaviour
     [SerializeField] private TMP_Text reading1Text;
     [SerializeField] private TMP_Text reading2Text;
     [SerializeField] private TMP_Text hintAdvanceText;
+
+    [Header("Audio de Vega en Revelación")]
+    [SerializeField] private AudioSource vegaRevelationSource;
+    [SerializeField] private AudioClip clipVegaRevelacion;
 
     private readonly RevelationCard[] cards = new RevelationCard[]
     {
@@ -96,6 +99,14 @@ public sealed class INV_RevelationUI : MonoBehaviour
     {
         if (isInitialized) return;
         isInitialized = true;
+
+        if (!vegaRevelationSource)
+        {
+            vegaRevelationSource = GetComponent<AudioSource>();
+            if (!vegaRevelationSource) vegaRevelationSource = gameObject.AddComponent<AudioSource>();
+        }
+        vegaRevelationSource.playOnAwake = false;
+        vegaRevelationSource.spatialBlend = 0f;
 
         if (panel == null)
         {
@@ -219,9 +230,22 @@ public sealed class INV_RevelationUI : MonoBehaviour
         }
     }
 
+    private void PlayVegaCue(int variant)
+    {
+        if (vegaRevelationSource == null) return;
+        INV_SoundHelper.PlayEffect(
+            vegaRevelationSource,
+            clipVegaRevelacion,
+            INV_SoundHelper.CreateVegaVoiceTransmission(variant),
+            0.85f
+        );
+    }
+
     private void ShowCard(int index)
     {
         if (index < 0 || index >= cards.Length) return;
+
+        PlayVegaCue(index % 4);
 
         RevelationCard c = cards[index];
         if (cardNumberText) cardNumberText.text = $"EVIDENCIA {index + 1} DE {cards.Length}";
@@ -255,6 +279,7 @@ public sealed class INV_RevelationUI : MonoBehaviour
 
     private void ShowEpilogueStep1()
     {
+        PlayVegaCue(2);
         if (cardNumberText) cardNumberText.text = "COMUNICACIÓN ENTRANTE DE VEGA";
         if (reading1Text) reading1Text.text = "";
         if (vegaVoiceText) vegaVoiceText.text = "Vega: \"Se parece a lo que mató las semillas de la Tierra...\"";
@@ -265,6 +290,7 @@ public sealed class INV_RevelationUI : MonoBehaviour
 
     private void ShowEpilogueStep2()
     {
+        PlayVegaCue(3);
         if (vegaVoiceText) vegaVoiceText.text = "Vega: \"Suéltala, Siete. Por favor.\"";
         if (reading2Text) reading2Text.text = "<color=#EF4444>La incubadora ahora tiene ruedas. Debo llevarla a la esclusa.</color>";
         if (hintAdvanceText) hintAdvanceText.text = "[E / Espacio / Clic] Salir al Invernadero";
@@ -292,7 +318,6 @@ public sealed class INV_RevelationUI : MonoBehaviour
         isShowing = false;
         isInEpilogue = false;
 
-        // Garantizar que todos los jugadores recuperen el movimiento
         SetPlayerMovement(true);
 
         var callback = onCompleteCallback;

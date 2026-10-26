@@ -1,6 +1,6 @@
 using UnityEngine;
 
-/// <summary>Maceta quemada con los restos de Ella en el Invernadero. Incluye modelo 3D con ceniza y brillo violeta tenue.</summary>
+/// <summary>Maceta quemada con los restos de Ella en el Invernadero. Incluye modelo 3D con ceniza, brillo violeta tenue y reproducción de AudioSource.</summary>
 [ExecuteAlways]
 [RequireComponent(typeof(Collider))]
 public sealed class INV_RestosElla : MonoBehaviour
@@ -15,6 +15,10 @@ public sealed class INV_RestosElla : MonoBehaviour
     [SerializeField] private float lightIntensityBase = 1.8f;
     [SerializeField] private float lightIntensityPulse = 0.4f;
 
+    [Header("Audio (AudioSource en este mismo objeto)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip clipExaminarMaceta;
+
     private CORE_PlayerController player;
     private bool inRange;
     private Light violetLight;
@@ -24,6 +28,17 @@ public sealed class INV_RestosElla : MonoBehaviour
         if (autoBuild3DModel)
         {
             Ensure3DModel();
+        }
+
+        if (Application.isPlaying)
+        {
+            if (!audioSource)
+            {
+                audioSource = GetComponent<AudioSource>();
+                if (!audioSource) audioSource = gameObject.AddComponent<AudioSource>();
+            }
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
         }
     }
 
@@ -53,7 +68,6 @@ public sealed class INV_RestosElla : MonoBehaviour
         root.transform.SetParent(transform, false);
         root.transform.localPosition = Vector3.zero;
 
-        // 1. Cuerpo de la Maceta Quemada (Cilindro cerámico oscuro)
         GameObject potGo = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         potGo.name = "Maceta_Quemada_Cuerpo";
         potGo.transform.SetParent(root.transform, false);
@@ -62,7 +76,6 @@ public sealed class INV_RestosElla : MonoBehaviour
         DestroyImmediate(potGo.GetComponent<Collider>());
         SetMaterialColor(potGo, new Color(0.11f, 0.10f, 0.12f), 0.2f);
 
-        // 2. Borde superior de la maceta
         GameObject rimGo = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         rimGo.name = "Maceta_Quemada_Borde";
         rimGo.transform.SetParent(root.transform, false);
@@ -71,7 +84,6 @@ public sealed class INV_RestosElla : MonoBehaviour
         DestroyImmediate(rimGo.GetComponent<Collider>());
         SetMaterialColor(rimGo, new Color(0.14f, 0.13f, 0.15f), 0.25f);
 
-        // 3. Ceniza / Sustrato negro carbón
         GameObject ashGo = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         ashGo.name = "Ceniza_Sustrato";
         ashGo.transform.SetParent(root.transform, false);
@@ -80,12 +92,10 @@ public sealed class INV_RestosElla : MonoBehaviour
         DestroyImmediate(ashGo.GetComponent<Collider>());
         SetMaterialColor(ashGo, new Color(0.06f, 0.06f, 0.08f), 0.1f);
 
-        // 4. Restos carbonizados de tallos de Ella
         CreateCharredSprout(root.transform, "TalloQuemado_1", new Vector3(0.02f, 0.52f, 0.02f), new Vector3(0.045f, 0.16f, 0.045f), new Vector3(14f, 30f, -8f));
         CreateCharredSprout(root.transform, "TalloQuemado_2", new Vector3(-0.06f, 0.50f, -0.03f), new Vector3(0.04f, 0.12f, 0.04f), new Vector3(-18f, -15f, 12f));
         CreateCharredSprout(root.transform, "TalloQuemado_3", new Vector3(0.05f, 0.48f, -0.05f), new Vector3(0.035f, 0.10f, 0.035f), new Vector3(8f, 110f, -14f));
 
-        // 5. Brasa violeta apagada (núcleo resplandeciente en la ceniza)
         GameObject emberGo = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         emberGo.name = "Brasa_Violeta_Nucleo";
         emberGo.transform.SetParent(root.transform, false);
@@ -94,7 +104,6 @@ public sealed class INV_RestosElla : MonoBehaviour
         DestroyImmediate(emberGo.GetComponent<Collider>());
         SetMaterialEmission(emberGo, violetGlowColor);
 
-        // 6. Luz misteriosa violeta ténue
         GameObject lightGo = new GameObject("LuzVioletaApagada");
         lightGo.transform.SetParent(root.transform, false);
         lightGo.transform.localPosition = new Vector3(0, 0.55f, 0);
@@ -123,7 +132,6 @@ public sealed class INV_RestosElla : MonoBehaviour
         var renderer = go.GetComponent<MeshRenderer>();
         if (!renderer) return;
 
-        // Intentar usar un material base del proyecto o crear una instancia Standard
         Shader shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
         Material mat = new Material(shader);
         mat.color = color;
@@ -146,7 +154,8 @@ public sealed class INV_RestosElla : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out CORE_PlayerController pc))
+        var pc = other.GetComponentInParent<CORE_PlayerController>();
+        if (pc != null)
         {
             player = pc;
             inRange = true;
@@ -156,7 +165,7 @@ public sealed class INV_RestosElla : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<CORE_PlayerController>())
+        if (other.GetComponentInParent<CORE_PlayerController>() != null)
         {
             player = null;
             inRange = false;
@@ -173,18 +182,24 @@ public sealed class INV_RestosElla : MonoBehaviour
 
     private void Update()
     {
-        // Respiración / pulsación sutil del brillo violeta de la ceniza
         if (violetLight != null)
         {
             float pulse = Mathf.Sin(Time.time * 2.2f) * lightIntensityPulse;
             violetLight.intensity = lightIntensityBase + pulse;
         }
 
+        if (!Application.isPlaying) return;
         if (!inRange || player == null) return;
         if (NotebookController.Instance && NotebookController.Instance.IsOpen) return;
 
         if (player.InteractPressed)
         {
+            INV_SoundHelper.PlayEffect(
+                audioSource,
+                clipExaminarMaceta,
+                INV_SoundHelper.CreateAshInspectSound(),
+                0.75f
+            );
             CORE_InteractionHUD.ShowMessage(inspectMessage, 3.5f);
         }
     }

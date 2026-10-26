@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
 
-/// <summary>Interfaz interactiva para el puzle de afinación de la incubadora.</summary>
+/// <summary>Interfaz interactiva para el puzle de afinación de la incubadora (2-4-1-3).</summary>
 public sealed class INV_IncubatorUI : MonoBehaviour
 {
     [Header("Panel Principal")]
@@ -36,6 +36,12 @@ public sealed class INV_IncubatorUI : MonoBehaviour
     [SerializeField] private Slider stabilitySlider;
     [SerializeField] private TMP_Text statusText;
 
+    [Header("Audio de Interfaz de Afinación")]
+    [SerializeField] private AudioSource perillaClickSource;
+    [SerializeField] private AudioSource afinacionCompletadaSource;
+    [SerializeField] private AudioClip clipPerillaClick;
+    [SerializeField] private AudioClip clipAfinacionCompletada;
+
     // Metas según N8 (GDD pág 10)
     public const int TargetCalor = 2;
     public const int TargetOscuridad = 4;
@@ -53,8 +59,6 @@ public sealed class INV_IncubatorUI : MonoBehaviour
     private bool isInitialized = false;
     private bool isOpening = false;
     private Action onSolvedCallback;
-    private AudioSource audioSource;
-    private AudioClip clickClip;
 
     public bool IsOpen => panel != null && panel.activeInHierarchy;
 
@@ -62,7 +66,6 @@ public sealed class INV_IncubatorUI : MonoBehaviour
     {
         EnsureInitialized();
 
-        // Solo ocultar al despertar si NO estamos abriendo el panel por primera vez desde Open()
         if (!isOpening && panel != null)
         {
             panel.SetActive(false);
@@ -74,10 +77,23 @@ public sealed class INV_IncubatorUI : MonoBehaviour
         if (isInitialized) return;
         isInitialized = true;
 
-        audioSource = GetComponent<AudioSource>();
-        if (!audioSource) audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.playOnAwake = false;
-        clickClip = INV_SoundHelper.CreatePerillaClick();
+        if (!perillaClickSource)
+        {
+            perillaClickSource = GetComponent<AudioSource>();
+            if (!perillaClickSource) perillaClickSource = gameObject.AddComponent<AudioSource>();
+        }
+        perillaClickSource.playOnAwake = false;
+        perillaClickSource.spatialBlend = 0f;
+
+        if (!afinacionCompletadaSource && transform.parent != null)
+        {
+            afinacionCompletadaSource = INV_SoundHelper.FindOrCreateChildSource(
+                transform.parent,
+                "Audio_Afinacion_Completada",
+                0.85f,
+                loop: false
+            );
+        }
 
         if (panel == null)
         {
@@ -107,7 +123,6 @@ public sealed class INV_IncubatorUI : MonoBehaviour
     {
         isOpening = true;
 
-        // Asegurar que toda la jerarquía padre del Canvas esté activa antes de activar el panel
         EnsureHierarchyActive(transform.parent);
         if (!gameObject.activeSelf)
         {
@@ -124,7 +139,6 @@ public sealed class INV_IncubatorUI : MonoBehaviour
 
         isOpening = false;
 
-        // Reconfirmar activación por si algún callback intermedio alteró el estado
         if (panel != null && !panel.activeSelf)
         {
             panel.SetActive(true);
@@ -148,7 +162,6 @@ public sealed class INV_IncubatorUI : MonoBehaviour
 
         RefreshVisuals();
 
-        // Solo pausar el movimiento de Siete si el panel está efectivamente visible en pantalla
         if (IsOpen)
         {
             SetPlayerMovement(false);
@@ -171,7 +184,6 @@ public sealed class INV_IncubatorUI : MonoBehaviour
 
     private void OnDisable()
     {
-        // Seguro contra bloqueos: si el panel se desactiva por cualquier motivo, Siete siempre recupera su movimiento
         if (!isOpening)
         {
             SetPlayerMovement(true);
@@ -220,7 +232,6 @@ public sealed class INV_IncubatorUI : MonoBehaviour
             return;
         }
 
-        // Teclado: 1, 2, 3, 4 para incrementar (+); Z, X, C, V para decrementar (-)
         if (WasKeyPressed(KeyCode.Alpha1, KeyCode.Keypad1, kb?.digit1Key, kb?.numpad1Key)) Adjust(ref valCalor, +1);
         if (WasKeyPressed(KeyCode.Z, KeyCode.None, kb?.zKey, null)) Adjust(ref valCalor, -1);
 
@@ -239,8 +250,8 @@ public sealed class INV_IncubatorUI : MonoBehaviour
     private static bool WasKeyPressed(
         KeyCode legacyPrimary,
         KeyCode legacySecondary,
-         UnityEngine.InputSystem.Controls.KeyControl primaryCtrl,
-         UnityEngine.InputSystem.Controls.KeyControl secondaryCtrl)
+        UnityEngine.InputSystem.Controls.KeyControl primaryCtrl,
+        UnityEngine.InputSystem.Controls.KeyControl secondaryCtrl)
     {
         if (primaryCtrl != null && primaryCtrl.wasPressedThisFrame) return true;
         if (secondaryCtrl != null && secondaryCtrl.wasPressedThisFrame) return true;
@@ -255,7 +266,12 @@ public sealed class INV_IncubatorUI : MonoBehaviour
         value = Mathf.Clamp(value + delta, 0, 4);
         if (value != prev)
         {
-            if (audioSource && clickClip) audioSource.PlayOneShot(clickClip, 0.6f);
+            INV_SoundHelper.PlayEffect(
+                perillaClickSource,
+                clipPerillaClick,
+                INV_SoundHelper.CreatePerillaClick(),
+                0.65f
+            );
             stableHoldTimer = 0f;
             RefreshVisuals();
         }
@@ -277,6 +293,18 @@ public sealed class INV_IncubatorUI : MonoBehaviour
             {
                 isSolved = true;
                 if (statusText) statusText.text = "<color=#A855F7>¡ESTABILIZADA! Iniciando floración...</color>";
+
+                // Reproducir sonido en INV_Canvas_Incubadora/Audio_Afinacion_Completada (activo aunque se cierre el panel)
+                if (afinacionCompletadaSource != null)
+                {
+                    INV_SoundHelper.PlayEffect(
+                        afinacionCompletadaSource,
+                        clipAfinacionCompletada,
+                        INV_SoundHelper.CreateTuningCompleteChime(),
+                        0.85f
+                    );
+                }
+
                 var callback = onSolvedCallback;
                 onSolvedCallback = null;
                 Close();
@@ -314,15 +342,15 @@ public sealed class INV_IncubatorUI : MonoBehaviour
         int dist = Mathf.Abs(current - target);
         if (dist == 0)
         {
-            ring.color = new Color(0.72f, 0.35f, 0.98f, 1f); // Violeta brillante
+            ring.color = new Color(0.72f, 0.35f, 0.98f, 1f);
         }
         else if (dist == 1)
         {
-            ring.color = new Color(0.55f, 0.45f, 0.65f, 0.75f); // Violeta apagado
+            ring.color = new Color(0.55f, 0.45f, 0.65f, 0.75f);
         }
         else
         {
-            ring.color = new Color(0.28f, 0.28f, 0.32f, 0.5f); // Gris frío
+            ring.color = new Color(0.28f, 0.28f, 0.32f, 0.5f);
         }
     }
 
@@ -373,7 +401,6 @@ public sealed class INV_IncubatorUI : MonoBehaviour
             colRect.anchoredPosition = new Vector2(posX, 20f);
             colRect.sizeDelta = new Vector2(200, 260);
 
-            // Anillo visual
             GameObject ringGo = new GameObject("Ring_" + i);
             ringGo.transform.SetParent(col.transform, false);
             var ringRect = ringGo.AddComponent<RectTransform>();
@@ -413,7 +440,6 @@ public sealed class INV_IncubatorUI : MonoBehaviour
             new Vector2(0.5f, 0.18f), Vector2.zero, new Vector2(700, 32),
             new Color(0.85f, 0.85f, 0.9f), TextAlignmentOptions.Center);
 
-        // Barra de estabilidad
         GameObject sliderGo = new GameObject("StabilitySlider");
         sliderGo.transform.SetParent(panel.transform, false);
         var sRect = sliderGo.AddComponent<RectTransform>();

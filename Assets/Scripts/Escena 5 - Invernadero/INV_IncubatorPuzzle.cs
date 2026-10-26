@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>Controlador integral de la incubadora: Montaje, Afinación, Germinación 3D en Cámara de Cultivo, Alerta de Esporas y Extracción al Carrito 3D.</summary>
+/// <summary>Controlador integral de la incubadora: Montaje, Afinación, Germinación 3D en Cámara de Cultivo, Alerta de Esporas, Voz de Vega y Extracción al Carrito 3D.</summary>
 [RequireComponent(typeof(Collider))]
 public sealed class INV_IncubatorPuzzle : MonoBehaviour
 {
@@ -22,25 +22,42 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
     [Header("Carrito Portátil 3D")]
     [SerializeField] private INV_IncubatorCart portableCart;
 
+    [Header("AudioSources de la Incubadora (hijos en Hierarchy)")]
+    [SerializeField] private AudioSource audioMontajeCalor;
+    [SerializeField] private AudioSource audioMontajeOscuridad;
+    [SerializeField] private AudioSource audioMontajePulso;
+    [SerializeField] private AudioSource audioMontajeBruma;
+    [SerializeField] private AudioSource audioGerminacionElla;
+    [SerializeField] private AudioSource audioAlarmaEsporas;
+    [SerializeField] private AudioSource audioVegaAlerta1;
+    [SerializeField] private AudioSource audioVegaAlerta2;
+    [SerializeField] private AudioSource audioVegaAlerta3;
+
+    [Header("Clips Opcionales (o arrástralos directo en cada AudioSource hijo)")]
+    [SerializeField] private AudioClip clipMontajeCalor;
+    [SerializeField] private AudioClip clipMontajeOscuridad;
+    [SerializeField] private AudioClip clipMontajePulso;
+    [SerializeField] private AudioClip clipMontajeBruma;
+    [SerializeField] private AudioClip clipGerminacionElla;
+    [SerializeField] private AudioClip clipAlarmaEsporas;
+    [SerializeField] private float duracionAlarmaSegundos = 15f;
+    [SerializeField] private AudioClip clipVegaAlerta1;
+    [SerializeField] private AudioClip clipVegaAlerta2;
+    [SerializeField] private AudioClip clipVegaAlerta3;
+
     private INV_EllaGerminationSequence chamberGermination;
     private CORE_PlayerController activePlayer;
     private bool inRange;
     private bool isMounting = false;
-    private AudioSource audioSource;
     private bool triggerAlarmNow = false;
-
-    private AudioClip heatHum;
-    private AudioClip darkClick;
-    private AudioClip stepPulse;
-    private AudioClip mistHiss;
-    private AudioClip bloomHarmonic;
-    private AudioClip alarmSiren;
+    private Coroutine alarmDurationRoutine;
+    private float alarmSavedVolume = -1f;
+    private AudioClip alarmSavedClip;
+    private bool alarmReplacedClipTemporarily = false;
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
-        if (!audioSource) audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.playOnAwake = false;
+        EnsureAudioSources();
 
         if (!incubatorUI)
         {
@@ -62,16 +79,33 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         if (incubatorCartVisual) incubatorCartVisual.SetActive(false);
         if (ellaSproutVisual) ellaSproutVisual.SetActive(false);
 
-        heatHum = INV_SoundHelper.CreateHeatHum();
-        darkClick = INV_SoundHelper.CreateDarkClick();
-        stepPulse = INV_SoundHelper.CreateStepPulse();
-        mistHiss = INV_SoundHelper.CreateMistHiss();
-        bloomHarmonic = INV_SoundHelper.CreateBloomHarmonic();
-        alarmSiren = INV_SoundHelper.CreateAlarmSiren();
-
         GetComponent<Collider>().isTrigger = true;
 
         EnsureProceduralVisuals();
+    }
+
+    private void EnsureAudioSources()
+    {
+        if (!audioMontajeCalor)
+            audioMontajeCalor = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Montaje_1_Calor", 0.75f, loop: false);
+        if (!audioMontajeOscuridad)
+            audioMontajeOscuridad = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Montaje_2_Oscuridad", 0.80f, loop: false);
+        if (!audioMontajePulso)
+            audioMontajePulso = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Montaje_3_Pulso", 0.80f, loop: false);
+        if (!audioMontajeBruma)
+            audioMontajeBruma = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Montaje_4_Bruma", 0.75f, loop: false);
+        if (!audioGerminacionElla)
+            audioGerminacionElla = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Germinacion_Ella", 0.95f, loop: false);
+        if (!audioAlarmaEsporas)
+            audioAlarmaEsporas = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Alarma_Esporas_Loop", 0.45f, loop: false);
+        if (audioAlarmaEsporas != null)
+            audioAlarmaEsporas.loop = false;
+        if (!audioVegaAlerta1)
+            audioVegaAlerta1 = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Vega_Alerta_1", 0.92f, loop: false);
+        if (!audioVegaAlerta2)
+            audioVegaAlerta2 = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Vega_Alerta_2", 0.92f, loop: false);
+        if (!audioVegaAlerta3)
+            audioVegaAlerta3 = INV_SoundHelper.FindOrCreateChildSource(transform, "Audio_Vega_Alerta_3", 0.92f, loop: false);
     }
 
     private void Start()
@@ -84,6 +118,7 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         if (ellaSproutVisual) ellaSproutVisual.SetActive(false);
         if (incubatorCartVisual) incubatorCartVisual.SetActive(false);
         if (redAlarmLight) redAlarmLight.enabled = revelado;
+        if (audioAlarmaEsporas != null) audioAlarmaEsporas.loop = false;
 
         EnsureChamberGerminationExists();
         if (chamberGermination != null)
@@ -227,6 +262,7 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
     {
         inRange = false;
         CORE_InteractionHUD.ClearPrompt(this);
+        StopAlarmCleanly();
     }
 
     private void UpdatePrompt()
@@ -308,7 +344,6 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         EnsurePortableCartExists();
         EnsureChamberGerminationExists();
 
-        // Retirar a Ella de la Cámara de Cultivo (dejando la bandeja y las cáscaras abiertas) y pasarla al carrito 3D
         if (ellaSproutVisual) ellaSproutVisual.SetActive(false);
         if (chamberGermination != null)
         {
@@ -366,17 +401,17 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
 
         CORE_InteractionHUD.ShowMessage("Instalando la Semilla y las 4 piezas en la Cámara de Cultivo...", 2.2f);
 
-        if (audioSource && heatHum) audioSource.PlayOneShot(heatHum, 0.7f);
-        yield return new WaitForSeconds(0.32f);
+        INV_SoundHelper.PlayEffect(audioMontajeCalor, clipMontajeCalor, INV_SoundHelper.CreateHeatHum(), 0.75f);
+        yield return new WaitForSeconds(0.34f);
 
-        if (audioSource && darkClick) audioSource.PlayOneShot(darkClick, 0.8f);
-        yield return new WaitForSeconds(0.32f);
+        INV_SoundHelper.PlayEffect(audioMontajeOscuridad, clipMontajeOscuridad, INV_SoundHelper.CreateDarkClick(), 0.80f);
+        yield return new WaitForSeconds(0.34f);
 
-        if (audioSource && stepPulse) audioSource.PlayOneShot(stepPulse, 0.75f);
-        yield return new WaitForSeconds(0.32f);
+        INV_SoundHelper.PlayEffect(audioMontajePulso, clipMontajePulso, INV_SoundHelper.CreateStepPulse(), 0.80f);
+        yield return new WaitForSeconds(0.34f);
 
-        if (audioSource && mistHiss) audioSource.PlayOneShot(mistHiss, 0.7f);
-        yield return new WaitForSeconds(0.32f);
+        INV_SoundHelper.PlayEffect(audioMontajeBruma, clipMontajeBruma, INV_SoundHelper.CreateMistHiss(), 0.75f);
+        yield return new WaitForSeconds(0.34f);
 
         CORE_InventoryBridge.RemoveItem("Semilla");
         CORE_InventoryBridge.RemoveItem("PiezaCalor");
@@ -387,7 +422,6 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         SAL_Progress.SetFlag(FlagMontada);
         isMounting = false;
 
-        // Mostrar la semilla colocada dentro de la Cámara de Cultivo lista para germinar
         EnsureChamberGerminationExists();
         chamberGermination?.ShowDormantSeed();
 
@@ -423,10 +457,14 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         SAL_Progress.SetFlag(FlagFlorecio);
         triggerAlarmNow = false;
 
-        // Siete NUNCA queda congelado
         SetPlayerMovement(true);
 
-        if (audioSource && bloomHarmonic) audioSource.PlayOneShot(bloomHarmonic, 0.95f);
+        INV_SoundHelper.PlayEffect(
+            audioGerminacionElla,
+            clipGerminacionElla,
+            INV_SoundHelper.CreateBloomHarmonic(),
+            0.95f
+        );
 
         EnsureChamberGerminationExists();
         if (chamberGermination != null)
@@ -441,7 +479,6 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         );
         UpdatePrompt();
 
-        // Dar tiempo a ver toda la animación de crecimiento (4.6s) + contemplar a Ella florecida (~3s)
         float timer = 7.4f;
         while (timer > 0f)
         {
@@ -450,7 +487,6 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
             yield return null;
         }
 
-        // Transición a la Alerta de Esporas y Marchitamiento (Acto 8)
         yield return StartCoroutine(AlarmaAndRevelationRoutine());
     }
 
@@ -463,27 +499,22 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         // Desbloquear la esclusa final en el Pasillo (Javier)
         SAL_Progress.UnlockFinal();
 
-        if (audioSource && alarmSiren)
-        {
-            audioSource.clip = alarmSiren;
-            audioSource.loop = true;
-            audioSource.Play();
-        }
+        StartAlarmForDuration(duracionAlarmaSegundos);
 
         if (redAlarmLight) redAlarmLight.enabled = true;
 
-        // Iniciar la transición suave hacia NEGRO de inv_hoja_clara, inv_hoja_oscura e inv_hoja_salvia
+        // Iniciar la transición suave hacia NEGRO de inv_hoja_clara, inv_hoja_oscura e inv_hoja_salvia (con su sonido)
         INV_RoomController.Instance?.TriggerSporeWithering(instant: false);
 
         EnsurePortableCartExists();
 
-        // Siete mantiene 100% su movimiento activo
         SetPlayerMovement(true);
         UpdatePrompt();
 
         string doorDirectionHint = GetExitDoorDirectionHint();
 
-        // Alerta de esporas indicando explícitamente que las plantas de toda la nave se están marchitando
+        // --- LÍNEA 1 DE VEGA ---
+        PlayVegaAlertLine(audioVegaAlerta1, clipVegaAlerta1, variant: 1);
         CORE_InteractionHUD.ShowMessage(
             "<color=#EF4444><b>[¡ALERTA DE ESPORAS!] Las plantas de toda la nave se están marchitando.</b></color>\n" +
             "Vega: \"Siete... ¿qué hiciste? ¡Las puertas selladas eran cuarentena biológica!\"",
@@ -491,12 +522,16 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
         );
         yield return new WaitForSeconds(5.2f);
 
+        // --- LÍNEA 2 DE VEGA ---
+        PlayVegaAlertLine(audioVegaAlerta2, clipVegaAlerta2, variant: 2);
         CORE_InteractionHUD.ShowMessage(
             "Vega: \"Quitaste el filtro 14. Mi aire pasa por ahí... Se parece a lo que mató las semillas de la Tierra...\"",
             5.5f
         );
         yield return new WaitForSeconds(4.5f);
 
+        // --- LÍNEA 3 DE VEGA ---
+        PlayVegaAlertLine(audioVegaAlerta3, clipVegaAlerta3, variant: 3);
         CORE_InteractionHUD.ShowMessage(
             "Vega: \"Suéltala, Siete. Por favor... Llévala a la esclusa de carga.\"",
             5.0f
@@ -509,6 +544,132 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
                 $"<color=#38BDF8><b>[OBJETIVO]</b></color> Pulsa <b>[E]</b> en la incubadora para sacar a Ella en el carrito y llévala al Pasillo ({doorDirectionHint}).",
                 6.5f
             );
+        }
+    }
+
+    /// <summary>
+    /// Reproduce la línea de voz/radio de Vega:
+    /// 1) Usa el clip propio de esa línea si fue asignado.
+    /// 2) Si esa línea está vacía pero el usuario asignó un sonido genérico de Vega en Audio_Vega_Alerta_1, reutiliza ese sonido.
+    /// 3) Si aún no hay audios asignados, reproduce la transmisión de radio sintetizada de Vega.
+    /// </summary>
+    private void PlayVegaAlertLine(AudioSource lineSource, AudioClip lineOverride, int variant)
+    {
+        if (lineSource == null) return;
+
+        if (INV_SoundHelper.HasUserAssignedAudio(lineSource, lineOverride))
+        {
+            INV_SoundHelper.PlayEffect(lineSource, lineOverride, null, 0.92f);
+            return;
+        }
+
+        // Si el usuario puso un sonido genérico de voz/radio de Vega en Audio_Vega_Alerta_1, reutilizarlo
+        if (lineSource != audioVegaAlerta1 && INV_SoundHelper.HasUserAssignedAudio(audioVegaAlerta1, clipVegaAlerta1))
+        {
+            AudioClip sharedVegaClip = clipVegaAlerta1 != null
+                ? clipVegaAlerta1
+                : (audioVegaAlerta1 != null ? audioVegaAlerta1.clip : null);
+
+            if (sharedVegaClip != null)
+            {
+                lineSource.PlayOneShot(sharedVegaClip);
+                return;
+            }
+            if (audioVegaAlerta1 != null)
+            {
+                INV_SoundHelper.PlayEffect(audioVegaAlerta1, clipVegaAlerta1, null, 0.92f);
+                return;
+            }
+        }
+
+        INV_SoundHelper.PlayEffect(
+            lineSource,
+            null,
+            INV_SoundHelper.CreateVegaVoiceTransmission(variant),
+            0.92f
+        );
+    }
+
+    private void StartAlarmForDuration(float durationSeconds)
+    {
+        if (audioAlarmaEsporas == null) return;
+
+        StopAlarmCleanly();
+        alarmDurationRoutine = StartCoroutine(PlayAlarmForDurationRoutine(Mathf.Max(0.5f, durationSeconds)));
+    }
+
+    private IEnumerator PlayAlarmForDurationRoutine(float durationSeconds)
+    {
+        if (audioAlarmaEsporas == null) yield break;
+
+        audioAlarmaEsporas.loop = false;
+        alarmSavedVolume = audioAlarmaEsporas.volume;
+        alarmSavedClip = audioAlarmaEsporas.clip;
+        alarmReplacedClipTemporarily = false;
+
+        if (clipAlarmaEsporas != null)
+        {
+            audioAlarmaEsporas.clip = clipAlarmaEsporas;
+            alarmReplacedClipTemporarily = true;
+        }
+        else if (audioAlarmaEsporas.clip == null && audioAlarmaEsporas.resource == null)
+        {
+            audioAlarmaEsporas.clip = INV_SoundHelper.CreateAlarmSiren();
+            alarmReplacedClipTemporarily = true;
+        }
+
+        audioAlarmaEsporas.Play();
+
+        float elapsed = 0f;
+        const float fadeOutWindow = 0.85f;
+
+        while (elapsed < durationSeconds)
+        {
+            if (audioAlarmaEsporas == null) yield break;
+
+            // Si el audio asignado dura menos de 15s, volver a dispararlo (sin activar Loop) hasta cubrir los 15s
+            if (!audioAlarmaEsporas.isPlaying && elapsed < (durationSeconds - 0.35f))
+            {
+                audioAlarmaEsporas.Play();
+            }
+
+            float remaining = durationSeconds - elapsed;
+            if (remaining < fadeOutWindow)
+            {
+                audioAlarmaEsporas.volume = alarmSavedVolume * Mathf.Clamp01(remaining / fadeOutWindow);
+            }
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        StopAlarmCleanly();
+    }
+
+    private void StopAlarmCleanly()
+    {
+        if (alarmDurationRoutine != null)
+        {
+            StopCoroutine(alarmDurationRoutine);
+            alarmDurationRoutine = null;
+        }
+
+        if (audioAlarmaEsporas != null)
+        {
+            audioAlarmaEsporas.Stop();
+            audioAlarmaEsporas.loop = false;
+
+            if (alarmSavedVolume >= 0f)
+            {
+                audioAlarmaEsporas.volume = alarmSavedVolume;
+                alarmSavedVolume = -1f;
+            }
+
+            if (alarmReplacedClipTemporarily)
+            {
+                audioAlarmaEsporas.clip = alarmSavedClip;
+                alarmReplacedClipTemporarily = false;
+            }
         }
     }
 }
