@@ -47,7 +47,7 @@ public class TAL_Cargador : MonoBehaviour
         }
 
         objectiveUI.RefreshObjective();
-        CORE_InteractionHUD.ShowMessage("Siete: " + objectiveUI.CurrentHint, 7f);
+        CORE_InteractionHUD.ShowMessage("Pista del Cargador: " + objectiveUI.CurrentHint, 7f);
 
         if (restSound != null)
             restSound.Play();
