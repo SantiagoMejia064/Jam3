@@ -23,6 +23,8 @@ public sealed class SAL_RoomController : MonoBehaviour
     [SerializeField] private SAL_NoteData[] notes;
     [SerializeField] private GameObject drawingsNotePrefab;
     [SerializeField] private GameObject symbolsNotePrefab;
+    [Header("Sonidos de interaccion - solo esta sala")]
+    [SerializeField] private SAL_InteractionAudio interactionAudio;
 
     public string Message { get; private set; }
     public float MessageUntil { get; private set; }
@@ -85,18 +87,22 @@ public sealed class SAL_RoomController : MonoBehaviour
                 PrepareDrawingsPage();
                 SAL_Progress.SetFlag(SAL_Progress.DrawingsFound);
                 RegisterNote("N6", 5, "Los dibujos de Ella");
+                interactionAudio?.PlayPaper();
                 Tell("N6 · Ella es una planta. Sus dibujos quedaron aquí.", 5f);
                 break;
             case SAL_Interactable.Kind.Drawings:
+                interactionAudio?.PlayPaper();
                 Tell("Pétalos de vitral. Venas violetas. Firma: ||·. Otras plantas, grises.", 6f);
                 break;
             case SAL_Interactable.Kind.DiamondSeal:
                 SAL_Progress.SetFlag(SAL_Progress.DiamondSeal);
+                interactionAudio?.PlaySealCollected();
                 Tell("Sello ◆ descubierto. Quedó en el Cuaderno.");
                 break;
             case SAL_Interactable.Kind.FilterLabel:
                 SAL_Progress.SetFlag(SAL_Progress.LabelRead);
                 RegisterNote("N7", 6, "Etiqueta del Filtro 14");
+                interactionAudio?.PlayPaper();
                 if (SAL_Progress.HasFlag(SAL_Progress.Revealed))
                 {
                     SAL_Progress.SetFlag(SAL_Progress.WarningInspected);
@@ -111,6 +117,7 @@ public sealed class SAL_RoomController : MonoBehaviour
                 if (!CORE_InventoryBridge.HasItem("Pelota")) { Tell("No agarra. Necesito la Pelota."); break; }
                 if (!CORE_InventoryBridge.IsSelected("Pelota")) { Tell("Selecciona la Pelota en el inventario."); break; }
                 SAL_Progress.SetFlag(SAL_Progress.GrilleOpen);
+                interactionAudio?.PlayValveOpened();
                 Tell("La Pelota hace de agarradero. Rejilla abierta.");
                 break;
             case SAL_Interactable.Kind.Filter:
@@ -120,6 +127,7 @@ public sealed class SAL_RoomController : MonoBehaviour
                     break;
                 }
                 SAL_Progress.SetFlag(SAL_Progress.FilterRemoved);
+                interactionAudio?.PlayFilterCollected();
                 if (SAL_Progress.Act < 4) SAL_Progress.SetAct(4);
                 SAL_AudioDirector.Instance?.OnFilterRemoved();
                 Tell("Pieza Bruma obtenida.");
@@ -147,17 +155,19 @@ public sealed class SAL_RoomController : MonoBehaviour
             return;
         }
         panelInput += symbol;
-        if (panelInput.Length < 3) { Tell("Panel: " + panelInput.Replace("▲", "triángulo ").Replace("◆", "rombo ").Replace("✚", "cruz")); return; }
+        if (panelInput.Length < 3) { interactionAudio?.PlayPanelPress(); Tell("Panel: " + panelInput.Replace("▲", "triángulo ").Replace("◆", "rombo ").Replace("✚", "cruz")); return; }
         if (panelInput == "▲◆✚")
         {
             SAL_Progress.SetFlag(SAL_Progress.PanelSolved);
             PrepareSymbolsPage();
             RegisterNote("N5", 4, "Orden de la ronda");
+            interactionAudio?.PlayPanelSolved();
             Tell("N5 · El orden de la ronda abrió el compactador.");
         }
         else
         {
             PanelCoolingDown = true;
+            interactionAudio?.PlayPanelRejected();
             Tell("Orden incorrecto. El panel se reinicia en 3 segundos.");
             if (panelRoutine != null) StopCoroutine(panelRoutine);
             panelRoutine = StartCoroutine(ResetPanel());
@@ -175,13 +185,14 @@ public sealed class SAL_RoomController : MonoBehaviour
 
     private void ChooseBlock(int index)
     {
-        if (index != 3) { Tell("El bloque no lleva mi firma. Debo mirar los otros."); return; }
+        if (index != 3) { interactionAudio?.PlayBlockInspect(); Tell("El bloque no lleva mi firma. Debo mirar los otros."); return; }
         if (!CORE_InventoryBridge.WasCollected("Semilla") && !CORE_InventoryBridge.TryAddItem("Semilla"))
         {
             Tell("No se pudo recoger la Semilla.");
             return;
         }
         SAL_Progress.SetFlag(SAL_Progress.SeedObtained);
+        interactionAudio?.PlaySeedCollected();
         RegisterNote("N9", 8, "La semilla de Ella");
         if (SAL_Progress.Act < 5) SAL_Progress.SetAct(5);
         Tell("Semilla obtenida. N9 · Aquí. No la sueltes.", 6f);
