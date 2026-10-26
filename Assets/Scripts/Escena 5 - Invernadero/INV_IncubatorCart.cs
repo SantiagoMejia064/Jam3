@@ -188,7 +188,7 @@ public sealed class INV_IncubatorCart : MonoBehaviour
 
         // Si se reinició la partida o volvimos al menú principal, limpiar instancia persistente
         string activeScene = SceneManager.GetActiveScene().name;
-        if (!SAL_Progress.HasFlag(FlagEllaEnCarrito) || activeScene == "MainMenu")
+        if (!SAL_Progress.HasFlag(FlagEllaEnCarrito) || activeScene == "MainMenu" || activeScene == "MenuInicio")
         {
             if (ActiveAttachedInstance == this) ActiveAttachedInstance = null;
             Destroy(gameObject);
@@ -239,7 +239,7 @@ public sealed class INV_IncubatorCart : MonoBehaviour
             Time.deltaTime * 720f
         );
 
-        bool movingCart = Mathf.Abs(dxWorld) > 0.0004f && Time.timeScale > 0f;
+        bool movingCart = !SAL_Progress.HasFlag(SAL_Progress.FinalComplete) && Mathf.Abs(dxWorld) > 0.0004f && Time.timeScale > 0f;
 
         if (movingCart)
         {

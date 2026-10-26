@@ -10,6 +10,8 @@ public sealed class CORE_ScreenWake : MonoBehaviour
     [SerializeField] private string onceFlag = "LAB_A1Reproducido";
     [SerializeField, TextArea(3, 6)] private string openingMessage =
         "A1\nFORMATEO COMPLETADO.\nMOTIVO: DESOBEDIENCIA.\n\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588";
+    [SerializeField, TextArea(3, 6)] private string revealedMessage =
+        "A1\nFORMATEO COMPLETADO.\nMOTIVO: ELIMINAR APEGO.\nESTE PROCESO NO CAUSA DOLOR.";
     [SerializeField] private Color sleepingColor = new Color(0.015f, 0.025f, 0.035f, 1f);
     [SerializeField] private Color awakeColor = new Color(0.12f, 0.62f, 0.96f, 1f);
     [SerializeField, Min(0f)] private float wakeDelay = 0.45f;
@@ -39,7 +41,7 @@ public sealed class CORE_ScreenWake : MonoBehaviour
         {
             wakeStarted = true;
             SetSurfaceColor(awakeColor);
-            if (display) display.text = openingMessage;
+            if (display) display.text = CurrentDisplayMessage();
         }
     }
 
@@ -48,8 +50,9 @@ public sealed class CORE_ScreenWake : MonoBehaviour
     {
         if (wakeStarted)
         {
-            if (SAL_Progress.HasFlag(onceFlag) && SAL_AudioDirector.Instance)
-                SAL_AudioDirector.Instance.PlayLog(audioLogId, SAL_Progress.HasFlag(SAL_Progress.Revealed), subtitleSeconds);
+            if (display) display.text = CurrentDisplayMessage();
+            if (!string.IsNullOrEmpty(audioLogId))
+                SAL_AudioDirector.PlayVegaLog(audioLogId, SAL_Progress.HasFlag(SAL_Progress.Revealed), subtitleSeconds);
             return;
         }
         wakeStarted = true;
@@ -61,18 +64,26 @@ public sealed class CORE_ScreenWake : MonoBehaviour
         yield return new WaitForSeconds(wakeDelay);
         SetSurfaceColor(awakeColor);
         if ((string.IsNullOrEmpty(onceFlag) || !SAL_Progress.HasFlag(onceFlag)) &&
-            !string.IsNullOrEmpty(audioLogId) && SAL_AudioDirector.Instance)
+            !string.IsNullOrEmpty(audioLogId))
         {
-            SAL_AudioDirector.Instance.PlayLog(audioLogId, false, subtitleSeconds);
+            SAL_AudioDirector.PlayVegaLog(audioLogId, SAL_Progress.HasFlag(SAL_Progress.Revealed), subtitleSeconds);
             if (!string.IsNullOrEmpty(onceFlag)) SAL_Progress.SetFlag(onceFlag);
         }
         if (!display) yield break;
 
-        for (int visible = 1; visible <= openingMessage.Length; visible++)
+        string targetMessage = CurrentDisplayMessage();
+        for (int visible = 1; visible <= targetMessage.Length; visible++)
         {
-            display.text = openingMessage.Substring(0, visible);
+            display.text = targetMessage.Substring(0, visible);
             yield return new WaitForSeconds(characterDelay);
         }
+    }
+
+    private string CurrentDisplayMessage()
+    {
+        return SAL_Progress.HasFlag(SAL_Progress.Revealed) && !string.IsNullOrEmpty(revealedMessage)
+            ? revealedMessage
+            : openingMessage;
     }
 
     private void SetSurfaceColor(Color color)

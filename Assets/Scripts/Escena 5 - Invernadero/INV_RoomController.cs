@@ -485,29 +485,24 @@ public sealed class INV_RoomController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.6f);
 
-        bool directorPlayedRealVoice = false;
-        if (SAL_AudioDirector.Instance != null)
+        bool userAssignedLocalA4 = INV_SoundHelper.HasUserAssignedAudio(vegaEntradaA4Source, clipVegaEntradaA4);
+        bool directorHasRealClip = SAL_AudioDirector.Instance != null && SAL_AudioDirector.Instance.HasAssignedClip("A4", false);
+
+        // Si asignaron un clip real en el asset SAL_A4 y no en el objeto local del Invernadero, usar el de SAL_AudioDirector
+        if (!userAssignedLocalA4 && directorHasRealClip)
         {
             SAL_AudioDirector.Instance.PlayLog("A4", false, a4SubtitleDuration);
-
-            // Verificar si SAL_AudioDirector tenía un clip real asignado para A4
-            FieldInfo voiceField = typeof(SAL_AudioDirector).GetField("voiceSource", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (voiceField != null)
-            {
-                AudioSource salVoice = voiceField.GetValue(SAL_AudioDirector.Instance) as AudioSource;
-                if (salVoice != null && salVoice.isPlaying && salVoice.clip != null)
-                {
-                    directorPlayedRealVoice = true;
-                }
-            }
+            yield break;
         }
-        else
+
+        // Mostrar subtítulo y HUD sin duplicar el disparo de audio
+        if (SAL_AudioDirector.Instance != null)
         {
-            CORE_InteractionHUD.ShowMessage("Vega: \"Siete, no la busques. Por favor.\"", a4SubtitleDuration);
+            SAL_AudioDirector.Instance.ShowSubtitle("Siete, no la busques. Por favor.", a4SubtitleDuration);
         }
+        CORE_InteractionHUD.ShowMessage("Vega: \"Siete, no la busques. Por favor.\"", a4SubtitleDuration);
 
-        // Reproducir siempre el sonido de Vega al hablar en el umbral (salvo que SAL_AudioDirector ya esté sonando su voz)
-        if (!directorPlayedRealVoice && vegaEntradaA4Source != null)
+        if (vegaEntradaA4Source != null)
         {
             INV_SoundHelper.PlayEffect(
                 vegaEntradaA4Source,

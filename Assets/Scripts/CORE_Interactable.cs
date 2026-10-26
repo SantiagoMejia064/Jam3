@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -56,7 +57,7 @@ public sealed class CORE_Interactable : MonoBehaviour
         if (!string.IsNullOrEmpty(playOnStartOnceFlag) && SAL_Progress.HasFlag(playOnStartOnceFlag)) return;
         PlayAudioLog();
         string message = GetCurrentMessage();
-        if (!string.IsNullOrEmpty(message)) CORE_InteractionHUD.ShowMessage(message, messageSeconds);
+        if (!string.IsNullOrEmpty(message)) CORE_InteractionHUD.ShowMessage(message, EffectiveMessageSeconds());
         if (!string.IsNullOrEmpty(playOnStartOnceFlag)) SAL_Progress.SetFlag(playOnStartOnceFlag);
     }
 
@@ -130,12 +131,13 @@ public sealed class CORE_Interactable : MonoBehaviour
         if (!string.IsNullOrEmpty(resultItem)) CORE_InventoryBridge.AddItem(resultItem);
         PlayAudioLog();
 
-        if (!string.IsNullOrEmpty(message)) CORE_InteractionHUD.ShowMessage(message, messageSeconds);
+        float duration = EffectiveMessageSeconds();
+        if (!string.IsNullOrEmpty(message)) CORE_InteractionHUD.ShowMessage(message, duration);
         if (responseAudio)
         {
             responseAudio.Stop();
             responseAudio.Play();
-            if (messageSeconds > 0f) StartCoroutine(StopResponseAudioAfter(messageSeconds));
+            if (duration > 0f) StartCoroutine(StopResponseAudioAfter(duration));
         }
         if (notebookIndex >= 0 && NotebookController.Instance)
             NotebookController.Instance.CollectNote(notebookIndex, notebookTitle, notebookContent, notebookRereading);
@@ -163,9 +165,42 @@ public sealed class CORE_Interactable : MonoBehaviour
 
     private string GetCurrentMessage()
     {
-        return !string.IsNullOrEmpty(revealFlag) && SAL_Progress.HasFlag(revealFlag) && !string.IsNullOrEmpty(alternateResponseMessage)
-            ? alternateResponseMessage
-            : responseMessage;
+        string effectiveLog = ResolveEffectiveAudioLogId();
+
+        // GDD pág. 15 (El final · La caminata): Al pasar frente a la cabina sellada de Vega llevando a Ella en el carrito, Vega tose y repite su petición
+        if (effectiveLog == "A2" && SAL_Progress.HasFlag(INV_IncubatorCart.FlagEllaEnCarrito))
+        {
+            return "Vega: \"*cof*... Suéltala, Siete. Por favor...\"";
+        }
+
+        if (!string.IsNullOrEmpty(revealFlag) && SAL_Progress.HasFlag(revealFlag) && !string.IsNullOrEmpty(alternateResponseMessage))
+        {
+            return alternateResponseMessage;
+        }
+
+        if (SAL_Progress.HasFlag(SAL_Progress.Revealed))
+        {
+            if (effectiveLog == "A2")
+            {
+                return "A2 · ¡No puedes sacar eso de aquí! La alarma de esporas ya sonaba.";
+            }
+            if (!string.IsNullOrEmpty(responseMessage) && responseMessage.StartsWith("A1", StringComparison.Ordinal))
+            {
+                return "A1 · Motivo: eliminar apego. Este proceso no causa dolor.";
+            }
+        }
+
+        return responseMessage;
+    }
+
+    private float EffectiveMessageSeconds()
+    {
+        string effectiveLog = ResolveEffectiveAudioLogId();
+        if (effectiveLog == "A2" && (SAL_Progress.HasFlag(SAL_Progress.Revealed) || SAL_Progress.HasFlag(INV_IncubatorCart.FlagEllaEnCarrito)))
+        {
+            return Mathf.Max(4.5f, messageSeconds);
+        }
+        return messageSeconds;
     }
 
     private string CurrentPrompt()
@@ -177,10 +212,40 @@ public sealed class CORE_Interactable : MonoBehaviour
         return prompt;
     }
 
+    private string ResolveEffectiveAudioLogId()
+    {
+        if (!string.IsNullOrEmpty(audioLogId)) return audioLogId.Trim();
+
+        // Si el mismo objeto ya tiene CORE_ScreenWake (ej. A1 en Javier), CORE_ScreenWake gestiona su propio PlayVegaLog en onInteract
+        if (GetComponent<CORE_ScreenWake>() != null) return string.Empty;
+
+        if (!string.IsNullOrEmpty(responseMessage))
+        {
+            if (responseMessage.StartsWith("A1 ", StringComparison.Ordinal) || responseMessage.StartsWith("A1·", StringComparison.Ordinal)) return "A1";
+            if (responseMessage.StartsWith("A2 ", StringComparison.Ordinal) || responseMessage.StartsWith("A2·", StringComparison.Ordinal)) return "A2";
+            if (responseMessage.StartsWith("A3 ", StringComparison.Ordinal) || responseMessage.StartsWith("A3·", StringComparison.Ordinal)) return "A3";
+            if (responseMessage.StartsWith("A4 ", StringComparison.Ordinal) || responseMessage.StartsWith("A4·", StringComparison.Ordinal)) return "A4";
+        }
+        return string.Empty;
+    }
+
     private void PlayAudioLog()
     {
-        if (!string.IsNullOrEmpty(audioLogId) && SAL_AudioDirector.Instance)
-            SAL_AudioDirector.Instance.PlayLog(audioLogId, SAL_Progress.HasFlag(SAL_Progress.Revealed), messageSeconds);
+        string effectiveLog = ResolveEffectiveAudioLogId();
+        if (string.IsNullOrEmpty(effectiveLog)) return;
+
+        // En la caminata final con el carrito hacia la esclusa, Vega repite su súplica debilitado detrás de la puerta de su cabina
+        if (effectiveLog == "A2" && SAL_Progress.HasFlag(INV_IncubatorCart.FlagEllaEnCarrito))
+        {
+            SAL_AudioDirector.EnsureInstance().PlayVegaCustomLine(
+                "Vega: \"*cof*... Suéltala, Siete. Por favor...\"",
+                variant: 3,
+                subtitleSeconds: 4.5f
+            );
+            return;
+        }
+
+        SAL_AudioDirector.PlayVegaLog(effectiveLog, SAL_Progress.HasFlag(SAL_Progress.Revealed), Mathf.Max(3.5f, EffectiveMessageSeconds()));
     }
 
     private IEnumerator StopResponseAudioAfter(float seconds)
