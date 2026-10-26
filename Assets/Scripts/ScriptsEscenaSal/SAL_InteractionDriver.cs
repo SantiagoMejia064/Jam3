@@ -16,11 +16,15 @@ public sealed class SAL_InteractionDriver : MonoBehaviour
 
     private void Start()
     {
-        // SAL ya no usa el Siete local duplicado de la escena; toma al jugador persistente que viene del Pasillo.
-        if (!player || !player.isActiveAndEnabled)
+        // Si SAL se carga desde otra zona, prioriza el jugador que ya está persistiendo.
+        // Al abrir SAL directamente, usa su CORE_Siete local como respaldo.
+        PlayerPersistence persistentPlayer = PlayerPersistence.Instance;
+        if (persistentPlayer)
+            player = persistentPlayer.GetComponent<CORE_PlayerController>();
+        else if (!player || !player.isActiveAndEnabled)
         {
-            PlayerPersistence persistentPlayer = PlayerPersistence.Instance;
-            if (persistentPlayer) player = persistentPlayer.GetComponent<CORE_PlayerController>();
+            GameObject localPlayer = GameObject.Find("CORE_Siete");
+            if (localPlayer) player = localPlayer.GetComponent<CORE_PlayerController>();
         }
         targets = FindObjectsByType<SAL_Interactable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         readyAt = Time.time + .35f;
