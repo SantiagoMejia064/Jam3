@@ -32,7 +32,7 @@ RenderSettings:
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 0
+  m_DefaultReflectionMode: 1
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 4
   m_ReflectionIntensity: 1
@@ -183385,6 +183385,7 @@ GameObject:
   - component: {fileID: 4277221281981874594}
   - component: {fileID: 8445186822656576019}
   - component: {fileID: 8445186822656576020}
+  - component: {fileID: 8445186822656576021}
   m_Layer: 0
   m_Name: SAL_Camara_2_5D
   m_TagString: MainCamera
@@ -245663,6 +245664,14 @@ MonoBehaviour:
   xLimits: {x: -8.3, y: 8.3}
   offset: {x: 0, y: 5.2, z: -24.7}
   smooth: 3.09
+--- !u!81 &8445186822656576021
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2196997799511123704}
+  m_Enabled: 1
 --- !u!23 &8445321590618421566
 MeshRenderer:
   m_ObjectHideFlags: 0
