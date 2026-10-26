@@ -12,13 +12,13 @@ EditorBuildSettings:
     path: Assets/Scenes/Inicio.unity
     guid: e46a9ecc55cd7da44a9c5606a7e78f48
   - enabled: 1
-    path: Assets/Scenes/Javier.unity
+    path: Assets/Scenes/Inicio-Laboratorio.unity
     guid: 4cd5c6dc5196a3f41ab79b942a2eabdf
   - enabled: 1
     path: Assets/Scenes/Taller.unity
     guid: 44706a8189631d646b881bce39a0d128
   - enabled: 1
-    path: Assets/Scenes/SAL.unity
+    path: Assets/Scenes/SalaMaquinas.unity
     guid: 5e01aab2d7aa4a66a362b58b4c85a321
   - enabled: 1
     path: Assets/Scenes/Bodega.unity

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1a0e00020014a819b00000000000101, type: 3}
+  m_Name: CORE_Cuadro_05
+  m_EditorClassIdentifier: Assembly-CSharp::CuadroCinematicaData
+  tituloCuadro: "La orden y la negativa"
+  imagen: {fileID: 0}
+  colorPlaceholder: {r: 0.26, g: 0.16, b: 0.07, a: 1}
+  barraInicio: 61
+  barraFin: 72
+  subtitulos:
+  - hablante: 0
+    texto: "\xABQu\xE9mala, Siete. Es una orden.\xBB"
+    duracionMinima: 2.8
+    sonidoExtra: {fileID: 0}
+    retrasoSonidoExtra: 0
+    dispararAlTerminarTexto: 0
+    silencioFinalExtra: 0
+    respaldoProcedural: 0
+  - hablante: 1
+    texto: "\xABMi funci\xF3n era obedecer a Vega. Pero no pude. No encontr\xE9 en m\xED c\xF3mo destruir algo tan bello.\xBB"
+    duracionMinima: 4.2
+    sonidoExtra: {fileID: 8300000, guid: d97f3bd991e892e4794b1d5e9a28ad90, type: 3}
+    retrasoSonidoExtra: 0.18
+    dispararAlTerminarTexto: 1
+    silencioFinalExtra: 1
+    respaldoProcedural: 1
+  efecto: 2
+  efectoSecundario: 0
+  tinteAmbiental: {r: 1, g: 0.68, b: 0.22, a: 0.18}
+  disolverImagen: 0
+  modoTerminalVerde: 0
+  fundidoEntrada: 0.55
+  fundidoSalida: 0.45

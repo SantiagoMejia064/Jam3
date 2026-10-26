@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1a0e00020014a819b00000000000101, type: 3}
+  m_Name: CORE_Fase2_DialogoPostIntro
+  m_EditorClassIdentifier: Assembly-CSharp::CORE_DialogoSecuenciaData
+  lineas:
+  - hablante: 0
+    texto: "\xABTermin\xF3, Siete. Por fin. Realiza tus labores con normalidad: por estar pendiente de ella descuidaste muchas partes de la nave y ahora est\xE1n llenas de polvo.\xBB"
+    duracionMinima: 5.5
+    sonidoExtra: {fileID: 0}
+    retrasoSonidoExtra: 0
+    dispararAlTerminarTexto: 0
+    silencioFinalExtra: 0
+    respaldoProcedural: 0
+  - hablante: 1
+    texto: "\xABRegistro vac\xEDo. No s\xE9 de qu\xE9 habla.\xBB"
+    duracionMinima: 3
+    sonidoExtra: {fileID: 0}
+    retrasoSonidoExtra: 0
+    dispararAlTerminarTexto: 0
+    silencioFinalExtra: 0
+    respaldoProcedural: 0

@@ -25,6 +25,8 @@ public static class INV_SoundHelper
     private static AudioClip cachedCartDeploy;
     private static AudioClip cachedDoorAirlock;
     private static readonly AudioClip[] cachedVegaTransmissions = new AudioClip[6];
+    private static AudioClip cachedVegaIntercomOpen;
+    private static AudioClip cachedVegaIntercomClose;
 
     // =========================================================================
     // UTILIDADES DE REPRODUCCIÓN (RESPETAN EL INSPECTOR DEL USUARIO)
@@ -391,6 +393,55 @@ public static class INV_SoundHelper
 
         return cachedVegaTransmissions[idx];
     }
+
+    /// <summary>
+    /// Sílaba / blip dinámico de la voz matemática de Vega para sincronizar letra por letra con subtítulos.
+    /// Reutiliza exactamente la misma síntesis vocal cálida (fundamental + formantes 2.0x y 3.1x + vibrato 5.8 Hz + leve estática de radio)
+    /// que CreateVegaVoiceTransmission, recortada a una sílaba corta sin silencios muertos al final.
+    /// </summary>
+    public static AudioClip CreateVegaDynamicSyllable(
+        float basePitchHz = 248f,
+        float pitchMultiplier = 1f,
+        float durationSeconds = 0.082f,
+        int seed = 0)
+    {
+        float dur = Mathf.Clamp(durationSeconds, 0.03f, 0.30f);
+        float pitch = Mathf.Clamp(basePitchHz * pitchMultiplier, 90f, 700f);
+        var rnd = new System.Random(204 + seed * 31);
+
+        return GenerateClip($"CORE_VegaSyllable_{seed}", dur, (t, i) =>
+        {
+            float norm = t / dur;
+            // Misma envolvente suave sin clics y ataque rápido de CreateVegaVoiceTransmission
+            float syllEnv = Mathf.Sin(Mathf.PI * norm) * Mathf.Clamp01(t * 55f);
+            float vibrato = Mathf.Sin(2f * Mathf.PI * 5.8f * t) * 4.2f;
+            float f0 = pitch + vibrato;
+
+            // Mismos formantes vocales cálidos filtrados estilo intercomunicador (1x, 2.0x, 3.1x)
+            float vFund = Mathf.Sin(2f * Mathf.PI * f0 * t) * 0.48f;
+            float vForm1 = Mathf.Sin(2f * Mathf.PI * (f0 * 2.0f) * t) * 0.28f;
+            float vForm2 = Mathf.Sin(2f * Mathf.PI * (f0 * 3.1f) * t) * 0.14f;
+            float radioNoise = ((float)rnd.NextDouble() * 2f - 1f) * 0.032f;
+
+            float sample = (vFund + vForm1 + vForm2 + radioNoise) * syllEnv * 0.56f;
+            return Mathf.Clamp(sample, -0.85f, 0.85f);
+        });
+    }
+
+    /// <summary>Pitido doble corto de apertura del canal de Vega (misma firma de radio de CreateVegaVoiceTransmission).</summary>
+    public static AudioClip CreateVegaIntercomOpenCue() => cachedVegaIntercomOpen ??= GenerateClip("CORE_VegaComms_Open", 0.135f, (t, i) =>
+    {
+        if (t < 0.065f)
+            return Mathf.Sin(2f * Mathf.PI * 880f * t) * Mathf.Exp(-t * 28f) * 0.25f;
+        float tp = t - 0.065f;
+        return Mathf.Sin(2f * Mathf.PI * 1174.66f * tp) * Mathf.Exp(-tp * 26f) * 0.23f;
+    });
+
+    /// <summary>Clic corto de cierre del canal de Vega al terminar su línea.</summary>
+    public static AudioClip CreateVegaIntercomCloseCue() => cachedVegaIntercomClose ??= GenerateClip("CORE_VegaComms_Close", 0.075f, (t, i) =>
+    {
+        return Mathf.Sin(2f * Mathf.PI * 640f * t) * Mathf.Exp(-t * 65f) * 0.20f;
+    });
 
     /// <summary>Ambiente orgánico y tranquilo del biodomo del Invernadero (en bucle de 6 segundos).</summary>
     public static AudioClip CreateGreenhouseAmbience()
