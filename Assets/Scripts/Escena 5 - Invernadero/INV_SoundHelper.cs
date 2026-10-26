@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Generador de sonidos procedurales de respaldo y utilidades de reproducción para el Invernadero (Escena 5).
+/// Generador de sonidos procedurales de respaldo y utilidades de reproducción para el Invernadero (Escena 5) y la voz de Vega en toda la nave.
 /// Si el usuario arrastra sus propios clips en los AudioSource del Inspector (o en las casillas de los scripts),
 /// siempre tienen prioridad absoluta sobre los sonidos procedurales.
 /// </summary>
@@ -24,7 +24,7 @@ public static class INV_SoundHelper
     private static AudioClip cachedWindowWind;
     private static AudioClip cachedCartDeploy;
     private static AudioClip cachedDoorAirlock;
-    private static readonly AudioClip[] cachedVegaTransmissions = new AudioClip[4];
+    private static readonly AudioClip[] cachedVegaTransmissions = new AudioClip[6];
 
     // =========================================================================
     // UTILIDADES DE REPRODUCCIÓN (RESPETAN EL INSPECTOR DEL USUARIO)
@@ -239,19 +239,91 @@ public static class INV_SoundHelper
     /// <summary>
     /// Transmisión de radio / voz sintetizada de Vega cuando habla por el intercomunicador de la nave.
     /// Incluye pitido sci-fi de canal abierto, leve estática de radio, cadencia vocal cálida y cierre de transmisión.
+    /// Variantes:
+    /// 0 = Súplica suave / reflexiva (A4, A3, A1 relectura)
+    /// 1 = Urgencia y alarma (A2 cabina sellada, Alerta 1 Invernadero)
+    /// 2 = Voz débil / falta de aire (Alerta 2, caminata final hacia la esclusa)
+    /// 3 = Ruego quebrado (Alerta 3, súplica final frente a cabina)
+    /// 4 = Registro clínico de bitácora (A1 al despertar en el Laboratorio)
+    /// 5 = Transmisión cortada en seco en la Esclusa ("La voz de Vega se corta")
     /// </summary>
     public static AudioClip CreateVegaVoiceTransmission(int variant = 0)
     {
-        int idx = Mathf.Clamp(variant, 0, 3);
+        int idx = Mathf.Clamp(variant, 0, cachedVegaTransmissions.Length - 1);
         if (cachedVegaTransmissions[idx] != null) return cachedVegaTransmissions[idx];
 
         var rnd = new System.Random(108 + idx * 37);
+
+        // Variante 5: La última transmisión de Vega al abrir la esclusa que se corta abruptamente a mitad de frase
+        if (idx == 5)
+        {
+            const float cutoffTime = 0.86f;
+            float[] cutStarts = { 0.16f, 0.42f, 0.68f };
+            float[] cutLengths = { 0.19f, 0.20f, 0.30f };
+            float[] cutPitchMults = { 0.98f, 0.92f, 0.86f };
+            const float cutBasePitch = 228f;
+
+            cachedVegaTransmissions[idx] = GenerateClip("INV_VegaComms_Cutoff", 1.05f, (t, i) =>
+            {
+                float sample = 0f;
+
+                // 1. Mismo pitido doble de apertura de intercomunicador (0.00s - 0.135s)
+                if (t < 0.065f)
+                {
+                    sample += Mathf.Sin(2f * Mathf.PI * 880f * t) * Mathf.Exp(-t * 28f) * 0.26f;
+                }
+                else if (t < 0.135f)
+                {
+                    float tp = t - 0.065f;
+                    sample += Mathf.Sin(2f * Mathf.PI * 1174.66f * tp) * Mathf.Exp(-tp * 26f) * 0.24f;
+                }
+
+                // 2. Estática + voz débil de Vega hasta el instante exacto del corte (0.86s)
+                if (t >= 0.08f && t < cutoffTime)
+                {
+                    float staticEnv = Mathf.Min((t - 0.08f) * 14f, 1f);
+                    sample += ((float)rnd.NextDouble() * 2f - 1f) * 0.042f * staticEnv;
+
+                    for (int s = 0; s < cutStarts.Length; s++)
+                    {
+                        float st = t - cutStarts[s];
+                        float len = cutLengths[s];
+                        if (st >= 0f && st <= len)
+                        {
+                            float norm = st / len;
+                            float syllEnv = Mathf.Sin(Mathf.PI * norm) * Mathf.Clamp01(st * 35f);
+                            float vibrato = Mathf.Sin(2f * Mathf.PI * 5.8f * t) * 4.2f;
+                            float f0 = cutBasePitch * cutPitchMults[s] + vibrato;
+
+                            float vFund = Mathf.Sin(2f * Mathf.PI * f0 * t) * 0.48f;
+                            float vForm1 = Mathf.Sin(2f * Mathf.PI * (f0 * 2.0f) * t) * 0.28f;
+                            float vForm2 = Mathf.Sin(2f * Mathf.PI * (f0 * 3.1f) * t) * 0.14f;
+                            sample += (vFund + vForm1 + vForm2) * syllEnv * 0.40f;
+                        }
+                    }
+                }
+                // 3. Chasquido seco de corte de portadora (0.86s - 0.92s) y luego silencio absoluto
+                else if (t >= cutoffTime && t <= cutoffTime + 0.06f)
+                {
+                    float tc = t - cutoffTime;
+                    float snapNoise = ((float)rnd.NextDouble() * 2f - 1f) * Mathf.Exp(-tc * 95f) * 0.34f;
+                    float dropTone = Mathf.Sin(2f * Mathf.PI * 410f * tc) * Mathf.Exp(-tc * 110f) * 0.25f;
+                    sample += snapNoise + dropTone;
+                }
+
+                return Mathf.Clamp(sample, -0.85f, 0.85f);
+            });
+
+            return cachedVegaTransmissions[idx];
+        }
+
         float basePitch = idx switch
         {
-            0 => 248f, // Entrada A4: súplica suave ("Siete, no la busques. Por favor.")
-            1 => 286f, // Alerta 1: alarma y angustia ("Siete... ¿qué hiciste?!")
-            2 => 232f, // Alerta 2: voz débil / falta de aire ("Quitaste el filtro 14...")
-            _ => 240f  // Alerta 3: ruego quebrado ("Suéltala, Siete. Por favor...")
+            0 => 248f, // Entrada A4 / A3 / A1 relectura: súplica suave o confesión
+            1 => 286f, // A2 / Alerta 1: alarma y urgencia ("¡No puedes sacar eso de aquí!")
+            2 => 232f, // Alerta 2 / Pasillo final: voz débil / falta de aire
+            4 => 244f, // A1 inicial: registro clínico de formateo al despertar
+            _ => 240f  // Alerta 3 / Cabina final: ruego quebrado ("Suéltala, Siete. Por favor...")
         };
 
         float[] syllableStarts = { 0.16f, 0.38f, 0.62f, 0.90f, 1.18f };
@@ -260,6 +332,7 @@ public static class INV_SoundHelper
         {
             1 => new[] { 1.05f, 1.16f, 1.10f, 1.22f, 0.98f },
             2 => new[] { 1.00f, 0.95f, 0.91f, 0.88f, 0.83f },
+            4 => new[] { 1.00f, 1.00f, 0.98f, 1.01f, 0.94f },
             _ => new[] { 1.04f, 0.98f, 1.02f, 0.92f, 0.85f }
         };
 

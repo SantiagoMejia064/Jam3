@@ -3737,7 +3737,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.75, g: 0.35, b: 0.98, a: 1}
-  m_Intensity: 2.1998894
+  m_Intensity: 1.7921066
   m_Range: 2.4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -12844,7 +12844,7 @@ MonoBehaviour:
   sideTurnSpeed: 10
   sacarEllaSource: {fileID: 1660909795}
   ruedasCarritoSource: {fileID: 1108843800}
-  clipSacarEllaCarrito: {fileID: 0}
+  clipSacarEllaCarrito: {fileID: 8300000, guid: be3b8356f75ac174b882e823dca74c95, type: 3}
   clipRuedasCarrito: {fileID: 0}
 --- !u!1 &784064388
 GameObject:
@@ -17367,7 +17367,7 @@ MonoBehaviour:
   noteTachado: "Vega no sabe que hay semillas. Yo s\xED."
   noteVisualSheet: {fileID: 1288376520}
   audioSource: {fileID: 1113733070}
-  clipLeerPlanilla: {fileID: 0}
+  clipLeerPlanilla: {fileID: 8300000, guid: 59c5958ba9eb75849878df4a3f231cb8, type: 3}
 --- !u!65 &1113733069
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22246,7 +22246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::INV_DoorAudioTrigger
   audioSource: {fileID: 1465435009}
-  clipAbrirPuerta: {fileID: 0}
+  clipAbrirPuerta: {fileID: 8300000, guid: 515c259cbcc4ea64294c08fb9a2d6325, type: 3}
 --- !u!82 &1465435009
 AudioSource:
   m_ObjectHideFlags: 0
@@ -30716,7 +30716,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2128336613
 Transform:
   m_ObjectHideFlags: 0
