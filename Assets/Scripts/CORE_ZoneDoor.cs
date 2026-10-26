@@ -90,7 +90,8 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
             CORE_InteractionHUD.ShowMessage(string.IsNullOrEmpty(missingFlagMessage) ? lockedMessage : missingFlagMessage);
             return;
         }
-        if (string.IsNullOrEmpty(destinationScene) || !Application.CanStreamedLevelBeLoaded(destinationScene))
+        string targetScene = CORE_SceneResolver.ResolveSceneName(destinationScene);
+        if (string.IsNullOrEmpty(targetScene) || !Application.CanStreamedLevelBeLoaded(targetScene))
         {
             CORE_InteractionHUD.ShowMessage("Esta zona todavía no está disponible.");
             return;
@@ -114,8 +115,10 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
 
     private void LoadDestination()
     {
-        if (GameSceneManager.Instance != null) GameSceneManager.Instance.LoadSceneByName(destinationScene);
-        else SceneManager.LoadScene(destinationScene);
+        string targetScene = CORE_SceneResolver.ResolveSceneName(destinationScene);
+        if (GameSceneManager.Instance != null) GameSceneManager.Instance.LoadSceneByName(targetScene);
+        else SceneManager.LoadScene(targetScene);
+
     }
 
     private bool PlayerIsInRange()
@@ -126,7 +129,9 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
 
     private string CurrentPrompt()
     {
-        return SAL_Progress.HasFlag(openedFlag) ? "E · Entrar a " + destinationScene : prompt;
+        string targetScene = CORE_SceneResolver.ResolveSceneName(destinationScene);
+        string nombreDestino = string.IsNullOrEmpty(targetScene) ? destinationScene : targetScene;
+        return SAL_Progress.HasFlag(openedFlag) ? "E · Entrar a " + nombreDestino : prompt;
     }
 }
 

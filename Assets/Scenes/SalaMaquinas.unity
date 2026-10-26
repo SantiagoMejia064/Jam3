@@ -65047,7 +65047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SAL_RoomController
   standaloneDemo: 0
-  exitScene: Javier
+  exitScene: Inicio-Laboratorio
   dust: {fileID: 1195770038248819321}
   drawings: {fileID: 68765121}
   sealCover: {fileID: 0}

@@ -80,7 +80,8 @@ public sealed class SAL_RoomController : MonoBehaviour
         switch (target.kind)
         {
             case SAL_Interactable.Kind.Exit:
-                if (Application.CanStreamedLevelBeLoaded(exitScene)) SceneManager.LoadScene(exitScene);
+                string resolvedExit = CORE_SceneResolver.ResolveSceneName(exitScene);
+                if (Application.CanStreamedLevelBeLoaded(resolvedExit)) SceneManager.LoadScene(resolvedExit);
                 else Tell("El Pasillo aún no está en Build Settings. Puedes seguir probando SAL.");
                 break;
             case SAL_Interactable.Kind.Trash:

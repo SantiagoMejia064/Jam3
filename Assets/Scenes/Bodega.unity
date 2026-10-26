@@ -2050,9 +2050,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbb0b821eb68d8d44a84153e6f4e58c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameSceneManager
-  inicioScene: Javier
+  inicioScene: Inicio-Laboratorio
   tallerScene: Taller
-  salaMaquinasScene: SAL
+  salaMaquinasScene: SalaMaquinas
   bodegaFriaScene: Bodega
   invernaderoScene: Invernadero
 --- !u!4 &421056846
@@ -13548,7 +13548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d280b44dbea764facdd3ad6192fa06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
-  destinationScene: Javier
+  destinationScene: Inicio-Laboratorio
   requiredItem: 
   ignoreRequirementForDebug: 0
   openedFlag: 
@@ -20407,7 +20407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d280b44dbea764facdd3ad6192fa06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
-  destinationScene: Javier
+  destinationScene: Inicio-Laboratorio
   requiredItem: 
   ignoreRequirementForDebug: 0
   openedFlag: 

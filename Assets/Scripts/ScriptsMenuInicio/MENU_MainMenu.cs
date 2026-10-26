@@ -9,7 +9,7 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public sealed class MENU_MainMenu : MonoBehaviour
 {
-    [SerializeField] private string gameScenePath = "Assets/Scenes/Javier.unity";
+    [SerializeField] private string gameScenePath = "Assets/Scenes/Inicio-Laboratorio.unity";
     [SerializeField] private Button playButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private GameObject loadingPanel;
@@ -36,10 +36,11 @@ public sealed class MENU_MainMenu : MonoBehaviour
     public void Play()
     {
         if (loading) return;
-        if (!Application.CanStreamedLevelBeLoaded(gameScenePath))
+        string sceneToLoad = CORE_SceneResolver.ResolveSceneName(gameScenePath);
+        if (!Application.CanStreamedLevelBeLoaded(sceneToLoad))
         {
             if (statusText) statusText.text = "No se encuentra la escena inicial del juego.";
-            Debug.LogError("MenuInicio: falta " + gameScenePath + " en las escenas del build.", this);
+            Debug.LogError("MenuInicio: falta " + sceneToLoad + " en las escenas del build.", this);
             return;
         }
         loading = true;
@@ -64,7 +65,8 @@ public sealed class MENU_MainMenu : MonoBehaviour
             if (inventory) Instantiate(inventory);
         }
         if (CORE_Inventory.Instance) CORE_Inventory.Instance.ResetForNewGame();
-        AsyncOperation operation = SceneManager.LoadSceneAsync(gameScenePath, LoadSceneMode.Single);
+        string sceneToLoad = CORE_SceneResolver.ResolveSceneName(gameScenePath);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Single);
         while (operation != null && !operation.isDone) yield return null;
     }
 

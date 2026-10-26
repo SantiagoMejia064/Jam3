@@ -4528,8 +4528,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14699992a90047748af5822d137b702e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
-  sceneName: Javier
-  entryFromScene: SAL
+  sceneName: Inicio-Laboratorio
+  entryFromScene: SalaMaquinas
 --- !u!4 &57567269
 Transform:
   m_ObjectHideFlags: 0
@@ -5056,7 +5056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14699992a90047748af5822d137b702e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
-  sceneName: Javier
+  sceneName: Inicio-Laboratorio
   entryFromScene: 
 --- !u!4 &59718210
 Transform:
@@ -73692,7 +73692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14699992a90047748af5822d137b702e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
-  sceneName: Javier
+  sceneName: Inicio-Laboratorio
   entryFromScene: Bodega
 --- !u!4 &997422269
 Transform:
@@ -90395,7 +90395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14699992a90047748af5822d137b702e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
-  sceneName: Javier
+  sceneName: Inicio-Laboratorio
   entryFromScene: Taller
 --- !u!4 &1227222061
 Transform:
@@ -113729,7 +113729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d280b44dbea764facdd3ad6192fa06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CORE_ZoneDoor
-  destinationScene: SAL
+  destinationScene: SalaMaquinas
   requiredItem: 
   ignoreRequirementForDebug: 0
   openedFlag: 
@@ -153248,9 +153248,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbb0b821eb68d8d44a84153e6f4e58c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameSceneManager
-  inicioScene: Javier
+  inicioScene: Inicio-Laboratorio
   tallerScene: Taller
-  salaMaquinasScene: SAL
+  salaMaquinasScene: SalaMaquinas
   bodegaFriaScene: Bodega
   invernaderoScene: Invernadero
 --- !u!4 &2080563570

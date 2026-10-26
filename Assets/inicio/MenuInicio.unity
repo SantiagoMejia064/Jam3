@@ -2603,7 +2603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e7c20145d968ca4096cb8a470af2373, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MENU_MainMenu
-  gameScenePath: Assets/Scenes/Javier.unity
+  gameScenePath: Assets/Scenes/Inicio-Laboratorio.unity
   playButton: {fileID: 1844486518}
   quitButton: {fileID: 62465766}
   loadingPanel: {fileID: 229064905}

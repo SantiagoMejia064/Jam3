@@ -41,6 +41,7 @@ public sealed class GameSceneManager : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(sceneName);
+        string resolved = CORE_SceneResolver.ResolveSceneName(sceneName);
+        SceneManager.LoadScene(resolved);
     }
 }
