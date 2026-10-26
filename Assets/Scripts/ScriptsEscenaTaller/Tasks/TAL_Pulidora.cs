@@ -16,6 +16,7 @@ public class TAL_Pulidora : MonoBehaviour
     public AudioSource pulseSource;
     public AudioClip pulseClip;
     public float pulseInterval = 1.2f;
+    public TAL_Audio audioFeedback;
 
     public TMP_Text statusText;
     public Renderer statusLight;
@@ -96,6 +97,9 @@ public class TAL_Pulidora : MonoBehaviour
             SAL_Progress.SetFlag(CableInstalled);
             CORE_InventoryBridge.RemoveItem("Cable");
 
+            if (audioFeedback != null)
+                audioFeedback.PlayCableConnection();
+
             Refresh();
 
             CORE_InteractionHUD.ShowMessage("Cable instalado. Pulsa E para probarla.");
@@ -114,6 +118,8 @@ public class TAL_Pulidora : MonoBehaviour
             }
 
             SAL_Progress.SetFlag(MachineTested);
+            if (audioFeedback != null)
+                audioFeedback.PlayPolisherStart();
             Refresh();
 
             CORE_InteractionHUD.ShowMessage("Gira lento… Pieza Pulso obtenida.");

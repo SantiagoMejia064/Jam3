@@ -5,6 +5,7 @@ public class TAL_Estante : MonoBehaviour
 {
     public GameObject notebookDiagramPrefab;
     public string noteTitle = "N3 · Por reparar";
+    public TAL_Audio audioFeedback;
 
     private const string NoteFound = "TAL_N3Encontrada";
 
@@ -47,6 +48,9 @@ public class TAL_Estante : MonoBehaviour
         notebook.CollectNote(2, noteTitle, "");
 
         SAL_Progress.SetFlag(NoteFound);
+
+        if (audioFeedback != null)
+            audioFeedback.PlayShelfNote();
 
         CORE_InteractionHUD.ShowMessage(
             "N3 guardada en el Cuaderno.");
