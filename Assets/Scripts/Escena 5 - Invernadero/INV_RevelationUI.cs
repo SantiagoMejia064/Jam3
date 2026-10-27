@@ -7,6 +7,7 @@ using TMPro;
 /// <summary>Presentación de las seis tarjetas de revelación de doble lectura según el GDD, con sonido de voz/radio de Vega.</summary>
 public sealed class INV_RevelationUI : MonoBehaviour
 {
+    [SerializeField] private Sprite uiPanelSprite;
     [Serializable]
     public struct RevelationCard
     {
@@ -348,6 +349,12 @@ public sealed class INV_RevelationUI : MonoBehaviour
 
         var bg = panel.AddComponent<Image>();
         bg.color = new Color(0.02f, 0.02f, 0.05f, 0.98f);
+        if (uiPanelSprite)
+        {
+            bg.sprite = uiPanelSprite;
+            bg.type = Image.Type.Sliced;
+            bg.color = Color.white;
+        }
 
         cardNumberText = CreateRuntimeText(panel.transform, "CardNumber", "EVIDENCIA 1 DE 6", 20,
             new Vector2(0.5f, 0.85f), Vector2.zero, new Vector2(800, 35),

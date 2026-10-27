@@ -7,6 +7,7 @@ using TMPro;
 /// <summary>Interfaz interactiva para el puzle de afinación de la incubadora (2-4-1-3).</summary>
 public sealed class INV_IncubatorUI : MonoBehaviour
 {
+    [SerializeField] private Sprite uiPanelSprite;
     [Header("Panel Principal")]
     [SerializeField] private GameObject panel;
     [SerializeField] private Button closeButton;
@@ -378,6 +379,12 @@ public sealed class INV_IncubatorUI : MonoBehaviour
 
         var bg = panel.AddComponent<Image>();
         bg.color = new Color(0.06f, 0.08f, 0.12f, 0.95f);
+        if (uiPanelSprite)
+        {
+            bg.sprite = uiPanelSprite;
+            bg.type = Image.Type.Sliced;
+            bg.color = Color.white;
+        }
 
         CreateRuntimeText(panel.transform, "Titulo", "INCUBADORA IMPROVISADA · AFINACIÓN DE FRECUENCIA", 26,
             new Vector2(0.5f, 0.92f), new Vector2(0, 0), new Vector2(900, 40),
@@ -493,7 +500,7 @@ public sealed class INV_IncubatorUI : MonoBehaviour
         return tmp;
     }
 
-    private static Button CreateRuntimeButton(Transform parent, string name, string label, Vector2 pos, Vector2 size)
+    private Button CreateRuntimeButton(Transform parent, string name, string label, Vector2 pos, Vector2 size)
     {
         GameObject go = new GameObject(name);
         go.transform.SetParent(parent, false);
@@ -503,6 +510,14 @@ public sealed class INV_IncubatorUI : MonoBehaviour
 
         var img = go.AddComponent<Image>();
         img.color = new Color(0.22f, 0.22f, 0.28f);
+        if (uiPanelSprite)
+        {
+            img.sprite = uiPanelSprite;
+            img.type = Image.Type.Sliced;
+            img.pixelsPerUnitMultiplier = Mathf.Max(1f, uiPanelSprite.rect.height / size.y,
+                (uiPanelSprite.border.x + uiPanelSprite.border.z) / (size.x * .7f));
+            img.color = Color.white;
+        }
 
         var btn = go.AddComponent<Button>();
         var colors = btn.colors;

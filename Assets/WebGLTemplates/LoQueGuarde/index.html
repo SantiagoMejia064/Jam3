@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lo que guardé</title>
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #080b14; }
+    #game { position: absolute; width: 100%; height: 100%; }
+    #unity-canvas { display: block; width: 100%; height: 100%; outline: none; background: #080b14; }
+    #loading { position: absolute; inset: 0; display: grid; place-content: center; gap: 12px;
+      background: #080b14; color: #e1e4f2; text-align: center; font: 16px system-ui, sans-serif; }
+    #loading progress { width: min(260px, 70vw); accent-color: #b8a1eb; }
+    #error { position: absolute; inset: 12%; display: none; place-content: center;
+      color: #e1e4f2; font: 16px system-ui, sans-serif; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <main id="game">
+    <canvas id="unity-canvas" width="{{{ WIDTH }}}" height="{{{ HEIGHT }}}" tabindex="-1" aria-label="Lo que guardé"></canvas>
+    <div id="loading"><span>Cargando…</span><progress id="progress" max="1" value="0"></progress></div>
+    <div id="error" role="alert"></div>
+  </main>
+  <script>
+    const game = document.getElementById("game");
+    const canvas = document.getElementById("unity-canvas");
+    const loading = document.getElementById("loading");
+    const progress = document.getElementById("progress");
+    const error = document.getElementById("error");
+
+    // Keep the authored 16:9 composition inside itch.io's iframe or fullscreen window.
+    // Unity sizes its render target from this CSS size and the screen's native DPI.
+    function fitGame() {
+      const viewportWidth = document.documentElement.clientWidth;
+      const viewportHeight = document.documentElement.clientHeight;
+      const width = Math.max(1, Math.floor(Math.min(viewportWidth, viewportHeight * 16 / 9)));
+      const height = Math.max(1, Math.floor(width * 9 / 16));
+      game.style.width = width + "px";
+      game.style.height = height + "px";
+      game.style.left = Math.floor((viewportWidth - width) / 2) + "px";
+      game.style.top = Math.floor((viewportHeight - height) / 2) + "px";
+    }
+    fitGame();
+    window.addEventListener("resize", fitGame);
+    document.addEventListener("fullscreenchange", fitGame);
+
+    function showError(message) {
+      loading.style.display = "none";
+      error.textContent = message;
+      error.style.display = "grid";
+    }
+    const buildUrl = "Build";
+    const config = {
+      dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+      frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+      codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "{{{ COMPANY_NAME }}}",
+      productName: "{{{ PRODUCT_NAME }}}",
+      productVersion: "{{{ PRODUCT_VERSION }}}",
+      matchWebGLToCanvasSize: true,
+      showBanner: (message, type) => {
+        if (type === "error") showError("No se pudo iniciar el juego.\n" + message);
+        else console.warn(message);
+      }
+    };
+    // Do not force devicePixelRatio=1 or stretch a fixed low-resolution buffer.
+    // The loader's default high-DPI rendering keeps UI text sharp at actual display size.
+    const loader = document.createElement("script");
+    loader.src = buildUrl + "/{{{ LOADER_FILENAME }}}";
+    loader.onload = () => createUnityInstance(canvas, config, value => { progress.value = value; })
+      .then(() => { loading.style.display = "none"; canvas.focus(); })
+      .catch(message => showError("No se pudo iniciar el juego.\n" + message));
+    loader.onerror = () => showError("No se pudieron cargar los archivos del juego. Recarga la página.");
+    document.body.appendChild(loader);
+  </script>
+</body>
+</html>

@@ -187,15 +187,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.018, g: 0.028, b: 0.045, a: 0.16}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: -403120080, guid: 55428762c1c77c14293df87637ba58f8, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -203,7 +203,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 5.782051
 --- !u!222 &62465765
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -234,10 +234,10 @@ MonoBehaviour:
   m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_HighlightedColor: {r: 1.14, g: 1.09, b: 1.2, a: 1}
+    m_PressedColor: {r: 0.72, g: 0.65, b: 0.85, a: 1}
+    m_SelectedColor: {r: 1.1, g: 1.03, b: 1.2, a: 1}
+    m_DisabledColor: {r: 0.48, g: 0.48, b: 0.55, a: 0.7}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -273,7 +273,7 @@ MonoBehaviour:
   pointer: {fileID: 1129037363}
   background: {fileID: 62465764}
   normalText: {r: 0.88, g: 0.85, b: 0.75, a: 1}
-  accent: {r: 1, g: 0.65, b: 0.23, a: 1}
+  accent: {r: 0.8, g: 0.68, b: 1, a: 1}
 --- !u!114 &83075781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -792,7 +792,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880009796}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 019d51005c73871439a265c2953ede51, type: 3}
   m_Name: 
@@ -1933,7 +1933,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1334418155}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 019d51005c73871439a265c2953ede51, type: 3}
   m_Name: 
@@ -2092,8 +2092,8 @@ Canvas:
   m_GameObject: {fileID: 1533459914}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
-  m_Camera: {fileID: 4203159808318148133}
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 1
   m_PixelPerfect: 1
   m_ReceivesEvents: 1
@@ -2474,10 +2474,10 @@ MonoBehaviour:
   m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_HighlightedColor: {r: 1.14, g: 1.09, b: 1.2, a: 1}
+    m_PressedColor: {r: 0.72, g: 0.65, b: 0.85, a: 1}
+    m_SelectedColor: {r: 1.1, g: 1.03, b: 1.2, a: 1}
+    m_DisabledColor: {r: 0.48, g: 0.48, b: 0.55, a: 0.7}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -2513,7 +2513,7 @@ MonoBehaviour:
   pointer: {fileID: 1688934676}
   background: {fileID: 1844486519}
   normalText: {r: 0.88, g: 0.85, b: 0.75, a: 1}
-  accent: {r: 1, g: 0.65, b: 0.23, a: 1}
+  accent: {r: 0.8, g: 0.68, b: 1, a: 1}
 --- !u!114 &1844486519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2527,15 +2527,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.018, g: 0.028, b: 0.045, a: 0.16}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: -403120080, guid: 55428762c1c77c14293df87637ba58f8, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2543,7 +2543,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 5.782051
 --- !u!222 &1844486520
 CanvasRenderer:
   m_ObjectHideFlags: 0

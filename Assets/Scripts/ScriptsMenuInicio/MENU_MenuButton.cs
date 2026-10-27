@@ -29,7 +29,9 @@ public sealed class MENU_MenuButton : Button
         if (frame) frame.color = active ? accent : new Color(.62f, .48f, .29f, .44f * alpha);
         if (label) label.color = (active ? accent : normalText) * new Color(1f, 1f, 1f, alpha);
         if (pointer) pointer.color = active ? accent : Color.clear;
-        if (background) background.color = new Color(.018f, .028f, .045f, active ? .43f : .16f);
+        if (background) background.color = background.sprite
+            ? new Color(active ? 1.1f : 1f, active ? 1.05f : 1f, active ? 1.15f : 1f, alpha)
+            : new Color(.018f, .028f, .045f, active ? .43f : .16f);
     }
 
     public override void OnPointerEnter(PointerEventData eventData)

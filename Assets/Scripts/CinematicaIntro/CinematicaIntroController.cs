@@ -98,6 +98,8 @@ public class CinematicaIntroController : MonoBehaviour
     public Color colorNombreVega = new Color(0.95f, 0.72f, 0.38f, 1f);
     public Color colorNombreSiete = new Color(0.44f, 0.90f, 1.00f, 1f);
     public Color colorVerdeFosforo = new Color(0.28f, 1.00f, 0.48f, 1f);
+    [SerializeField] private Sprite panelDialogoSprite;
+    [SerializeField] private Sprite panelHUDSprite;
 
     [Header("Textos Fijos de Interfaz (UI de Terminal)")]
     public string textoAlertaSuperior1 = "ALERTA CRÍTICA: PROTOCOLO DE PURGA ACTIVADO";
@@ -431,7 +433,7 @@ public class CinematicaIntroController : MonoBehaviour
 
         solicitudAvance = false;
         if (tmpIndicadorContinuar != null)
-            tmpIndicadorContinuar.alpha = 0.25f;
+            tmpIndicadorContinuar.alpha = 0.55f;
 
         string textoLinea = linea.texto ?? string.Empty;
         generadorVoces.ReiniciarEstadoLinea(linea.hablante);
@@ -551,7 +553,7 @@ public class CinematicaIntroController : MonoBehaviour
         generadorVoces.DetenerVozInmediato();
 
         if (tmpIndicadorContinuar != null)
-            tmpIndicadorContinuar.alpha = 0.78f;
+            tmpIndicadorContinuar.alpha = 0.95f;
 
         // ---------------------------------------------------------------------
         // FASE 2: Efecto al terminar de escribir (ej. Cuadro 5: pitido + 1s silencio) y pausa de lectura
@@ -1428,6 +1430,12 @@ public class CinematicaIntroController : MonoBehaviour
         {
             RectTransform rtTerm = CrearRect("CORE_PanelTerminalVerde", transform, new Vector2(0.5f, 0.50f), new Vector2(0.5f, 0.50f), Vector2.zero, new Vector2(1260f, 540f));
             panelTerminalVerde = rtTerm.gameObject;
+            if (panelHUDSprite)
+            {
+                Image fondoTerminal = AsegurarComp<Image>(panelTerminalVerde);
+                AplicarFondoPanel(fondoTerminal, panelHUDSprite, 540f);
+                fondoTerminal.raycastTarget = false;
+            }
             CanvasGroup cgTerm = AsegurarComp<CanvasGroup>(panelTerminalVerde);
             cgTerm.alpha = 1f;
 
@@ -1461,17 +1469,25 @@ public class CinematicaIntroController : MonoBehaviour
 
             Image fondoAlerta = AsegurarComp<Image>(contenedorMarcoAlerta.gameObject);
             fondoAlerta.color = new Color(0.09f, 0.02f, 0.03f, 0.94f);
+            if (panelHUDSprite) AplicarFondoPanel(fondoAlerta, panelHUDSprite, 140f);
             fondoAlerta.raycastTarget = false;
 
             RectTransform rtBorde = CrearRect("BordeRojoParpadeante", contenedorMarcoAlerta, Vector2.zero, Vector2.one, new Vector2(-2f, -2f), new Vector2(2f, 2f));
             rtBorde.SetAsFirstSibling();
             bordeMarcoAlerta = AsegurarComp<Image>(rtBorde.gameObject);
             bordeMarcoAlerta.color = new Color(0.92f, 0.16f, 0.18f, 0.85f);
+            if (panelHUDSprite)
+            {
+                AplicarFondoPanel(bordeMarcoAlerta, panelHUDSprite, 144f);
+                bordeMarcoAlerta.fillCenter = false;
+                bordeMarcoAlerta.color = new Color(0.92f, 0.16f, 0.18f, 0.85f);
+            }
             bordeMarcoAlerta.raycastTarget = false;
 
             RectTransform rtInterior = CrearRect("InteriorOscuroAlerta", contenedorMarcoAlerta, Vector2.zero, Vector2.one, new Vector2(3f, 3f), new Vector2(-3f, -3f));
             Image imgInt = AsegurarComp<Image>(rtInterior.gameObject);
             imgInt.color = new Color(0.08f, 0.018f, 0.025f, 0.97f);
+            if (panelHUDSprite) imgInt.color = Color.clear;
             imgInt.raycastTarget = false;
 
             RectTransform rtL1 = CrearRect("TextoAlerta1", rtInterior, new Vector2(0.02f, 0.68f), new Vector2(0.98f, 0.95f), Vector2.zero, Vector2.zero);
@@ -1534,24 +1550,27 @@ public class CinematicaIntroController : MonoBehaviour
         // 6. Abajo: Caja limpia de subtítulos
         if (grupoCajaSubtitulos == null)
         {
-            RectTransform rtSubCaja = CrearRect("CORE_CajaSubtitulosInferior", transform, new Vector2(0.11f, 0f), new Vector2(0.89f, 0f), new Vector2(0f, 26f), new Vector2(0f, 184f));
+            RectTransform rtSubCaja = CrearRect("CORE_CajaSubtitulosInferior", transform, new Vector2(0.11f, 0f), new Vector2(0.89f, 0f), new Vector2(0f, 26f), new Vector2(0f, 200f));
             grupoCajaSubtitulos = AsegurarComp<CanvasGroup>(rtSubCaja.gameObject);
 
             Image imgBordeSub = AsegurarComp<Image>(rtSubCaja.gameObject);
             imgBordeSub.color = new Color(0.20f, 0.30f, 0.39f, 0.72f);
+            if (panelDialogoSprite) AplicarFondoPanel(imgBordeSub, panelDialogoSprite, 174f);
             imgBordeSub.raycastTarget = false;
 
             RectTransform rtSubInt = CrearRect("InteriorCajaSubtitulos", rtSubCaja, Vector2.zero, Vector2.one, new Vector2(2f, 2f), new Vector2(-2f, -2f));
             Image imgSubInt = AsegurarComp<Image>(rtSubInt.gameObject);
             imgSubInt.color = new Color(0.035f, 0.052f, 0.075f, 0.94f);
+            if (panelDialogoSprite) imgSubInt.color = Color.clear;
             imgSubInt.raycastTarget = false;
 
-            RectTransform rtTextoSub = CrearRect("TextoSubtitulo", rtSubInt, new Vector2(0f, 0.16f), new Vector2(1f, 0.92f), new Vector2(34f, 4f), new Vector2(-34f, -4f));
+            RectTransform rtTextoSub = CrearRect("TextoSubtitulo", rtSubInt, new Vector2(0f, 0.32f), new Vector2(1f, 0.94f), new Vector2(34f, 4f), new Vector2(-34f, -4f));
             tmpSubtitulo = CrearTMP(rtTextoSub.gameObject, fuenteTMP, 27f, TextAlignmentOptions.TopLeft, new Color(0.93f, 0.96f, 0.99f, 1f));
+            if (panelDialogoSprite) tmpSubtitulo.margin = new Vector4(22f, 0f, 22f, 0f);
             tmpSubtitulo.lineSpacing = 10f;
 
-            RectTransform rtCont = CrearRect("IndicadorContinuar", rtSubInt, new Vector2(0.65f, 0.02f), new Vector2(0.985f, 0.22f), Vector2.zero, Vector2.zero);
-            tmpIndicadorContinuar = CrearTMP(rtCont.gameObject, fuenteTMP, 14f, TextAlignmentOptions.BottomRight, new Color(0.56f, 0.72f, 0.84f, 0.65f));
+            RectTransform rtCont = CrearRect("IndicadorContinuar", rtSubInt, new Vector2(0.45f, 0f), new Vector2(1f, 0f), new Vector2(0f, 18f), new Vector2(-60f, 48f));
+            tmpIndicadorContinuar = CrearTMP(rtCont.gameObject, fuenteTMP, 20f, TextAlignmentOptions.MidlineRight, new Color(0.78f, 0.84f, 0.94f, 0.95f));
             tmpIndicadorContinuar.text = "ESPACIO / ENTER / CLIC \u00B7 Avanzar";
         }
 
@@ -1566,6 +1585,7 @@ public class CinematicaIntroController : MonoBehaviour
         rectBotonSaltar = CrearRect("BotonSaltarIntro", rtEsquina, new Vector2(0f, 0.44f), new Vector2(1f, 1f), Vector2.zero, Vector2.zero);
         Image imgBtn = AsegurarComp<Image>(rectBotonSaltar.gameObject);
         imgBtn.color = new Color(0.09f, 0.14f, 0.20f, 0.90f);
+        if (panelHUDSprite) AplicarFondoPanel(imgBtn, panelHUDSprite, 38f);
         imgBtn.raycastTarget = true;
 
         botonSaltarIntro = AsegurarComp<Button>(rectBotonSaltar.gameObject);
@@ -1802,6 +1822,14 @@ public class CinematicaIntroController : MonoBehaviour
         }
         rt.localScale = Vector3.one;
         return rt;
+    }
+
+    private static void AplicarFondoPanel(Image imagen, Sprite sprite, float alto)
+    {
+        imagen.sprite = sprite;
+        imagen.type = Image.Type.Sliced;
+        imagen.pixelsPerUnitMultiplier = Mathf.Max(1f, sprite.rect.height / alto);
+        imagen.color = Color.white;
     }
 
     private static TMP_Text CrearTMP(
