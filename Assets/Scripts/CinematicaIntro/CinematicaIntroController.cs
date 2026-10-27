@@ -1125,6 +1125,7 @@ public class CinematicaIntroController : MonoBehaviour
         }
 
         audiosEscenaPausados.Clear();
+        CORE_SceneMusic.PauseForIntro(true);
         if (SAL_AudioDirector.Instance != null)
         {
             foreach (AudioSource src in SAL_AudioDirector.Instance.GetComponentsInChildren<AudioSource>(true))
@@ -1143,6 +1144,7 @@ public class CinematicaIntroController : MonoBehaviour
         if (controlDevuelto)
             return;
         controlDevuelto = true;
+        CORE_SceneMusic.PauseForIntro(false);
 
         foreach (AudioSource src in audiosEscenaPausados)
         {

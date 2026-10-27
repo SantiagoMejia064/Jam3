@@ -259,7 +259,8 @@ public sealed class INV_RoomController : MonoBehaviour
         StartCoroutine(SetupPlayerRoutine());
 
         // 5. Iniciar audio de ambiente del Invernadero
-        if (ambienteInvernaderoSource != null)
+        // Si esta fuente contiene musica, su reproduccion la controla CORE_SceneMusic.
+        if (ambienteInvernaderoSource != null && !ambienteInvernaderoSource.GetComponent<CORE_SceneMusic>())
         {
             INV_SoundHelper.PlayLoop(
                 ambienteInvernaderoSource,

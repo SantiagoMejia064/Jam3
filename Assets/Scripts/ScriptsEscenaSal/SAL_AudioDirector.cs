@@ -1,20 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>Shared music, effects and subtitled logs. Clips can be assigned later without changing scene events.</summary>
+/// <summary>Director persistente de ambiente, efectos y voz de Vega. La musica pertenece a cada escena.</summary>
 public sealed class SAL_AudioDirector : MonoBehaviour
 {
     [SerializeField] private SAL_AudioLogData[] logs;
     [SerializeField] private AudioSource voiceSource;
     [SerializeField] private AudioSource ambienceSource;
-    [SerializeField] private AudioSource musicSource;
-    [SerializeField] private AudioSource stringsSource;
-    [SerializeField] private AudioSource lightSource;
+    // Referencias antiguas: se conservan para detener las capas de escenas anteriores.
+    [SerializeField, HideInInspector] private AudioSource musicSource;
+    [SerializeField, HideInInspector] private AudioSource stringsSource;
+    [SerializeField, HideInInspector] private AudioSource lightSource;
     [SerializeField] private AudioSource effectsSource;
     [SerializeField] private AudioClip industrialLoop;
-    [SerializeField] private AudioClip musicBase;
-    [SerializeField] private AudioClip musicStrings;
-    [SerializeField] private AudioClip musicLight;
     [SerializeField] private AudioClip filterRemovedEffect;
     [SerializeField] private AudioClip stepPulse;
 
@@ -31,18 +29,15 @@ public sealed class SAL_AudioDirector : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         EnsureVoiceSource();
         if (!industrialLoop) industrialLoop = SAL_ProceduralSound.CreateIndustrialLoop();
-        if (!musicBase) musicBase = SAL_ProceduralSound.CreateMusic(false);
-        if (!musicStrings) musicStrings = SAL_ProceduralSound.CreateStrings();
-        if (!musicLight) musicLight = SAL_ProceduralSound.CreateMusic(true);
+        if (musicSource) { musicSource.Stop(); musicSource.playOnAwake = false; }
+        if (stringsSource) { stringsSource.Stop(); stringsSource.playOnAwake = false; }
+        if (lightSource) { lightSource.Stop(); lightSource.playOnAwake = false; }
         if (!filterRemovedEffect) filterRemovedEffect = SAL_ProceduralSound.CreateFilterEffect();
         if (!stepPulse) stepPulse = SAL_ProceduralSound.CreatePulse();
         if (ambienceSource && industrialLoop) { ambienceSource.clip = industrialLoop; ambienceSource.loop = true; ambienceSource.Play(); }
         if (SAL_Progress.HasFlag(SAL_Progress.FilterRemoved) && ambienceSource) ambienceSource.pitch = 0.78f;
-        ApplyAct(SAL_Progress.Act);
     }
 
-    private void OnEnable() { SAL_Progress.ActChanged += ApplyAct; }
-    private void OnDisable() { SAL_Progress.ActChanged -= ApplyAct; }
     private void OnDestroy() { if (Instance == this) Instance = null; }
 
     /// <summary>Garantiza que exista siempre un director de audio activo para reproducir la voz matemática de Vega en cualquier escena.</summary>
@@ -184,6 +179,7 @@ public sealed class SAL_AudioDirector : MonoBehaviour
     /// <summary>Silencia todos los canales del director para los segundos de silencio absoluto tras expulsar a Ella en la esclusa.</summary>
     public void SilenceAllForEnding()
     {
+        CORE_SceneMusic.SilenceForEnding();
         if (subtitleRoutine != null)
         {
             StopCoroutine(subtitleRoutine);
@@ -254,20 +250,4 @@ public sealed class SAL_AudioDirector : MonoBehaviour
         if (effectsSource && stepPulse) effectsSource.PlayOneShot(stepPulse);
     }
 
-    private void ApplyAct(int act)
-    {
-        PlayLayer(musicSource, musicBase, act < 8, 0.26f);
-        PlayLayer(stringsSource, musicStrings, act >= 3 && act < 8, 0.15f);
-        PlayLayer(lightSource, musicLight, act == 7, 0.18f);
-    }
-
-    private static void PlayLayer(AudioSource source, AudioClip clip, bool enabled, float volume)
-    {
-        if (!source) return;
-        if (!enabled || !clip) { source.Stop(); return; }
-        source.volume = volume;
-        if (source.clip != clip) source.clip = clip;
-        source.loop = true;
-        if (!source.isPlaying) source.Play();
-    }
 }
