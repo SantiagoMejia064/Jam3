@@ -59,7 +59,9 @@ public sealed class CORE_InteractionHUD : MonoBehaviour
         for (int i = promptOrder.Count - 1; i >= 0; i--)
         {
             Object source = promptOrder[i];
-            if (source && prompts.TryGetValue(source, out activePrompt)) break;
+            bool enabledSource = source && (!(source is Behaviour behaviour) || behaviour.isActiveAndEnabled);
+            if (enabledSource && prompts.TryGetValue(source, out activePrompt)) break;
+            prompts.Remove(source);
             promptOrder.RemoveAt(i);
         }
         promptText.text = activePrompt;

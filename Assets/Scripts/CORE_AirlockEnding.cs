@@ -88,7 +88,6 @@ public sealed class CORE_AirlockEnding : MonoBehaviour
             customClip: clipVegaCaminataFinal,
             customSource: vegaFinalSource
         );
-        CORE_InteractionHUD.ShowMessage(walkLine, 4.8f);
         finalWalkRoutine = null;
     }
 
@@ -128,7 +127,7 @@ public sealed class CORE_AirlockEnding : MonoBehaviour
             customClip: clipVegaCorteEsclusa,
             customSource: vegaFinalSource
         );
-        CORE_InteractionHUD.ShowMessage("La escotilla se abre.\nVega: \"Siete... gracias, yo—\"", 1.1f);
+        CORE_InteractionHUD.ShowMessage("La escotilla se abre.", 1.1f);
 
         Vector3 start = hatch.localPosition;
         Vector3 end = closedLocalPosition + Vector3.up * slideDistance;

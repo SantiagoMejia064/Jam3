@@ -515,30 +515,21 @@ public sealed class INV_IncubatorPuzzle : MonoBehaviour
 
         // --- LÍNEA 1 DE VEGA ---
         PlayVegaAlertLine(audioVegaAlerta1, clipVegaAlerta1, variant: 1);
-        SAL_AudioDirector.Instance?.ShowSubtitle("Vega: \"Siete... ¿qué hiciste? ¡Las puertas selladas eran cuarentena biológica!\"", 5.0f);
+        SAL_AudioDirector.EnsureInstance().ShowSubtitle("Vega: \"Siete... ¿qué hiciste? ¡Las puertas selladas eran cuarentena biológica!\"", 5.0f);
         CORE_InteractionHUD.ShowMessage(
-            "<color=#EF4444><b>[¡ALERTA DE ESPORAS!] Las plantas de toda la nave se están marchitando.</b></color>\n" +
-            "Vega: \"Siete... ¿qué hiciste? ¡Las puertas selladas eran cuarentena biológica!\"",
+            "<color=#EF4444><b>[¡ALERTA DE ESPORAS!] Las plantas de toda la nave se están marchitando.</b></color>",
             6.0f
         );
         yield return new WaitForSeconds(5.2f);
 
         // --- LÍNEA 2 DE VEGA ---
         PlayVegaAlertLine(audioVegaAlerta2, clipVegaAlerta2, variant: 2);
-        SAL_AudioDirector.Instance?.ShowSubtitle("Vega: \"Quitaste el filtro 14. Mi aire pasa por ahí... Se parece a lo que mató las semillas de la Tierra...\"", 4.4f);
-        CORE_InteractionHUD.ShowMessage(
-            "Vega: \"Quitaste el filtro 14. Mi aire pasa por ahí... Se parece a lo que mató las semillas de la Tierra...\"",
-            5.5f
-        );
+        SAL_AudioDirector.EnsureInstance().ShowSubtitle("Vega: \"Quitaste el filtro 14. Mi aire pasa por ahí... Se parece a lo que mató las semillas de la Tierra...\"", 4.4f);
         yield return new WaitForSeconds(4.5f);
 
         // --- LÍNEA 3 DE VEGA ---
         PlayVegaAlertLine(audioVegaAlerta3, clipVegaAlerta3, variant: 3);
-        SAL_AudioDirector.Instance?.ShowSubtitle("Vega: \"Suéltala, Siete. Por favor... Llévala a la esclusa de carga.\"", 4.2f);
-        CORE_InteractionHUD.ShowMessage(
-            "Vega: \"Suéltala, Siete. Por favor... Llévala a la esclusa de carga.\"",
-            5.0f
-        );
+        SAL_AudioDirector.EnsureInstance().ShowSubtitle("Vega: \"Suéltala, Siete. Por favor... Llévala a la esclusa de carga.\"", 4.2f);
         yield return new WaitForSeconds(3.5f);
 
         if (!SAL_Progress.HasFlag(INV_IncubatorCart.FlagEllaEnCarrito))

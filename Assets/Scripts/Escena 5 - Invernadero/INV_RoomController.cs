@@ -495,12 +495,8 @@ public sealed class INV_RoomController : MonoBehaviour
             yield break;
         }
 
-        // Mostrar subtítulo y HUD sin duplicar el disparo de audio
-        if (SAL_AudioDirector.Instance != null)
-        {
-            SAL_AudioDirector.Instance.ShowSubtitle("Siete, no la busques. Por favor.", a4SubtitleDuration);
-        }
-        CORE_InteractionHUD.ShowMessage("Vega: \"Siete, no la busques. Por favor.\"", a4SubtitleDuration);
+        // La voz de Vega se muestra solo en el panel inferior de subtitulos.
+        SAL_AudioDirector.EnsureInstance().ShowSubtitle("Vega: \"Siete, no la busques. Por favor.\"", a4SubtitleDuration);
 
         if (vegaEntradaA4Source != null)
         {

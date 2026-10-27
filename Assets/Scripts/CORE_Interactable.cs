@@ -22,6 +22,8 @@ public sealed class CORE_Interactable : MonoBehaviour
     [SerializeField] private bool playAudioOnApproach;
     [SerializeField] private string playOnStartOnceFlag;
     [SerializeField] private string requiredFlag;
+    [SerializeField, Tooltip("Oculta y bloquea esta interaccion cuando se obtiene la bandera indicada.")]
+    private string unavailableAfterFlag;
     [SerializeField] private string resultFlag;
     [SerializeField] private bool triggerOnApproach;
     [SerializeField] private AudioSource responseAudio;
@@ -40,11 +42,13 @@ public sealed class CORE_Interactable : MonoBehaviour
     private string displayedPrompt;
     private CORE_PlayerController player;
     private Collider triggerCollider;
+    private bool IsUnavailable => SAL_Progress.HasFlag(unavailableAfterFlag);
 
     private void Awake() { triggerCollider = GetComponent<Collider>(); }
 
     private void Start()
     {
+        if (IsUnavailable) return;
         if (oneShot && ((!string.IsNullOrEmpty(resultItem) && CORE_InventoryBridge.WasCollected(resultItem)) ||
                         (notebookIndex >= 0 && NotebookController.Instance && NotebookController.Instance.IsNoteUnlocked(notebookIndex)) ||
                         (!string.IsNullOrEmpty(resultFlag) && SAL_Progress.HasFlag(resultFlag))))
@@ -57,7 +61,7 @@ public sealed class CORE_Interactable : MonoBehaviour
         if (!string.IsNullOrEmpty(playOnStartOnceFlag) && SAL_Progress.HasFlag(playOnStartOnceFlag)) return;
         PlayAudioLog();
         string message = GetCurrentMessage();
-        if (!string.IsNullOrEmpty(message)) CORE_InteractionHUD.ShowMessage(message, EffectiveMessageSeconds());
+        ShowResponseMessage(message, EffectiveMessageSeconds());
         if (!string.IsNullOrEmpty(playOnStartOnceFlag)) SAL_Progress.SetFlag(playOnStartOnceFlag);
     }
 
@@ -65,7 +69,7 @@ public sealed class CORE_Interactable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (oneShot && used) return;
+        if (IsUnavailable || (oneShot && used)) return;
         if (!other.TryGetComponent(out CORE_PlayerController foundPlayer)) return;
         player = foundPlayer;
         displayedPrompt = CurrentPrompt();
@@ -77,19 +81,18 @@ public sealed class CORE_Interactable : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!other.GetComponent<CORE_PlayerController>()) return;
-        player = null;
-        displayedPrompt = null;
-        CORE_InteractionHUD.ClearPrompt(this);
+        ClearActivePrompt();
     }
 
     private void Update()
     {
-        if (oneShot && used) { CORE_InteractionHUD.ClearPrompt(this); return; }
+        if (IsUnavailable || (oneShot && used)) { ClearActivePrompt(); return; }
         if (NotebookController.Instance && NotebookController.Instance.IsOpen) return;
         if (!PlayerIsInRange())
         {
-            if (player) CORE_InteractionHUD.ClearPrompt(this);
-            player = null;
+            // El jugador puede haber sido destruido al sustituir duplicados de otra escena.
+            // En ese caso Unity lo considera null, pero el aviso aun puede estar registrado.
+            ClearActivePrompt();
             return;
         }
 
@@ -106,6 +109,7 @@ public sealed class CORE_Interactable : MonoBehaviour
 
     public void Interact()
     {
+        if (IsUnavailable) { ClearActivePrompt(); return; }
         if (NotebookController.Instance && NotebookController.Instance.IsOpen) return;
         if (oneShot && used) return;
         if (!string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem))
@@ -132,7 +136,7 @@ public sealed class CORE_Interactable : MonoBehaviour
         PlayAudioLog();
 
         float duration = EffectiveMessageSeconds();
-        if (!string.IsNullOrEmpty(message)) CORE_InteractionHUD.ShowMessage(message, duration);
+        ShowResponseMessage(message, duration);
         if (responseAudio)
         {
             responseAudio.Stop();
@@ -156,11 +160,40 @@ public sealed class CORE_Interactable : MonoBehaviour
                 if (visual) visual.SetActive(false);
     }
 
+    private void ShowResponseMessage(string message, float seconds)
+    {
+        if (string.IsNullOrWhiteSpace(message)) return;
+        string text = message.TrimStart();
+        bool dialogue = text.StartsWith("Vega:", StringComparison.OrdinalIgnoreCase);
+        for (int i = 1; i <= 4; i++)
+        {
+            string prefix = "A" + i;
+            if (text.StartsWith(prefix, StringComparison.Ordinal) && text.Length > 2 &&
+                (char.IsWhiteSpace(text[2]) || text[2] == '\u00b7' || text[2] == ':'))
+                dialogue = true;
+        }
+
+        if (!dialogue)
+        {
+            CORE_InteractionHUD.ShowMessage(message, seconds);
+            return;
+        }
+        // Los registros y la pantalla del muelle ya envian su subtitulo al reproducirse.
+        if (string.IsNullOrEmpty(ResolveEffectiveAudioLogId()) && GetComponent<CORE_ScreenWake>() == null)
+            SAL_AudioDirector.EnsureInstance().ShowSubtitle(message, seconds);
+    }
+
     private void OnDisable()
     {
+        ClearActivePrompt();
+    }
+
+    private void ClearActivePrompt()
+    {
+        if (displayedPrompt != null || CORE_InteractionHUD.HasPrompt(this))
+            CORE_InteractionHUD.ClearPrompt(this);
         player = null;
         displayedPrompt = null;
-        CORE_InteractionHUD.ClearPrompt(this);
     }
 
     private string GetCurrentMessage()
