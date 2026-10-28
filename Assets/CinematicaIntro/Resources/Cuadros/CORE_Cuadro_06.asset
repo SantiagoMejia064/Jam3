@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: CORE_Cuadro_06
   m_EditorClassIdentifier: Assembly-CSharp::CuadroCinematicaData
   tituloCuadro: "La destrucci\xF3n"
-  imagen: {fileID: 0}
+  imagen: {fileID: -1640778101, guid: 874cc62c43bcd3649b5232fbf1539cc9, type: 3}
   colorPlaceholder: {r: 0.34, g: 0.09, b: 0.06, a: 1}
   barraInicio: 73
   barraFin: 88
   subtitulos:
   - hablante: 1
-    texto: "\xABComo me negu\xE9, lo hizo \xE9l mismo. La quem\xF3 frente a m\xED. Y por mi desobediencia, decidi\xF3 borrarla de mi memoria.\xBB"
+    texto: "\xABComo me negu\xE9, lo hizo \xE9l mismo. La quem\xF3 frente a m\xED.
+      Y por mi desobediencia, decidi\xF3 borrarla de mi memoria.\xBB"
     duracionMinima: 4.3
     sonidoExtra: {fileID: 0}
     retrasoSonidoExtra: 0

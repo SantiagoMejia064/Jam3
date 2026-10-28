@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: CORE_Cuadro_07
   m_EditorClassIdentifier: Assembly-CSharp::CuadroCinematicaData
   tituloCuadro: "La desintegraci\xF3n del recuerdo"
-  imagen: {fileID: 0}
+  imagen: {fileID: -508048929, guid: a1148af6a2118c143a34ee6285a1ebac, type: 3}
   colorPlaceholder: {r: 0.17, g: 0.1, b: 0.24, a: 1}
   barraInicio: 89
   barraFin: 98
   subtitulos:
   - hablante: 1
-    texto: "\xABMis circuitos se est\xE1n apagando. Mis recuerdos de su brillo se desvanecen en el c\xF3digo...\xBB"
+    texto: "\xABMis circuitos se est\xE1n apagando. Mis recuerdos de su brillo se
+      desvanecen en el c\xF3digo...\xBB"
     duracionMinima: 4
     sonidoExtra: {fileID: 0}
     retrasoSonidoExtra: 0

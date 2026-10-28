@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a0e00020014a819b00000000000101, type: 3}
   m_Name: CORE_Cuadro_05
   m_EditorClassIdentifier: Assembly-CSharp::CuadroCinematicaData
-  tituloCuadro: "La orden y la negativa"
-  imagen: {fileID: 0}
+  tituloCuadro: La orden y la negativa
+  imagen: {fileID: -1199326572, guid: 729d8394f36e9014db58d80609294029, type: 3}
   colorPlaceholder: {r: 0.26, g: 0.16, b: 0.07, a: 1}
   barraInicio: 61
   barraFin: 72
@@ -27,7 +27,8 @@ MonoBehaviour:
     silencioFinalExtra: 0
     respaldoProcedural: 0
   - hablante: 1
-    texto: "\xABMi funci\xF3n era obedecer a Vega. Pero no pude. No encontr\xE9 en m\xED c\xF3mo destruir algo tan bello.\xBB"
+    texto: "\xABMi funci\xF3n era obedecer a Vega. Pero no pude. No encontr\xE9 en
+      m\xED c\xF3mo destruir algo tan bello.\xBB"
     duracionMinima: 4.2
     sonidoExtra: {fileID: 8300000, guid: d97f3bd991e892e4794b1d5e9a28ad90, type: 3}
     retrasoSonidoExtra: 0.18

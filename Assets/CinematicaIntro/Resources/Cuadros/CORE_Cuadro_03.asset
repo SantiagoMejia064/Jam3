@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: CORE_Cuadro_03
   m_EditorClassIdentifier: Assembly-CSharp::CuadroCinematicaData
   tituloCuadro: "El apego an\xF3malo"
-  imagen: {fileID: 0}
+  imagen: {fileID: -710357571, guid: 9f1103646c9f5f146b07d9c41d822aa4, type: 3}
   colorPlaceholder: {r: 0.24, g: 0.11, b: 0.34, a: 1}
   barraInicio: 29
   barraFin: 44
   subtitulos:
   - hablante: 1
-    texto: "\xABUn robot de carga no deber\xEDa conmoverse por la belleza. Vega lo not\xF3 en mis sensores... y tuvo miedo.\xBB"
+    texto: "\xABUn robot de carga no deber\xEDa conmoverse por la belleza. Vega lo
+      not\xF3 en mis sensores... y tuvo miedo.\xBB"
     duracionMinima: 4
     sonidoExtra: {fileID: 0}
     retrasoSonidoExtra: 0

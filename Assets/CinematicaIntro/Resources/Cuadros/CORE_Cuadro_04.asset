@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: CORE_Cuadro_04
   m_EditorClassIdentifier: Assembly-CSharp::CuadroCinematicaData
   tituloCuadro: "El diagn\xF3stico letal"
-  imagen: {fileID: 0}
+  imagen: {fileID: 779746647, guid: 14b399b85244a0e44b7d6c34e1d8917b, type: 3}
   colorPlaceholder: {r: 0.22, g: 0.09, b: 0.14, a: 1}
   barraInicio: 45
   barraFin: 60
   subtitulos:
   - hablante: 1
-    texto: "\xABEn el laboratorio, el esc\xE1ner de Vega encontr\xF3 algo malo. Ella no era lo que parec\xEDa... era una plaga que marchitaba todo a su paso.\xBB"
+    texto: "\xABEn el laboratorio, el esc\xE1ner de Vega encontr\xF3 algo malo. Ella
+      no era lo que parec\xEDa... era una plaga que marchitaba todo a su paso.\xBB"
     duracionMinima: 4.4
     sonidoExtra: {fileID: 0}
     retrasoSonidoExtra: 0

@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a0e00020014a819b00000000000101, type: 3}
   m_Name: CORE_Cuadro_02
   m_EditorClassIdentifier: Assembly-CSharp::CuadroCinematicaData
-  tituloCuadro: "El descubrimiento de Ella"
-  imagen: {fileID: 0}
+  tituloCuadro: El descubrimiento de Ella
+  imagen: {fileID: -1267151069, guid: ca1d080338a5e6149bee90531c3c468d, type: 3}
   colorPlaceholder: {r: 0.16, g: 0.14, b: 0.28, a: 1}
   barraInicio: 13
   barraFin: 28
   subtitulos:
   - hablante: 1
-    texto: "\xABEn medio de la maleza la vi. No se parec\xEDa a nada registrado en mis bancos de memoria. La llam\xE9 Ella.\xBB"
+    texto: "\xABEn medio de la maleza la vi. No se parec\xEDa a nada registrado en
+      mis bancos de memoria. La llam\xE9 Ella.\xBB"
     duracionMinima: 4
     sonidoExtra: {fileID: 0}
     retrasoSonidoExtra: 0

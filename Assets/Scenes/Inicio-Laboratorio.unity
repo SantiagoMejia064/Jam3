@@ -40050,7 +40050,7 @@ GameObject:
   m_Component:
   - component: {fileID: 514116559}
   m_Layer: 0
-  m_Name: PuertaNOSE
+  m_Name: "Habitaci\xF3n de vega"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76756,7 +76756,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1045854773}
-  m_Text: "ROPA \xB7 BANDEJAS \xB7 21 D\xCDAS"
+  m_Text: "Habitaci\xF3n de Vega"
   m_OffsetZ: 0
   m_CharacterSize: 0.055
   m_LineSpacing: 1
