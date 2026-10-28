@@ -8390,7 +8390,7 @@ MonoBehaviour:
   ignoreRequirementForDebug: 0
   openedFlag: InvernaderoAbierto
   additionalRequiredItem: 
-  requireSelectedItem: 1
+  requireSelectedItem: 0
   requiredFlag: SemillaObtenida
   missingFlagMessage: "Falta lo \xFAltimo de mi ronda: la semilla."
   prompt: "E \xB7 Usar Cortador"
@@ -8398,7 +8398,7 @@ MonoBehaviour:
   openMessage: "Cerrojo quemado.\nCUARENTENA BIOL\xD3GICA, NIVEL 4."
   alternateOpenMessage: 
   revealFlag: 
-  openMessageSeconds: 2.5
+  openMessageSeconds: 0.3
   promptVisual: {fileID: 0}
 --- !u!23 &91988300
 MeshRenderer:
@@ -40049,6 +40049,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 514116559}
+  - component: {fileID: 514116560}
+  - component: {fileID: 514116561}
+  - component: {fileID: 514116562}
   m_Layer: 0
   m_Name: "Habitaci\xF3n de vega"
   m_TagString: Untagged
@@ -40082,6 +40085,95 @@ Transform:
   - {fileID: 1522927409}
   m_Father: {fileID: 154965107}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &514116560
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514116558}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.5, y: 3.2, z: 3.5}
+  m_Center: {x: -12.5, y: 1.48, z: -2.05}
+--- !u!82 &514116561
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514116558}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.95
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &514116562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514116558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7195b28a2a444d38c645e998124fa10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CORE_VegaDoorController
+  colliderCenter: {x: -12.5, y: 1.48, z: -2.05}
+  colliderSize: {x: 3.5, y: 3.2, z: 3.5}
+  maxInteractionDistance: 3.8
+  doorAudioSource: {fileID: 514116561}
 --- !u!1 &514615166
 GameObject:
   m_ObjectHideFlags: 0
@@ -109266,7 +109358,7 @@ MonoBehaviour:
   ignoreRequirementForDebug: 0
   openedFlag: BodegaAbierta
   additionalRequiredItem: 
-  requireSelectedItem: 1
+  requireSelectedItem: 0
   requiredFlag: 
   missingFlagMessage: 
   prompt: "E \xB7 Usar Cortador"
@@ -109274,7 +109366,7 @@ MonoBehaviour:
   openMessage: "Cerrojo quemado.\nCUARENTENA BIOL\xD3GICA, NIVEL 4."
   alternateOpenMessage: 
   revealFlag: 
-  openMessageSeconds: 2.5
+  openMessageSeconds: 0.3
   promptVisual: {fileID: 3934779}
 --- !u!23 &1477804703
 MeshRenderer:
@@ -134265,7 +134357,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1824906814
 Transform:
   m_ObjectHideFlags: 0

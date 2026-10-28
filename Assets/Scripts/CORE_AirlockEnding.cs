@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>Opens Javier's authored airlock hatch and finishes the story when Ella reaches it.</summary>
+/// <summary>Opens Javier's authored airlock hatch and releases Ella into the vacuum when Siete brings her.</summary>
 public sealed class CORE_AirlockEnding : MonoBehaviour
 {
     public const string FlagVegaFinalWalkPlea = "FIN_VegaPeticionPasillo";
@@ -45,7 +45,8 @@ public sealed class CORE_AirlockEnding : MonoBehaviour
         // GDD pág. 15 (El final · 1. La caminata): Al regresar al Pasillo empujando a Ella en el carrito,
         // sin música (Acto 9) y Vega tose y repite su petición debilitado por el intercomunicador.
         if (SAL_Progress.HasFlag(INV_IncubatorCart.FlagEllaEnCarrito) &&
-            !SAL_Progress.HasFlag(SAL_Progress.FinalComplete))
+            !SAL_Progress.HasFlag(SAL_Progress.FinalComplete) &&
+            !SAL_Progress.HasFlag("INV_EllaExpulsada"))
         {
             SAL_Progress.SetAct(9);
 
@@ -75,7 +76,7 @@ public sealed class CORE_AirlockEnding : MonoBehaviour
     {
         yield return new WaitForSeconds(1.2f);
 
-        if (opening || SAL_Progress.HasFlag(SAL_Progress.FinalComplete)) yield break;
+        if (opening || SAL_Progress.HasFlag(SAL_Progress.FinalComplete) || SAL_Progress.HasFlag("INV_EllaExpulsada")) yield break;
 
         SAL_AudioDirector director = SAL_AudioDirector.EnsureInstance();
         if (Time.unscaledTime - director.LastVegaVoiceTime < 2.0f) yield break;
@@ -93,7 +94,8 @@ public sealed class CORE_AirlockEnding : MonoBehaviour
 
     private void Update()
     {
-        if (opening || !SAL_Progress.HasFlag(SAL_Progress.FinalComplete)) return;
+        if (opening || SAL_Progress.HasFlag("INV_EllaExpulsada")) return;
+        if (!SAL_Progress.HasFlag(SAL_Progress.FinalComplete)) return;
         if (!SAL_Progress.HasFlag(INV_IncubatorCart.FlagEllaEnCarrito)) return;
         if (!hatch)
         {
@@ -127,27 +129,19 @@ public sealed class CORE_AirlockEnding : MonoBehaviour
             customClip: clipVegaCorteEsclusa,
             customSource: vegaFinalSource
         );
-        CORE_InteractionHUD.ShowMessage("La escotilla se abre.", 1.1f);
+        CORE_InteractionHUD.ShowMessage("La escotilla se abre al vacío.", 2f);
 
         Vector3 start = hatch.localPosition;
         Vector3 end = closedLocalPosition + Vector3.up * slideDistance;
         float elapsed = 0f;
         bool cutoffTriggered = false;
 
-        if (fadeOverlay)
-        {
-            fadeOverlay.gameObject.SetActive(true);
-            fadeOverlay.alpha = 0f;
-            fadeOverlay.blocksRaycasts = true;
-        }
-
-        while (elapsed < Mathf.Max(openDuration, fadeDuration))
+        while (elapsed < openDuration)
         {
             elapsed += Time.deltaTime;
             float doorT = Mathf.Clamp01(elapsed / openDuration);
             doorT = doorT * doorT * (3f - 2f * doorT);
             hatch.localPosition = Vector3.LerpUnclamped(start, end, doorT);
-            if (fadeOverlay) fadeOverlay.alpha = Mathf.Clamp01(elapsed / fadeDuration);
 
             // Justo cuando la transmisión matemática de Vega se corta en seco: Ella sale al espacio, su brillo se apaga y cae el silencio absoluto
             if (!cutoffTriggered && elapsed >= 0.92f)
@@ -155,12 +149,6 @@ public sealed class CORE_AirlockEnding : MonoBehaviour
                 cutoffTriggered = true;
                 if (cart) cart.SetEllaVisible(false);
                 if (SAL_AudioDirector.Instance) SAL_AudioDirector.Instance.SilenceAllForEnding();
-            }
-
-            if (endingText && fadeOverlay && fadeOverlay.alpha >= 1f && !endingText.gameObject.activeSelf)
-            {
-                endingText.text = endingMessage;
-                endingText.gameObject.SetActive(true);
             }
             yield return null;
         }
@@ -174,35 +162,15 @@ public sealed class CORE_AirlockEnding : MonoBehaviour
         }
         if (vegaFinalSource) vegaFinalSource.Stop();
 
-        SAL_Progress.SetFlag(SAL_Progress.FinalComplete);
-        CORE_PlayerController player = PlayerPersistence.Instance
-            ? PlayerPersistence.Instance.GetComponent<CORE_PlayerController>()
-            : FindFirstObjectByType<CORE_PlayerController>();
-        if (player)
+        // Bandera narrativa: Ella fue expulsada por la esclusa
+        SAL_Progress.SetFlag("INV_EllaExpulsada", true);
+
+        // Guía al jugador: la flor ya se fue al espacio, Siete debe volver a la cabina de Vega
+        yield return new WaitForSeconds(0.6f);
+        if (SAL_AudioDirector.Instance)
         {
-            if (player.TryGetComponent(out Rigidbody body)) body.linearVelocity = Vector3.zero;
-            player.enabled = false;
+            SAL_AudioDirector.Instance.ShowSubtitle("Siete: «...Ella ya no está. Debo avisarle a Vega... Debo ir a su habitación.»", 6f);
         }
-
-        if (endingText)
-        {
-            endingText.text = endingMessage;
-            endingText.gameObject.SetActive(true);
-        }
-        else
-        {
-            CORE_InteractionHUD.ShowMessage(endingMessage, returnToMenuDelay);
-        }
-
-        yield return new WaitForSecondsRealtime(returnToMenuDelay);
-
-        if (cart) Destroy(cart.gameObject);
-        if (PlayerPersistence.Instance) Destroy(PlayerPersistence.Instance.gameObject);
-        if (CORE_Inventory.Instance) Destroy(CORE_Inventory.Instance.gameObject);
-        if (NotebookController.Instance) Destroy(NotebookController.Instance.gameObject);
-        if (SAL_AudioDirector.Instance) Destroy(SAL_AudioDirector.Instance.gameObject);
-
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("Assets/inicio/MenuInicio.unity", LoadSceneMode.Single);
+        CORE_InteractionHUD.ShowMessage("La esclusa se abrió al vacío. Ve a la habitación de Vega.", 4.5f);
     }
 }

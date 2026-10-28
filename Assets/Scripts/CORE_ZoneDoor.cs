@@ -75,7 +75,7 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
             CORE_InteractionHUD.ShowMessage(lockedMessage);
             return;
         }
-        if (!alreadyOpen && !ignoreRequirementForDebug && requireSelectedItem && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.IsSelected(requiredItem))
+        if (!alreadyOpen && !ignoreRequirementForDebug && requireSelectedItem && !string.IsNullOrEmpty(requiredItem) && !CORE_InventoryBridge.IsSelected(requiredItem) && !CORE_InventoryBridge.HasItem(requiredItem))
         {
             CORE_InteractionHUD.ShowMessage("Selecciona " + requiredItem + " en el inventario.");
             return;
@@ -98,18 +98,24 @@ public sealed class CORE_ZoneDoor : MonoBehaviour
         }
 
         if (!string.IsNullOrEmpty(openedFlag)) SAL_Progress.SetFlag(openedFlag);
+        if (alreadyOpen)
+        {
+            LoadDestination();
+            return;
+        }
         string message = !string.IsNullOrEmpty(revealFlag) && SAL_Progress.HasFlag(revealFlag) && !string.IsNullOrEmpty(alternateOpenMessage)
             ? alternateOpenMessage
             : openMessage;
-        if (!string.IsNullOrEmpty(message)) CORE_InteractionHUD.ShowMessage(message, openMessageSeconds);
-        if (openMessageSeconds > 0f && !string.IsNullOrEmpty(message)) StartCoroutine(LoadAfterMessage());
+        float delay = Mathf.Min(openMessageSeconds, 0.35f);
+        if (!string.IsNullOrEmpty(message)) CORE_InteractionHUD.ShowMessage(message, Mathf.Max(openMessageSeconds, 1.8f));
+        if (delay > 0f && !string.IsNullOrEmpty(message)) StartCoroutine(LoadAfterMessage(delay));
         else LoadDestination();
     }
 
-    private IEnumerator LoadAfterMessage()
+    private IEnumerator LoadAfterMessage(float delay)
     {
         loadingScene = true;
-        yield return new WaitForSecondsRealtime(openMessageSeconds);
+        yield return new WaitForSecondsRealtime(delay);
         LoadDestination();
     }
 
